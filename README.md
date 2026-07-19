@@ -7,7 +7,7 @@ LCS** — and publishes charts plus a markdown report.
 
 Nobody does consistent cross-league comparative analysis. This repo does.
 
-**Latest report:** <!-- LATEST-REPORT -->[2026-07-18 meta report](reports/2026-07-18-meta-report.md)<!-- /LATEST-REPORT -->
+**Latest report:** <!-- LATEST-REPORT -->[2026-07-19 meta report](reports/2026-07-19-meta-report.md)<!-- /LATEST-REPORT -->
 
 ## What it tracks
 
