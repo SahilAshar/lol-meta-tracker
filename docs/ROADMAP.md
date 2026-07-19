@@ -58,7 +58,12 @@ were we" file — read it first when resuming work.*
 
 ## Known issues
 
-- Oracle's Elixir has flagged some 2026 draft/champion-select data as incorrect
-  (format changes, upstream fix pending) — footnoted in reports.
+- ~~Oracle's Elixir flagged some 2026 draft/champion-select data as incorrect~~
+  **Resolved**: this was the "Side-Selection Bug" (blue side no longer guaranteed to
+  pick first; parser assumed it was) — fix deployed + broken games reparsed as of
+  Jan 18, 2026 per OE's announcement. Remove the footnote from report templates.
+  Spot-checks vs. Leaguepedia remain cheap insurance for draft work. Modeling rule
+  that survives the fix: derive pick order from draft columns, never infer from side.
+  Full stat glossary now at `docs/oracle-elixir-definitions.md`.
 - The ~50MB download happens every daily run even when data is unchanged
   (unavoidable — hash requires the file; Drive gives no usable checksum header).
