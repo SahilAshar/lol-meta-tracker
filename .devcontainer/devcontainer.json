@@ -1,0 +1,10 @@
+{
+  "name": "lol-meta-tracker",
+  "image": "mcr.microsoft.com/devcontainers/python:3.12",
+  "postCreateCommand": "pip install --user uv && ~/.local/bin/uv sync",
+  "customizations": {
+    "codespaces": {
+      "openFiles": ["docs/ROADMAP.md"]
+    }
+  }
+}

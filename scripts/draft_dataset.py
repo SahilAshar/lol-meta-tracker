@@ -13,6 +13,14 @@ resolves them), and each candidate is scored on how well it fills the roles the
 relevant team still has open. For bans the relevant team is the opponent, since
 bans target what the opponent could pick next.
 
+v0.7 adds champion-pair synergy/counter features: trailing-window together and
+head-to-head records for champion pairs, scored against the picks already
+locked on each side. pair_syn is the candidate's mean shrunk win rate alongside
+the reference team's locked picks (the team that would play the candidate: own
+for picks, the opponent's for bans); pair_ctr is its mean shrunk win rate
+versus the other side's locked picks. The pointwise model otherwise cannot see
+composition interactions at all.
+
 v0.6 adds per-player pool features: each (player, champion) pair gets a
 trailing-180d game/win history, each team's current player in each role is
 inferred from its most recent prior game (handles subs by recency), and each
@@ -46,6 +54,7 @@ RATE_WINDOW_DAYS = 28  # global champion pick/ban rates
 USAGE_WINDOW_DAYS = 56  # team-specific champion usage
 ROLE_WINDOW_DAYS = 120  # per-champion role distributions
 POOL_WINDOW_DAYS = 180  # per-player champion pools
+PAIR_WINDOW_DAYS = 180  # champion-pair synergy/counter stats
 MIN_ROLE_GAMES = 5  # below this, back off to uniform over ever-played roles
 
 ROLES = ["top", "jng", "mid", "bot", "sup"]
@@ -331,6 +340,76 @@ class PlayerPools:
         return (w + 2.0) / (g + 4.0)
 
 
+class PairStats:
+    """Point-in-time champion-pair together/versus records.
+
+    Four cumulative (days x champs x champs) tensors: games and wins for pairs
+    on the same team (together) and on opposing teams (versus, wins from the
+    first champion's perspective). Queried with the same as-of-yesterday
+    trailing window as the other rolling stats.
+    """
+
+    def __init__(
+        self,
+        players: pd.DataFrame,
+        cidx: dict[str, int],
+        didx: dict,
+    ):
+        self.cidx = cidx
+        self.didx = didx
+        n_days, n_champs = len(didx), len(cidx)
+        shape = (n_days, n_champs, n_champs)
+        tg = np.zeros(shape, dtype=np.float32)
+        tw = np.zeros(shape, dtype=np.float32)
+        vg = np.zeros(shape, dtype=np.float32)
+        vw = np.zeros(shape, dtype=np.float32)
+
+        game_day = players.groupby("gameid").day.first()
+        sides = players.groupby(["gameid", "side"]).agg(
+            champs=("champion", list), won=("result", "max")
+        )
+        for gameid, teams in sides.groupby(level=0):
+            if len(teams) != 2:
+                continue
+            d = didx[game_day[gameid]]
+            rec = [
+                ([cidx[c] for c in row.champs if isinstance(c, str) and c in cidx],
+                 float(row.won))
+                for _, row in teams.iterrows()
+            ]
+            for ix, won in rec:
+                for i, a in enumerate(ix):
+                    for b in ix[i + 1:]:
+                        tg[d, a, b] += 1; tg[d, b, a] += 1
+                        tw[d, a, b] += won; tw[d, b, a] += won
+            (ix_a, won_a), (ix_b, won_b) = rec
+            for a in ix_a:
+                for b in ix_b:
+                    vg[d, a, b] += 1; vg[d, b, a] += 1
+                    vw[d, a, b] += won_a; vw[d, b, a] += won_b
+        self.tg, self.tw = tg.cumsum(axis=0), tw.cumsum(axis=0)
+        self.vg, self.vw = vg.cumsum(axis=0), vw.cumsum(axis=0)
+
+    def _pair_wr(
+        self, games: np.ndarray, wins: np.ndarray, day: pd.Timestamp, cols: list[int]
+    ) -> np.ndarray:
+        """Mean shrunk win rate of every champion with/against `cols` champs."""
+        hi = self.didx[day] - 1
+        lo = hi - PAIR_WINDOW_DAYS
+        n = games.shape[1]
+        if not cols or hi < 0:
+            return np.full(n, 0.5, dtype=np.float32)
+        g = games[hi][:, cols] - (games[lo][:, cols] if lo >= 0 else 0.0)
+        w = wins[hi][:, cols] - (wins[lo][:, cols] if lo >= 0 else 0.0)
+        return ((w + 2.0) / (g + 4.0)).mean(axis=1).astype(np.float32)
+
+    def synergy(self, day: pd.Timestamp, with_champs: list[int]) -> np.ndarray:
+        return self._pair_wr(self.tg, self.tw, day, with_champs)
+
+    def counter(self, day: pd.Timestamp, vs_champs: list[int]) -> np.ndarray:
+        return self._pair_wr(self.vg, self.vw, day, vs_champs)
+
+
 def role_open_probs(
     picks: list[str], shares: np.ndarray, cidx: dict[str, int]
 ) -> np.ndarray:
@@ -369,6 +448,7 @@ def build() -> pd.DataFrame:
 
     rates = RollingRates(players, teams, champs)
     pools = PlayerPools(players, champs, cidx, rates.didx)
+    pairs = PairStats(players, cidx, rates.didx)
 
     # One record per game with both teams' ordered picks/bans.
     game_rows = {}
@@ -469,6 +549,15 @@ def build() -> pd.DataFrame:
                 sv, wv = pool_cache[pkey]
                 pool_vec += p_open[r_i] * sv
                 wr_vec += p_open[r_i] * wv
+
+            # Pair features vs the locked picks on each side. The reference
+            # team (would play the candidate) is `ref`; the other side is
+            # whoever the candidate would be played against.
+            other = opp if ref == side else side
+            ref_picked = [cidx[c] for c in picks_so_far[ref] if c in cidx]
+            other_picked = [cidx[c] for c in picks_so_far[other] if c in cidx]
+            pair_syn = pairs.synergy(day, ref_picked)
+            pair_ctr = pairs.counter(day, other_picked)
             out.append(pd.DataFrame({
                 "gameid": gameid,
                 "date": rec["date"],
@@ -491,6 +580,8 @@ def build() -> pd.DataFrame:
                 "role_overlap_max": (cand_shares * p_open).max(axis=1),
                 "player_pool": pool_vec[ci],
                 "player_wr": wr_vec[ci],
+                "pair_syn": pair_syn[ci],
+                "pair_ctr": pair_ctr[ci],
                 "label": [int(c == actual) for c in avail],
             }))
             taken.add(actual)
