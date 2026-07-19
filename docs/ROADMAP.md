@@ -1,6 +1,6 @@
 # Roadmap & Pickup Notes
 
-*Last updated: 2026-07-19 (session that built the repo). This doc is the "where
+*Last updated: 2026-07-19 (draft model v0.5 session). This doc is the "where
 were we" file — read it first when resuming work.*
 
 ## Current state (all working, all verified)
@@ -16,6 +16,12 @@ were we" file — read it first when resuming work.*
 - **Analysis window**: date-based (not split names — they're inconsistent across
   leagues). Defaults to 2026-07-22 (summer start); auto-falls-back to last 8 weeks
   until then.
+- **Draft next-pick model**: `scripts/draft_dataset.py` + `scripts/train_draft_model.py`.
+  v0.5 (role-constraint features) blind-tested on the EWC July main event:
+  top-1/3/5 = 11.7/29.3/40.9 vs meta baseline 8.4/25.9/36.4 — beats both baselines
+  at every k. Gains concentrate in phase-2 picks (top-5 18.6 → 39.0), exactly where
+  role constraints bind. Comparison in `data/processed/draft_model_metrics_v05.json`
+  (v0 block included).
 
 ## Open loops (near-term, in order)
 
@@ -23,13 +29,22 @@ were we" file — read it first when resuming work.*
    predicted Gen.G 2-1 over T1 and Dplus Kia 3-2 over Karmine Corp, plus draft
    reads (Nocturne paradox, expected bans). Finals were July 19; results land in
    the CSV ~July 20. Append an honest scorecard section to the preview.
-2. **Write the "meta entering summer" debut piece** — full EWC + MSI patch 16.13
+   NOTE 2026-07-19: Drive download is returning "Quota exceeded" for the 2026 CSV
+   (transient, popular-file limit — not a stale ID). Retry the download before
+   scoring; also re-run the draft blind test once finals games land (test set
+   grows past 43 games).
+2. **Draft model rung 3** — v0.5 (role-constraint features) done and beats the
+   meta baseline at every k; next per the ladder is the small transformer with
+   learned champion embeddings (t-SNE of embeddings = flex/role clusters).
+   Remaining v0.x idea: opponent-pool features for bans (bans still trail the
+   meta baseline at top-3/5).
+3. **Write the "meta entering summer" debut piece** — full EWC + MSI patch 16.13
    sample (115 international games), framed for @lolmetatracker's first thread
    (handle being grabbed). Prediction scorecard = credibility receipt.
-3. **Summer split coverage begins**: LPL Jul 22, LEC Jul 24, LCS Jul 25, LCK Jul 29.
+4. **Summer split coverage begins**: LPL Jul 22, LEC Jul 24, LCS Jul 25, LCK Jul 29.
    The default window goes live automatically. First "Week 1 cross-league" report
    ~Aug 3-4 → Reddit/Twitter debut per the engagement plan.
-4. **Riot personal API key** — request at developer.riotgames.com (few days'
+5. **Riot personal API key** — request at developer.riotgames.com (few days'
    approval lead time). Blocks the Challenger leading-indicator feature.
 
 ## Planned features (decided order, per docs/riot-api-assessment.md)

@@ -5,6 +5,14 @@ each decision, emits one row per *available* candidate champion with point-in-ti
 features. Availability accounts for champions already picked/banned this game and,
 in fearless leagues, champions used by either team earlier in the same series.
 
+v0.5 adds role-constraint features: each champion gets a trailing-window role
+distribution (share of games at top/jng/mid/bot/sup), a team's picks-so-far are
+probabilistically assigned to roles by enumerating role permutations weighted by
+those distributions (so flex picks like Poppy stay ambiguous until another pick
+resolves them), and each candidate is scored on how well it fills the roles the
+relevant team still has open. For bans the relevant team is the opponent, since
+bans target what the opponent could pick next.
+
 Draft order assumes the standard tournament sequence with blue banning/picking
 first. NOTE: as of 2026 blue is no longer guaranteed to pick first; Oracle's
 Elixir data does not record which team opened the draft, so sequence indices are
@@ -15,6 +23,8 @@ Output: data/processed/draft_decisions.parquet
 
 from __future__ import annotations
 
+import itertools
+
 import numpy as np
 import pandas as pd
 
@@ -24,6 +34,10 @@ LEAGUES = ["LCK", "LPL", "LEC", "LCS", "MSI", "EWC", "FST"]
 
 RATE_WINDOW_DAYS = 28  # global champion pick/ban rates
 USAGE_WINDOW_DAYS = 56  # team-specific champion usage
+ROLE_WINDOW_DAYS = 120  # per-champion role distributions
+MIN_ROLE_GAMES = 5  # below this, back off to uniform over ever-played roles
+
+ROLES = ["top", "jng", "mid", "bot", "sup"]
 
 # (sequence index, decision type, side, per-team ordinal), standard tournament draft.
 DRAFT_SEQUENCE = [
@@ -112,6 +126,16 @@ class RollingRates:
         ).dropna(subset=["champion"])
         self.cum_banned = cum_matrix(bans.groupby(["day", "champion"]).gameid.nunique())
 
+        # Per-role cumulative pick counts (one days x champs matrix per role).
+        self.cum_role = [
+            cum_matrix(
+                players[players.position == r]
+                .groupby(["day", "champion"])
+                .gameid.nunique()
+            )
+            for r in ROLES
+        ]
+
         games_per_day = players.groupby("day").gameid.nunique()
         daily_games = np.zeros(n_days, dtype=np.float32)
         for day, n in games_per_day.items():
@@ -148,11 +172,64 @@ class RollingRates:
         ban = self._window(self.cum_banned, day, RATE_WINDOW_DAYS) / games
         return pick, ban
 
+    def role_shares(self, day: pd.Timestamp) -> np.ndarray:
+        """(n_champs x 5) role distribution over the trailing ROLE_WINDOW_DAYS.
+
+        Champions with fewer than MIN_ROLE_GAMES windowed games back off to a
+        uniform distribution over roles they had ever played before `day`, then
+        to fully uniform if they had never been seen.
+        """
+        win = np.stack(
+            [self._window(m, day, ROLE_WINDOW_DAYS) for m in self.cum_role]
+        )  # (5, n_champs)
+        hi = self.didx[day] - 1
+        ever = (
+            np.stack([m[hi] for m in self.cum_role]) > 0
+            if hi >= 0
+            else np.zeros_like(win, dtype=bool)
+        )
+        shares = np.full_like(win, 1 / len(ROLES))
+        tot = win.sum(axis=0)
+        ok = tot >= MIN_ROLE_GAMES
+        shares[:, ok] = win[:, ok] / tot[ok]
+        backoff = ~ok & (ever.sum(axis=0) > 0)
+        shares[:, backoff] = ever[:, backoff] / ever[:, backoff].sum(axis=0)
+        return shares.T
+
     def team_usage(self, team: str, day: pd.Timestamp) -> np.ndarray:
         if team not in self.team_cum:
             return np.zeros(len(self.champs), dtype=np.float32)
         games = max(self._window(self.team_games[team], day, USAGE_WINDOW_DAYS), 1.0)
         return self._window(self.team_cum[team], day, USAGE_WINDOW_DAYS) / games
+
+
+def role_open_probs(
+    picks: list[str], shares: np.ndarray, cidx: dict[str, int]
+) -> np.ndarray:
+    """P(each role is still open) given a team's picks so far.
+
+    Enumerates all assignments of the picked champions to distinct roles,
+    weighting each assignment by the product of the champions' role-shares,
+    then marginalizes. A flex pick (Poppy: jng/sup) keeps both roles partially
+    open until another pick's assignment resolves it.
+    """
+    open_p = np.ones(len(ROLES), dtype=np.float32)
+    idx = [cidx[c] for c in picks if c in cidx]
+    if not idx:
+        return open_p
+    # Smooth so a set of picks whose shares contradict every permutation
+    # (e.g. two pure-mid champions) still yields a distribution.
+    s = shares[idx] + 1e-3
+    filled = np.zeros(len(ROLES))
+    total = 0.0
+    for perm in itertools.permutations(range(len(ROLES)), len(idx)):
+        w = 1.0
+        for i, r in enumerate(perm):
+            w *= s[i, r]
+        total += w
+        for r in perm:
+            filled[r] += w
+    return (open_p - filled / total).astype(np.float32)
 
 
 def build() -> pd.DataFrame:
@@ -179,6 +256,7 @@ def build() -> pd.DataFrame:
 
     # Series key for fearless state: same league/day/team-pair, ordered by date.
     series_prior: dict[tuple, list] = {}
+    role_share_cache: dict[pd.Timestamp, np.ndarray] = {}
     out = []
     skipped = 0
     for gameid, rec in sorted(game_rows.items(), key=lambda kv: kv[1]["date"]):
@@ -207,8 +285,12 @@ def build() -> pd.DataFrame:
         usage = {
             s: rates.team_usage(rec[s]["team"], day) for s in ("Blue", "Red")
         }
+        if day not in role_share_cache:
+            role_share_cache[day] = rates.role_shares(day)
+        shares = role_share_cache[day]
 
         taken = set(unavailable_series)  # champs unavailable at draft start
+        picks_so_far: dict[str, list[str]] = {"Blue": [], "Red": []}
         game_num = len(series_prior.get(skey, []))
         for seq, dtype, side, ordinal in DRAFT_SEQUENCE:
             actual = rec[side]["bans" if dtype == "ban" else "picks"][ordinal - 1]
@@ -216,11 +298,18 @@ def build() -> pd.DataFrame:
                 continue  # missed ban: no decision was made, state unchanged
             if actual not in cidx:
                 taken.add(actual)
+                if dtype == "pick":
+                    picks_so_far[side].append(actual)
                 continue
             opp = "Red" if side == "Blue" else "Blue"
             avail = [c for c in champs if c not in taken]
             ci = np.array([cidx[c] for c in avail])
             n = len(avail)
+            # Role need is scored against the team whose next pick is at stake:
+            # own open roles for picks, the opponent's for bans.
+            ref = side if dtype == "pick" else opp
+            p_open = role_open_probs(picks_so_far[ref], shares, cidx)
+            cand_shares = shares[ci]  # (n_avail x 5)
             out.append(pd.DataFrame({
                 "gameid": gameid,
                 "date": rec["date"],
@@ -239,9 +328,13 @@ def build() -> pd.DataFrame:
                 "presence": presence[ci],
                 "team_usage": usage[side][ci],
                 "opp_usage": usage[opp][ci],
+                "role_need": cand_shares @ p_open,
+                "role_overlap_max": (cand_shares * p_open).max(axis=1),
                 "label": [int(c == actual) for c in avail],
             }))
             taken.add(actual)
+            if dtype == "pick":
+                picks_so_far[side].append(actual)
 
         used_this_game = {
             c for s in ("Blue", "Red") for c in rec[s]["picks"] if isinstance(c, str)

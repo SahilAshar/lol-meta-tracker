@@ -1,8 +1,12 @@
-"""Train the v0 next-pick model and blind-score it on the EWC main event.
+"""Train the v0.5 next-pick model and blind-score it on the EWC main event.
 
 Pointwise ranking: a gradient-boosted classifier over (decision, candidate) rows
 from draft_dataset.py. At eval time, candidates for each decision are ranked by
 score; we report top-1/3/5 accuracy against the champion actually picked/banned.
+
+v0.5 = v0 features + role-constraint features (role_need, role_overlap_max)
+from draft_dataset.py. Model params and split are identical to v0; the stored
+v0 metrics block is copied into the output so the comparison lives in one file.
 
 Split design (temporal, no leakage):
   - test  = EWC July main event (patch 16.13)
@@ -13,7 +17,8 @@ Split design (temporal, no leakage):
 Baselines: rank by trailing-28d meta rates (pick_rate for picks, presence for
 bans) and by trailing-56d team habit (team_usage for picks, opp_usage for bans).
 
-Output: data/processed/draft_model_metrics.json, data/processed/draft_model.joblib
+Output: data/processed/draft_model_metrics_v05.json,
+        data/processed/draft_model_v05.joblib
 """
 
 from __future__ import annotations
@@ -30,8 +35,10 @@ from common import DATA_PROCESSED
 FEATURES = [
     "pick_rate", "ban_rate", "presence", "team_usage", "opp_usage",
     "is_ban", "phase2", "is_blue", "ordinal", "fearless", "game_in_series",
+    "role_need", "role_overlap_max",
 ]
 VAL_DAYS = 14
+VERSION = "v0.5"
 
 
 def topk_accuracy(df: pd.DataFrame, score_col: str) -> dict:
@@ -88,7 +95,7 @@ def main() -> None:
     model.fit(train[FEATURES], train["label"])
     print(f"iterations used: {model.n_iter_}")
 
-    results = {"cutoff": str(cutoff), "features": FEATURES}
+    results = {"version": VERSION, "cutoff": str(cutoff), "features": FEATURES}
     for name, part in [("val", val.copy()), ("test_ewc_main", test.copy())]:
         part["model_score"] = model.predict_proba(part[FEATURES])[:, 1]
         part["baseline_meta"] = np.where(part.is_ban == 1, part.presence, part.pick_rate)
@@ -99,10 +106,14 @@ def main() -> None:
             "baseline_team": topk_accuracy(part, "baseline_team"),
         }
 
-    out = DATA_PROCESSED / "draft_model_metrics.json"
+    v0_path = DATA_PROCESSED / "draft_model_metrics.json"
+    if v0_path.exists():
+        results["v0"] = json.loads(v0_path.read_text())
+
+    out = DATA_PROCESSED / "draft_model_metrics_v05.json"
     out.write_text(json.dumps(results, indent=2))
-    joblib.dump(model, DATA_PROCESSED / "draft_model.joblib")
-    print(json.dumps(results, indent=2))
+    joblib.dump(model, DATA_PROCESSED / "draft_model_v05.joblib")
+    print(json.dumps({k: v for k, v in results.items() if k != "v0"}, indent=2))
 
 
 if __name__ == "__main__":
