@@ -1,12 +1,15 @@
-"""Train the v0.5 next-pick model and blind-score it on the EWC main event.
+"""Train the v0.6 next-pick model and blind-score it on the EWC main event.
 
 Pointwise ranking: a gradient-boosted classifier over (decision, candidate) rows
 from draft_dataset.py. At eval time, candidates for each decision are ranked by
 score; we report top-1/3/5 accuracy against the champion actually picked/banned.
 
-v0.5 = v0 features + role-constraint features (role_need, role_overlap_max)
-from draft_dataset.py. Model params and split are identical to v0; the stored
-v0 metrics block is copied into the output so the comparison lives in one file.
+v0.6 = v0.5 features + per-player pool features (player_pool, player_wr) from
+draft_dataset.py. Model params and split are identical to v0.5; the stored
+v0.5 and v0 metrics blocks are copied into the output so the comparison lives
+in one file. If the test set has grown since v0.5 was scored (new games in the
+CSV), the v0.5 feature set is retrained on the current data instead, so the
+comparison stays apples-to-apples.
 
 Split design (temporal, no leakage):
   - test  = EWC July main event (patch 16.13)
@@ -17,8 +20,8 @@ Split design (temporal, no leakage):
 Baselines: rank by trailing-28d meta rates (pick_rate for picks, presence for
 bans) and by trailing-56d team habit (team_usage for picks, opp_usage for bans).
 
-Output: data/processed/draft_model_metrics_v05.json,
-        data/processed/draft_model_v05.joblib
+Output: data/processed/draft_model_metrics_v06.json,
+        data/processed/draft_model_v06.joblib
 """
 
 from __future__ import annotations
@@ -32,13 +35,14 @@ from sklearn.ensemble import HistGradientBoostingClassifier
 
 from common import DATA_PROCESSED
 
-FEATURES = [
+FEATURES_V05 = [
     "pick_rate", "ban_rate", "presence", "team_usage", "opp_usage",
     "is_ban", "phase2", "is_blue", "ordinal", "fearless", "game_in_series",
     "role_need", "role_overlap_max",
 ]
+FEATURES = FEATURES_V05 + ["player_pool", "player_wr"]
 VAL_DAYS = 14
-VERSION = "v0.5"
+VERSION = "v0.6"
 
 
 def topk_accuracy(df: pd.DataFrame, score_col: str) -> dict:
@@ -68,6 +72,39 @@ def topk_accuracy(df: pd.DataFrame, score_col: str) -> dict:
     }
 
 
+def fit_model(features: list[str], train: pd.DataFrame) -> HistGradientBoostingClassifier:
+    model = HistGradientBoostingClassifier(
+        max_iter=600,
+        learning_rate=0.08,
+        max_depth=6,
+        min_samples_leaf=50,
+        early_stopping=True,
+        validation_fraction=0.1,
+        n_iter_no_change=25,
+        random_state=16,
+    )
+    model.fit(train[features], train["label"])
+    print(f"iterations used ({len(features)} features): {model.n_iter_}")
+    return model
+
+
+def score_splits(
+    model: HistGradientBoostingClassifier, features: list[str],
+    val: pd.DataFrame, test: pd.DataFrame,
+) -> dict:
+    out = {}
+    for name, part in [("val", val.copy()), ("test_ewc_main", test.copy())]:
+        part["model_score"] = model.predict_proba(part[features])[:, 1]
+        part["baseline_meta"] = np.where(part.is_ban == 1, part.presence, part.pick_rate)
+        part["baseline_team"] = np.where(part.is_ban == 1, part.opp_usage, part.team_usage)
+        out[name] = {
+            "model": topk_accuracy(part, "model_score"),
+            "baseline_meta": topk_accuracy(part, "baseline_meta"),
+            "baseline_team": topk_accuracy(part, "baseline_team"),
+        }
+    return out
+
+
 def main() -> None:
     ds = pd.read_parquet(DATA_PROCESSED / "draft_decisions.parquet")
     ds["date"] = pd.to_datetime(ds["date"])
@@ -82,38 +119,33 @@ def main() -> None:
         print(f"  {name}: {part.gameid.nunique()} games, "
               f"{part.groupby(['gameid', 'seq']).ngroups} decisions")
 
-    model = HistGradientBoostingClassifier(
-        max_iter=600,
-        learning_rate=0.08,
-        max_depth=6,
-        min_samples_leaf=50,
-        early_stopping=True,
-        validation_fraction=0.1,
-        n_iter_no_change=25,
-        random_state=16,
-    )
-    model.fit(train[FEATURES], train["label"])
-    print(f"iterations used: {model.n_iter_}")
-
+    model = fit_model(FEATURES, train)
     results = {"version": VERSION, "cutoff": str(cutoff), "features": FEATURES}
-    for name, part in [("val", val.copy()), ("test_ewc_main", test.copy())]:
-        part["model_score"] = model.predict_proba(part[FEATURES])[:, 1]
-        part["baseline_meta"] = np.where(part.is_ban == 1, part.presence, part.pick_rate)
-        part["baseline_team"] = np.where(part.is_ban == 1, part.opp_usage, part.team_usage)
-        results[name] = {
-            "model": topk_accuracy(part, "model_score"),
-            "baseline_meta": topk_accuracy(part, "baseline_meta"),
-            "baseline_team": topk_accuracy(part, "baseline_team"),
-        }
+    results.update(score_splits(model, FEATURES, val, test))
 
-    v0_path = DATA_PROCESSED / "draft_model_metrics.json"
-    if v0_path.exists():
-        results["v0"] = json.loads(v0_path.read_text())
+    # Carry the v0.5 (and v0) comparison blocks forward. If the test set has
+    # changed since v0.5 was scored, its stored numbers are not comparable —
+    # refit the v0.5 feature set on the current data instead.
+    v05_path = DATA_PROCESSED / "draft_model_metrics_v05.json"
+    if v05_path.exists():
+        stored = json.loads(v05_path.read_text())
+        results["v0"] = stored.pop("v0", None)
+        n_test = test.groupby(["gameid", "seq"]).ngroups
+        stored_n = stored["test_ewc_main"]["model"]["all"]["n"]
+        if stored_n == n_test:
+            results["v0.5"] = stored
+        else:
+            print(f"test set changed ({stored_n} -> {n_test} decisions); "
+                  "refitting v0.5 feature set for comparability")
+            v05 = {"version": "v0.5 (refit)", "features": FEATURES_V05,
+                   "stored_v05_test_n": stored_n}
+            v05.update(score_splits(fit_model(FEATURES_V05, train), FEATURES_V05, val, test))
+            results["v0.5"] = v05
 
-    out = DATA_PROCESSED / "draft_model_metrics_v05.json"
+    out = DATA_PROCESSED / "draft_model_metrics_v06.json"
     out.write_text(json.dumps(results, indent=2))
-    joblib.dump(model, DATA_PROCESSED / "draft_model_v05.joblib")
-    print(json.dumps({k: v for k, v in results.items() if k != "v0"}, indent=2))
+    joblib.dump(model, DATA_PROCESSED / "draft_model_v06.joblib")
+    print(json.dumps({k: v for k, v in results.items() if k not in ("v0", "v0.5")}, indent=2))
 
 
 if __name__ == "__main__":

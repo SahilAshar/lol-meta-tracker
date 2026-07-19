@@ -13,6 +13,16 @@ resolves them), and each candidate is scored on how well it fills the roles the
 relevant team still has open. For bans the relevant team is the opponent, since
 bans target what the opponent could pick next.
 
+v0.6 adds per-player pool features: each (player, champion) pair gets a
+trailing-180d game/win history, each team's current player in each role is
+inferred from its most recent prior game (handles subs by recency), and each
+candidate is scored on how much of the relevant players' pools it represents
+(player_pool) and how well those players perform on it (player_wr, shrunk
+toward 0.5). Role weighting reuses the v0.5 open-role probabilities, so after
+four picks the remaining role's player dominates the score. For bans the
+relevant roster is the opponent's — bans target what their players are
+dangerous on in their open roles.
+
 Draft order assumes the standard tournament sequence with blue banning/picking
 first. NOTE: as of 2026 blue is no longer guaranteed to pick first; Oracle's
 Elixir data does not record which team opened the draft, so sequence indices are
@@ -35,6 +45,7 @@ LEAGUES = ["LCK", "LPL", "LEC", "LCS", "MSI", "EWC", "FST"]
 RATE_WINDOW_DAYS = 28  # global champion pick/ban rates
 USAGE_WINDOW_DAYS = 56  # team-specific champion usage
 ROLE_WINDOW_DAYS = 120  # per-champion role distributions
+POOL_WINDOW_DAYS = 180  # per-player champion pools
 MIN_ROLE_GAMES = 5  # below this, back off to uniform over ever-played roles
 
 ROLES = ["top", "jng", "mid", "bot", "sup"]
@@ -98,6 +109,18 @@ def detect_fearless(players: pd.DataFrame) -> set[str]:
     return fearless
 
 
+def window_before(
+    cum: np.ndarray, didx: dict, day: pd.Timestamp, days: int
+) -> np.ndarray:
+    """Sum a cumulative matrix over [day - days, day - 1], strictly before `day`."""
+    hi = didx[day] - 1
+    lo = hi - days
+    zero = np.zeros(cum.shape[1], dtype=np.float32) if cum.ndim == 2 else 0.0
+    top = cum[hi] if hi >= 0 else zero
+    bot = cum[lo] if lo >= 0 else zero
+    return top - bot
+
+
 class RollingRates:
     """Point-in-time champion rates and team usage, as of the day before a game."""
 
@@ -158,12 +181,7 @@ class RollingRates:
 
     def _window(self, cum: np.ndarray, day: pd.Timestamp, days: int) -> np.ndarray:
         """Sum over [day - days, day - 1], i.e. strictly before the game day."""
-        hi = self.didx[day] - 1
-        lo = hi - days
-        zero = np.zeros(cum.shape[1], dtype=np.float32) if cum.ndim == 2 else 0.0
-        top = cum[hi] if hi >= 0 else zero
-        bot = cum[lo] if lo >= 0 else zero
-        return top - bot
+        return window_before(cum, self.didx, day, days)
 
     def global_rates(self, day: pd.Timestamp) -> tuple[np.ndarray, np.ndarray]:
         games = self._window(self.cum_games, day, RATE_WINDOW_DAYS)
@@ -203,6 +221,116 @@ class RollingRates:
         return self._window(self.team_cum[team], day, USAGE_WINDOW_DAYS) / games
 
 
+class PlayerPools:
+    """Point-in-time per-player champion history and per-team role rosters.
+
+    Champion pools use the same as-of-yesterday discipline as RollingRates: a
+    trailing POOL_WINDOW_DAYS window ending the day before the game. The
+    current five players for a team come from the team's most recent game
+    strictly before the game day (so subs resolve by recency), but each member
+    is assigned to the role they have played most historically rather than the
+    single game's labels — OE occasionally scrambles position labels within a
+    game (e.g. Gen.G 2026-07-17: Chovy "bot", Duro "mid"), and one bad game
+    must not corrupt the roster used for the next game day.
+    """
+
+    def __init__(
+        self,
+        players: pd.DataFrame,
+        champs: list[str],
+        cidx: dict[str, int],
+        didx: dict,
+    ):
+        self.cidx = cidx
+        self.didx = didx
+        n_days, n_champs = len(didx), len(champs)
+
+        # Per-player cumulative (days x champs) games and wins.
+        self.games: dict[str, np.ndarray] = {}
+        self.wins: dict[str, np.ndarray] = {}
+        agg = players.groupby(["playername", "day", "champion"]).agg(
+            n=("gameid", "nunique"), w=("result", "sum")
+        )
+        for player, pdf in agg.groupby(level="playername"):
+            g = np.zeros((n_days, n_champs), dtype=np.float32)
+            w = np.zeros((n_days, n_champs), dtype=np.float32)
+            for (_, day, champ), row in pdf.iterrows():
+                if champ in cidx:
+                    g[didx[day], cidx[champ]] = row["n"]
+                    w[didx[day], cidx[champ]] = row["w"]
+            self.games[player] = g.cumsum(axis=0)
+            self.wins[player] = w.cumsum(axis=0)
+
+        # Per-player cumulative games by role (days x 5), for role assignment.
+        self.pos_cum: dict[str, np.ndarray] = {}
+        pos_counts = players[players.position.isin(ROLES)].groupby(
+            ["playername", "day", "position"]
+        ).gameid.nunique()
+        for player, pdf in pos_counts.groupby(level="playername"):
+            m = np.zeros((n_days, len(ROLES)), dtype=np.float32)
+            for (_, day, pos), n in pdf.items():
+                m[didx[day], ROLES.index(pos)] = n
+            self.pos_cum[player] = m.cumsum(axis=0)
+
+        # Per-team lineup timeline: (date, day, {role: player}) sorted by date.
+        self.lineups: dict[str, list] = {}
+        for (team, _), gdf in players.groupby(["teamname", "gameid"]):
+            self.lineups.setdefault(team, []).append(
+                (gdf.date.iloc[0], gdf.day.iloc[0], dict(zip(gdf.position, gdf.playername)))
+            )
+        for team in self.lineups:
+            self.lineups[team].sort(key=lambda t: t[0])
+
+    def roster(self, team: str, day: pd.Timestamp) -> dict[str, str]:
+        """Current roster: membership from the team's most recent game strictly
+        before `day`, roles from each member's historical majority position."""
+        last: dict[str, str] = {}
+        for _, gday, lineup in self.lineups.get(team, []):
+            if gday < day:
+                last = lineup
+            else:
+                break
+        hi = self.didx[day] - 1
+        if not last or hi < 0:
+            return last
+        members = set(last.values())
+        # Greedy highest-count (player, role) assignment as of the day before.
+        cands = sorted(
+            (
+                (cnt, p, r_i)
+                for p in members
+                if p in self.pos_cum
+                for r_i, cnt in enumerate(self.pos_cum[p][hi])
+                if cnt > 0
+            ),
+            key=lambda t: -t[0],
+        )
+        assigned: dict[str, str] = {}
+        used: set[str] = set()
+        for _, p, r_i in cands:
+            if p not in used and ROLES[r_i] not in assigned:
+                assigned[ROLES[r_i]] = p
+                used.add(p)
+        # Fall back to the game's own labels for anyone left unresolved.
+        for r, p in last.items():
+            if p not in used and r not in assigned:
+                assigned[r] = p
+                used.add(p)
+        return assigned
+
+    def share_vec(self, player: str, day: pd.Timestamp) -> np.ndarray:
+        """Each champion's share of the player's windowed games."""
+        g = window_before(self.games[player], self.didx, day, POOL_WINDOW_DAYS)
+        tot = g.sum()
+        return g / tot if tot > 0 else g
+
+    def wr_vec(self, player: str, day: pd.Timestamp) -> np.ndarray:
+        """Shrunk per-champion win rate, (wins+2)/(games+4); 0.5 when unplayed."""
+        g = window_before(self.games[player], self.didx, day, POOL_WINDOW_DAYS)
+        w = window_before(self.wins[player], self.didx, day, POOL_WINDOW_DAYS)
+        return (w + 2.0) / (g + 4.0)
+
+
 def role_open_probs(
     picks: list[str], shares: np.ndarray, cidx: dict[str, int]
 ) -> np.ndarray:
@@ -240,6 +368,7 @@ def build() -> pd.DataFrame:
     print(f"champions: {len(champs)}, fearless leagues: {sorted(fearless_leagues)}")
 
     rates = RollingRates(players, teams, champs)
+    pools = PlayerPools(players, champs, cidx, rates.didx)
 
     # One record per game with both teams' ordered picks/bans.
     game_rows = {}
@@ -257,6 +386,9 @@ def build() -> pd.DataFrame:
     # Series key for fearless state: same league/day/team-pair, ordered by date.
     series_prior: dict[tuple, list] = {}
     role_share_cache: dict[pd.Timestamp, np.ndarray] = {}
+    pool_cache: dict[tuple[str, pd.Timestamp], tuple[np.ndarray, np.ndarray]] = {}
+    roster_cache: dict[tuple[str, pd.Timestamp], dict[str, str]] = {}
+    bad_rosters: set[str] = set()
     out = []
     skipped = 0
     for gameid, rec in sorted(game_rows.items(), key=lambda kv: kv[1]["date"]):
@@ -310,6 +442,33 @@ def build() -> pd.DataFrame:
             ref = side if dtype == "pick" else opp
             p_open = role_open_probs(picks_so_far[ref], shares, cidx)
             cand_shares = shares[ci]  # (n_avail x 5)
+
+            # Per-player pool features against the reference team's roster.
+            ref_team = rec[ref]["team"]
+            rkey = (ref_team, day)
+            if rkey not in roster_cache:
+                roster_cache[rkey] = pools.roster(ref_team, day)
+            roster = roster_cache[rkey]
+            if roster and len(set(roster.values())) != 5 and ref_team not in bad_rosters:
+                bad_rosters.add(ref_team)
+                print(f"warning: inferred roster for {ref_team} on {day.date()} "
+                      f"has {len(set(roster.values()))} distinct players: {roster}")
+            pool_vec = np.zeros(len(champs), dtype=np.float32)
+            wr_vec = np.zeros(len(champs), dtype=np.float32)
+            for r_i, r in enumerate(ROLES):
+                player = roster.get(r)
+                if player is None or player not in pools.games:
+                    wr_vec += p_open[r_i] * 0.5  # neutral prior, matches shrinkage
+                    continue
+                pkey = (player, day)
+                if pkey not in pool_cache:
+                    pool_cache[pkey] = (
+                        pools.share_vec(player, day),
+                        pools.wr_vec(player, day),
+                    )
+                sv, wv = pool_cache[pkey]
+                pool_vec += p_open[r_i] * sv
+                wr_vec += p_open[r_i] * wv
             out.append(pd.DataFrame({
                 "gameid": gameid,
                 "date": rec["date"],
@@ -330,6 +489,8 @@ def build() -> pd.DataFrame:
                 "opp_usage": usage[opp][ci],
                 "role_need": cand_shares @ p_open,
                 "role_overlap_max": (cand_shares * p_open).max(axis=1),
+                "player_pool": pool_vec[ci],
+                "player_wr": wr_vec[ci],
                 "label": [int(c == actual) for c in avail],
             }))
             taken.add(actual)

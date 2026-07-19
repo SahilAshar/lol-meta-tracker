@@ -1,6 +1,6 @@
 # Roadmap & Pickup Notes
 
-*Last updated: 2026-07-19 (draft model v0.5 session). This doc is the "where
+*Last updated: 2026-07-19 (draft model v0.6 session). This doc is the "where
 were we" file — read it first when resuming work.*
 
 ## Current state (all working, all verified)
@@ -17,11 +17,15 @@ were we" file — read it first when resuming work.*
   leagues). Defaults to 2026-07-22 (summer start); auto-falls-back to last 8 weeks
   until then.
 - **Draft next-pick model**: `scripts/draft_dataset.py` + `scripts/train_draft_model.py`.
-  v0.5 (role-constraint features) blind-tested on the EWC July main event:
-  top-1/3/5 = 11.7/29.3/40.9 vs meta baseline 8.4/25.9/36.4 — beats both baselines
-  at every k. Gains concentrate in phase-2 picks (top-5 18.6 → 39.0), exactly where
-  role constraints bind. Comparison in `data/processed/draft_model_metrics_v05.json`
-  (v0 block included).
+  v0.6 (per-player pool features: trailing-180d player-champion history composed
+  with the v0.5 open-role probabilities; rosters inferred by recency with
+  majority-role assignment) blind-tested on the EWC July main event:
+  top-1/3/5 = 10.7/31.7/42.8 vs meta baseline 8.4/25.9/36.4 (v0.5: 11.7/29.3/40.9).
+  Bans 10.2/31.4/40.5 now beat the meta baseline (9.1/30.2/40.7) at top-1/3 and
+  tie at top-5 — the v0.5 ban gap is closed. The ~1pt top-1 dip vs v0.5 is within
+  early-stopping seed noise (verified on val with seeds 17/42). Comparison in
+  `data/processed/draft_model_metrics_v06.json` (v0.5 + v0 blocks included; the
+  train script auto-refits the v0.5 feature set if the test set ever grows).
 
 ## Open loops (near-term, in order)
 
@@ -30,14 +34,17 @@ were we" file — read it first when resuming work.*
    reads (Nocturne paradox, expected bans). Finals were July 19; results land in
    the CSV ~July 20. Append an honest scorecard section to the preview.
    NOTE 2026-07-19: Drive download is returning "Quota exceeded" for the 2026 CSV
-   (transient, popular-file limit — not a stale ID). Retry the download before
-   scoring; also re-run the draft blind test once finals games land (test set
-   grows past 43 games).
-2. **Draft model rung 3** — v0.5 (role-constraint features) done and beats the
-   meta baseline at every k; next per the ladder is the small transformer with
-   learned champion embeddings (t-SNE of embeddings = flex/role clusters).
-   Remaining v0.x idea: opponent-pool features for bans (bans still trail the
-   meta baseline at top-3/5).
+   (transient, popular-file limit — not a stale ID; still failing as of the v0.6
+   session, evening of 7/19). Retry the download before scoring; also re-run the
+   draft blind test once finals games land (test set grows past 43 games —
+   `train_draft_model.py` now auto-refits the v0.5 feature set for comparability
+   when that happens).
+2. **Draft model rung 3** — v0.6 (per-player pool features) done; ban gap closed
+   (bans beat meta at top-1/3, tie at top-5). Next per the ladder is the small
+   transformer with learned champion embeddings (t-SNE of embeddings = flex/role
+   clusters). Data-quality note: OE scrambled position labels in one Gen.G game
+   (2026-07-17) — roster inference guards against this via majority-role
+   assignment, but spot-checks vs Leaguepedia stay cheap insurance.
 3. **Write the "meta entering summer" debut piece** — full EWC + MSI patch 16.13
    sample (115 international games), framed for @lolmetatracker's first thread
    (handle being grabbed). Prediction scorecard = credibility receipt.
