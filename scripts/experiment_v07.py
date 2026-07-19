@@ -19,11 +19,9 @@ from lightgbm import LGBMRanker, early_stopping
 from sklearn.ensemble import HistGradientBoostingClassifier
 
 from common import DATA_PROCESSED
-from train_draft_model import FEATURES as FEATURES_V06
-from train_draft_model import VAL_DAYS, topk_accuracy
+from train_draft_model import FEATURES_V06, SEEDS, VAL_DAYS, topk_accuracy
 
 FEATURES_V07 = FEATURES_V06 + ["pair_syn", "pair_ctr"]
-SEEDS = [16, 17, 42, 7, 23]
 
 
 def fit_clf(features: list[str], train: pd.DataFrame, seed: int):

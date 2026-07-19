@@ -1,15 +1,17 @@
-"""Train the v0.6 next-pick model and blind-score it on the EWC main event.
+"""Train the v0.7 next-pick model and blind-score it on the EWC main event.
 
-Pointwise ranking: a gradient-boosted classifier over (decision, candidate) rows
-from draft_dataset.py. At eval time, candidates for each decision are ranked by
-score; we report top-1/3/5 accuracy against the champion actually picked/banned.
+At eval time, candidates for each decision are ranked by score; we report
+top-1/3/5 accuracy against the champion actually picked/banned.
 
-v0.6 = v0.5 features + per-player pool features (player_pool, player_wr) from
-draft_dataset.py. Model params and split are identical to v0.5; the stored
-v0.5 and v0 metrics blocks are copied into the output so the comparison lives
-in one file. If the test set has grown since v0.5 was scored (new games in the
-CSV), the v0.5 feature set is retrained on the current data instead, so the
-comparison stays apples-to-apples.
+v0.7 = v0.6 + champion-pair features (pair_syn, pair_ctr) + a 10-model
+ensemble: 5 seeds x {HistGradientBoosting classifier, LGBMRanker lambdarank},
+scores rank-averaged with equal weight between the two families. Chosen on
+val only (experiment_v07*.py): the ranker family wins top-1, the classifier
+family wins top-5, seeds and even platforms shift any single fit's top-1 by
++/-1.5pts, and the equal blend dominates both families. Stored v0.6/v0.5/v0
+blocks are copied into the output; if the test set has grown since they were
+scored, those feature sets are refit on the current data (original
+single-model config) so the comparison stays apples-to-apples.
 
 Split design (temporal, no leakage):
   - test  = EWC July main event (patch 16.13)
@@ -20,17 +22,19 @@ Split design (temporal, no leakage):
 Baselines: rank by trailing-28d meta rates (pick_rate for picks, presence for
 bans) and by trailing-56d team habit (team_usage for picks, opp_usage for bans).
 
-Output: data/processed/draft_model_metrics_v06.json,
-        data/processed/draft_model_v06.joblib
+Output: data/processed/draft_model_metrics_v07.json,
+        data/processed/draft_model_v07.joblib
 """
 
 from __future__ import annotations
 
 import json
+import platform
 
 import joblib
 import numpy as np
 import pandas as pd
+from lightgbm import LGBMRanker, early_stopping
 from sklearn.ensemble import HistGradientBoostingClassifier
 
 from common import DATA_PROCESSED
@@ -40,9 +44,11 @@ FEATURES_V05 = [
     "is_ban", "phase2", "is_blue", "ordinal", "fearless", "game_in_series",
     "role_need", "role_overlap_max",
 ]
-FEATURES = FEATURES_V05 + ["player_pool", "player_wr"]
+FEATURES_V06 = FEATURES_V05 + ["player_pool", "player_wr"]
+FEATURES = FEATURES_V06 + ["pair_syn", "pair_ctr"]
+SEEDS = [16, 17, 42, 7, 23]
 VAL_DAYS = 14
-VERSION = "v0.6"
+VERSION = "v0.7"
 
 
 def topk_accuracy(df: pd.DataFrame, score_col: str) -> dict:
@@ -72,7 +78,7 @@ def topk_accuracy(df: pd.DataFrame, score_col: str) -> dict:
     }
 
 
-def fit_model(features: list[str], train: pd.DataFrame) -> HistGradientBoostingClassifier:
+def fit_clf(features: list[str], train: pd.DataFrame, seed: int = 16):
     model = HistGradientBoostingClassifier(
         max_iter=600,
         learning_rate=0.08,
@@ -81,20 +87,53 @@ def fit_model(features: list[str], train: pd.DataFrame) -> HistGradientBoostingC
         early_stopping=True,
         validation_fraction=0.1,
         n_iter_no_change=25,
-        random_state=16,
+        random_state=seed,
     )
     model.fit(train[features], train["label"])
-    print(f"iterations used ({len(features)} features): {model.n_iter_}")
+    print(f"clf seed={seed} ({len(features)} features): {model.n_iter_} iterations")
     return model
 
 
-def score_splits(
-    model: HistGradientBoostingClassifier, features: list[str],
-    val: pd.DataFrame, test: pd.DataFrame,
-) -> dict:
+def fit_ranker(features: list[str], train: pd.DataFrame, seed: int):
+    """LambdaRank over decision groups; 10% of games held out for early stop."""
+    games = train.gameid.unique()
+    rng = np.random.RandomState(seed)
+    holdout = set(rng.choice(games, size=len(games) // 10, replace=False))
+    fit_df = train[~train.gameid.isin(holdout)].sort_values(["gameid", "seq"])
+    es_df = train[train.gameid.isin(holdout)].sort_values(["gameid", "seq"])
+    groups = fit_df.groupby(["gameid", "seq"], sort=False).size().to_numpy()
+    es_groups = es_df.groupby(["gameid", "seq"], sort=False).size().to_numpy()
+    model = LGBMRanker(
+        objective="lambdarank", n_estimators=600, learning_rate=0.08,
+        num_leaves=63, min_child_samples=50, random_state=seed, verbose=-1,
+    )
+    model.fit(
+        fit_df[features], fit_df["label"], group=groups,
+        eval_set=[(es_df[features], es_df["label"])], eval_group=[es_groups],
+        eval_at=[5], callbacks=[early_stopping(25, verbose=False)],
+    )
+    print(f"ranker seed={seed} ({len(features)} features): {model.best_iteration_} iterations")
+    return model
+
+
+def ensemble_score(models: dict, features: list[str], part: pd.DataFrame) -> np.ndarray:
+    """Equal-weight rank-average: mean pct-rank within family, then mean of
+    the two families (pct-ranks are monotone per model, so within-decision
+    ordering is preserved)."""
+    def family(ms, predict):
+        return np.mean([
+            pd.Series(predict(m)).rank(pct=True).to_numpy() for m in ms
+        ], axis=0)
+
+    clf = family(models["clf"], lambda m: m.predict_proba(part[features])[:, 1])
+    rank = family(models["rank"], lambda m: m.predict(part[features]))
+    return (clf + rank) / 2.0
+
+
+def score_splits(score_fn, val: pd.DataFrame, test: pd.DataFrame) -> dict:
     out = {}
     for name, part in [("val", val.copy()), ("test_ewc_main", test.copy())]:
-        part["model_score"] = model.predict_proba(part[features])[:, 1]
+        part["model_score"] = score_fn(part)
         part["baseline_meta"] = np.where(part.is_ban == 1, part.presence, part.pick_rate)
         part["baseline_team"] = np.where(part.is_ban == 1, part.opp_usage, part.team_usage)
         out[name] = {
@@ -119,33 +158,49 @@ def main() -> None:
         print(f"  {name}: {part.gameid.nunique()} games, "
               f"{part.groupby(['gameid', 'seq']).ngroups} decisions")
 
-    model = fit_model(FEATURES, train)
-    results = {"version": VERSION, "cutoff": str(cutoff), "features": FEATURES}
-    results.update(score_splits(model, FEATURES, val, test))
+    models = {
+        "clf": [fit_clf(FEATURES, train, s) for s in SEEDS],
+        "rank": [fit_ranker(FEATURES, train, s) for s in SEEDS],
+    }
+    results = {
+        "version": VERSION, "cutoff": str(cutoff), "features": FEATURES,
+        "ensemble": {"seeds": SEEDS, "families": ["hist_gbm_clf", "lgbm_lambdarank"],
+                     "blend": "equal-weight rank average"},
+        "platform": platform.platform(),
+    }
+    results.update(score_splits(
+        lambda part: ensemble_score(models, FEATURES, part), val, test))
 
-    # Carry the v0.5 (and v0) comparison blocks forward. If the test set has
-    # changed since v0.5 was scored, its stored numbers are not comparable —
-    # refit the v0.5 feature set on the current data instead.
-    v05_path = DATA_PROCESSED / "draft_model_metrics_v05.json"
-    if v05_path.exists():
-        stored = json.loads(v05_path.read_text())
+    # Carry the v0.6/v0.5/v0 comparison blocks forward. If the test set has
+    # changed since they were scored, refit those feature sets (original
+    # single-model config) on the current data instead.
+    v06_path = DATA_PROCESSED / "draft_model_metrics_v06.json"
+    if v06_path.exists():
+        stored = json.loads(v06_path.read_text())
         results["v0"] = stored.pop("v0", None)
+        results["v0.5"] = stored.pop("v0.5", None)
         n_test = test.groupby(["gameid", "seq"]).ngroups
         stored_n = stored["test_ewc_main"]["model"]["all"]["n"]
         if stored_n == n_test:
-            results["v0.5"] = stored
+            results["v0.6"] = stored
         else:
             print(f"test set changed ({stored_n} -> {n_test} decisions); "
-                  "refitting v0.5 feature set for comparability")
-            v05 = {"version": "v0.5 (refit)", "features": FEATURES_V05,
-                   "stored_v05_test_n": stored_n}
-            v05.update(score_splits(fit_model(FEATURES_V05, train), FEATURES_V05, val, test))
-            results["v0.5"] = v05
+                  "refitting v0.5/v0.6 feature sets for comparability")
+            for tag, feats in [("v0.5", FEATURES_V05), ("v0.6", FEATURES_V06)]:
+                m = fit_clf(feats, train, 16)
+                blk = {"version": f"{tag} (refit)", "features": feats,
+                       "stored_test_n": stored_n}
+                blk.update(score_splits(
+                    lambda part, m=m, f=feats: m.predict_proba(part[f])[:, 1],
+                    val, test))
+                results[tag] = blk
 
-    out = DATA_PROCESSED / "draft_model_metrics_v06.json"
+    out = DATA_PROCESSED / "draft_model_metrics_v07.json"
     out.write_text(json.dumps(results, indent=2))
-    joblib.dump(model, DATA_PROCESSED / "draft_model_v06.joblib")
-    print(json.dumps({k: v for k, v in results.items() if k not in ("v0", "v0.5")}, indent=2))
+    joblib.dump(models, DATA_PROCESSED / "draft_model_v07.joblib")
+    print(json.dumps(
+        {k: v for k, v in results.items() if k not in ("v0", "v0.5", "v0.6")},
+        indent=2))
 
 
 if __name__ == "__main__":
