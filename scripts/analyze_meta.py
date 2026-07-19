@@ -6,6 +6,8 @@ start July 22-29 — falls back to the most recent 8 weeks of available data so
 the pipeline always produces output.
 
 Outputs to data/processed/:
+  major_leagues.parquet     full-column archive of all 4-league rows for the year
+                            (git-committed insurance + fast reloads + DuckDB substrate)
   pick_rates.csv            league, champion, games_picked, total_games, pick_rate
   ban_rates.csv             league, champion, games_banned, total_games, ban_rate
   pick_rate_comparison.csv  champion x league pivot of pick rates (+ mean)
@@ -35,11 +37,19 @@ USECOLS = [
 
 
 def load_major_leagues(year: int) -> pd.DataFrame:
+    """Load 4-league rows and refresh the full-column parquet archive."""
     path = raw_csv_path(year)
     if not path.exists():
         raise FileNotFoundError(f"{path} not found — run scripts/download_data.py first")
-    df = pd.read_csv(path, usecols=USECOLS, low_memory=False)
-    df = df[df["league"].isin(MAJOR_LEAGUES)].copy()
+    full = pd.read_csv(path, low_memory=False)
+    full = full[full["league"].isin(MAJOR_LEAGUES)].copy()
+
+    DATA_PROCESSED.mkdir(parents=True, exist_ok=True)
+    snapshot = DATA_PROCESSED / "major_leagues.parquet"
+    full.to_parquet(snapshot, index=False)
+    print(f"Snapshot: {snapshot.name} ({snapshot.stat().st_size / 1e6:.1f} MB, {len(full)} rows)")
+
+    df = full[USECOLS].copy()
     df["date"] = pd.to_datetime(df["date"], errors="coerce")
     return df.dropna(subset=["date"])
 

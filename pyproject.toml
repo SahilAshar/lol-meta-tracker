@@ -9,6 +9,7 @@ dependencies = [
     "seaborn>=0.13",
     "requests>=2.31",
     "plotly>=5.20",
+    "pyarrow>=15.0",
 ]
 
 [tool.uv]

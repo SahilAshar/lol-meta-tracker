@@ -11,6 +11,8 @@ __pycache__/
 # Scratch formats
 *.feather
 *.parquet
+# ...but the committed weekly archive is the point
+!data/processed/major_leagues.parquet
 
 # OS
 .DS_Store
