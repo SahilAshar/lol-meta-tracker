@@ -1,0 +1,16 @@
+# Raw Oracle's Elixir CSVs are ~50MB+ and re-downloadable — keep out of git
+data/raw/*.csv
+data/raw/*.csv.part
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.env
+
+# Scratch formats
+*.feather
+*.parquet
+
+# OS
+.DS_Store
