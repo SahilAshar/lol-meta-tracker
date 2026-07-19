@@ -1,14 +1,19 @@
-"""Weekly pipeline orchestrator: download → analyze → charts → markdown report.
+"""Daily pipeline orchestrator: download → analyze → charts → markdown report.
+
+Runs daily; skips all computation if the source CSV is unchanged since the
+last run (Oracle's Elixir updates roughly once a day, but not on a fixed
+schedule). Always writes reports/latest.md; with --snapshot (Mondays in CI)
+also writes a dated reports/YYYY-MM-DD-meta-report.md for the archive.
 
 Usage:
-  python scripts/weekly_report.py                # full run
-  python scripts/weekly_report.py --skip-download  # reuse existing raw CSV
-
-Writes reports/YYYY-MM-DD-meta-report.md and refreshes the "Latest Report"
-link in README.md.
+  python scripts/daily_report.py                   # full run
+  python scripts/daily_report.py --skip-download   # reuse existing raw CSV
+  python scripts/daily_report.py --force           # recompute even if unchanged
+  python scripts/daily_report.py --snapshot        # also write dated snapshot
 """
 
 import argparse
+import hashlib
 import json
 import re
 import subprocess
@@ -18,9 +23,19 @@ from pathlib import Path
 
 import pandas as pd
 
-from common import DATA_PROCESSED, MAJOR_LEAGUES, REPO_ROOT, REPORTS_DIR
+from common import DATA_PROCESSED, MAJOR_LEAGUES, REPO_ROOT, REPORTS_DIR, raw_csv_path
+
+HASH_FILE = DATA_PROCESSED / "source.sha256"
 
 SCRIPTS = Path(__file__).resolve().parent
+
+
+def source_hash() -> str:
+    h = hashlib.sha256()
+    with open(raw_csv_path(), "rb") as f:
+        for chunk in iter(lambda: f.read(1 << 20), b""):
+            h.update(chunk)
+    return h.hexdigest()
 
 
 def run_step(script: str, *extra: str) -> None:
@@ -36,7 +51,7 @@ def md_rate_table(df: pd.DataFrame, rate_col: str, count_col: str, top: int = 10
     return "\n".join(lines)
 
 
-def build_report(report_date: str) -> Path:
+def build_report(report_date: str, snapshot: bool = False) -> Path:
     meta = json.loads((DATA_PROCESSED / "meta.json").read_text())
     pick_rates = pd.read_csv(DATA_PROCESSED / "pick_rates.csv")
     ban_rates = pd.read_csv(DATA_PROCESSED / "ban_rates.csv")
@@ -82,9 +97,13 @@ def build_report(report_date: str) -> Path:
               "Note: some 2026 draft/champion-select data has known issues pending upstream fix._", ""]
 
     REPORTS_DIR.mkdir(parents=True, exist_ok=True)
-    out = REPORTS_DIR / f"{report_date}-meta-report.md"
+    out = REPORTS_DIR / "latest.md"
     out.write_text("\n".join(parts))
     print(f"\nWrote {out.relative_to(REPO_ROOT)}")
+    if snapshot:
+        dated = REPORTS_DIR / f"{report_date}-meta-report.md"
+        dated.write_text("\n".join(parts))
+        print(f"Wrote snapshot {dated.relative_to(REPO_ROOT)}")
     return out
 
 
@@ -93,7 +112,7 @@ def update_readme_latest(report_path: Path, report_date: str) -> None:
     if not readme.exists():
         return
     rel = report_path.relative_to(REPO_ROOT)
-    link = f"[{report_date} meta report]({rel})"
+    link = f"[Latest meta report ({report_date})]({rel})"
     text = readme.read_text()
     new = re.sub(
         r"(<!-- LATEST-REPORT -->).*?(<!-- /LATEST-REPORT -->)",
@@ -110,17 +129,27 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--skip-download", action="store_true")
     parser.add_argument("--since", default=None, help="Override analysis window start")
+    parser.add_argument("--force", action="store_true", help="Recompute even if source CSV unchanged")
+    parser.add_argument("--snapshot", action="store_true", help="Also write dated report snapshot")
     args = parser.parse_args()
 
     if not args.skip_download:
         run_step("download_data.py")
+
+    new_hash = source_hash()
+    old_hash = HASH_FILE.read_text().strip() if HASH_FILE.exists() else None
+    if new_hash == old_hash and not args.force:
+        print("Source CSV unchanged since last run — nothing to recompute.")
+        return
+
     analyze_args = ["--since", args.since] if args.since else []
     run_step("analyze_meta.py", *analyze_args)
     run_step("generate_charts.py")
 
     report_date = date.today().isoformat()
-    report = build_report(report_date)
+    report = build_report(report_date, snapshot=args.snapshot)
     update_readme_latest(report, report_date)
+    HASH_FILE.write_text(new_hash + "\n")
     print("\nDone.")
 
 
