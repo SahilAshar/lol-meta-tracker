@@ -65,6 +65,55 @@ KC's signature Rumble (8 games, 88% WR) has already eaten 5 targeted bans this e
 decide a long series. The upset case is real: KC's comeback vs T1 showed they don't
 fold from behind, and if Rumble/Gnar priority survives draft, blue-side KC wins fast games.
 
+## Draft preview: KC vs DK on patch 16.13
+
+All international play (MSI + EWC knockouts) has been on **patch 16.13** — 115 games
+of draft data. Top-table presence: **Vi 73%, Poppy 71%, Jayce 70%, Orianna 69%,
+Nocturne 63%**.
+
+### The Nocturne paradox
+
+Nocturne is the most-banned champion of the event overall — DK banned it 3× today,
+KC 2× — but **neither Yike nor Lucid has played it on this patch**. Those bans were
+aimed at other junglers (Oner, Canyon). Head-to-head, both teams can safely release
+it, freeing a phase-1 ban each. Watch whether either team respects it anyway — a
+wasted Nocturne ban is a small draft win for the other side.
+
+### Expected phase-1 bans
+
+- **DK targeting KC:** Rumble (Canna: 4W-1L on 16.13, 88% since Jun 1 — already 5
+  targeted bans this event), then two of Vi / Orianna / Qiyana aimed at Yike and
+  kyeahoo. Poppy (63% ban rate at internationals) to protect Lucid's early pathing.
+- **KC targeting DK:** Lee Sin (Lucid's most-played), Taliyah (3G-0L split between
+  ShowMaker and Smash), and Viktor — Smash is 2-0 on it and Gen.G burned **three**
+  Viktor bans against DK today; that's the market telling you what it fears.
+
+### The contested pool
+
+Champions both teams actively play on 16.13, where draft priority will collide:
+
+| Champion | KC | DK | Note |
+|---|---|---|---|
+| Vi | 2G, 100% | 2G, 100% | Both junglers; 73% presence — likely ban-or-first-pick |
+| Jayce | 2G, 100% | 3G, 67% | Canna and Siwoo both flex it |
+| Syndra | 2G, 100% | 4G, 50% | Both mids |
+| Xin Zhao | 2G, 50% | 3G, 67% | Jungle fallback for both |
+| Lucian+Milio | KC 1G | DK 2G, 100% | The premier bot duo; DK runs it more |
+| Camille | 3G (support!) | 2G, 100% (support!) | **Both teams play Camille support** — live tech |
+
+### Pool asymmetry — the hidden edge
+
+- **Caliste (KC bot): 12 unique champions** in the international sample — functionally
+  un-target-bannable. KC's draft flexibility lives here.
+- **Smash (DK bot): 8 champions, hyper-efficient** (7.7 KDA since Jun 1) but the
+  narrower pool means KC can actually spend bans on him (Lucian, Viktor, Kai'Sa).
+- **First picks on blue:** KC defaults to Vi/Orianna; DK to Ryze/Lee Sin. If Vi and
+  Orianna are both banned out, KC's blue-side plan A disappears — DK's doesn't.
+
+**Draft read:** DK has more ways to get a comfortable five; KC has the single
+scariest card (Rumble) and the widest bot pool. Expect games decided in the
+Vi/Jayce/Orianna triangle and won on whichever side solves red-side draft first.
+
 ---
 *Data: [Oracle's Elixir](https://oracleselixir.com). Predictions are heuristic reads
 of team-level stats, not a trained model. Written before finals day; results will be
