@@ -1,0 +1,590 @@
+{
+  "version": "v0.7",
+  "cutoff": "2026-07-15 09:41:28",
+  "features": [
+    "pick_rate",
+    "ban_rate",
+    "presence",
+    "team_usage",
+    "opp_usage",
+    "is_ban",
+    "phase2",
+    "is_blue",
+    "ordinal",
+    "fearless",
+    "game_in_series",
+    "role_need",
+    "role_overlap_max",
+    "player_pool",
+    "player_wr",
+    "pair_syn",
+    "pair_ctr"
+  ],
+  "ensemble": {
+    "seeds": [
+      16,
+      17,
+      42,
+      7,
+      23
+    ],
+    "families": [
+      "hist_gbm_clf",
+      "lgbm_lambdarank"
+    ],
+    "blend": "equal-weight rank average"
+  },
+  "platform": "Linux-6.8.0-1052-azure-x86_64-with-glibc2.41",
+  "val": {
+    "model": {
+      "all": {
+        "n": 1080,
+        "top1": 0.1324,
+        "top3": 0.3278,
+        "top5": 0.4407
+      },
+      "picks": {
+        "n": 540,
+        "top1": 0.1259,
+        "top3": 0.3,
+        "top5": 0.4315
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.1389,
+        "top3": 0.3556,
+        "top5": 0.45
+      }
+    },
+    "baseline_meta": {
+      "all": {
+        "n": 1080,
+        "top1": 0.0657,
+        "top3": 0.2241,
+        "top5": 0.3037
+      },
+      "picks": {
+        "n": 540,
+        "top1": 0.0593,
+        "top3": 0.1722,
+        "top5": 0.2333
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.0722,
+        "top3": 0.2759,
+        "top5": 0.3741
+      }
+    },
+    "baseline_team": {
+      "all": {
+        "n": 1080,
+        "top1": 0.0481,
+        "top3": 0.1139,
+        "top5": 0.1907
+      },
+      "picks": {
+        "n": 540,
+        "top1": 0.037,
+        "top3": 0.1167,
+        "top5": 0.1889
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.0593,
+        "top3": 0.1111,
+        "top5": 0.1926
+      }
+    }
+  },
+  "test_ewc_main": {
+    "model": {
+      "all": {
+        "n": 860,
+        "top1": 0.1116,
+        "top3": 0.3198,
+        "top5": 0.414
+      },
+      "picks": {
+        "n": 430,
+        "top1": 0.1233,
+        "top3": 0.3302,
+        "top5": 0.4233
+      },
+      "bans": {
+        "n": 430,
+        "top1": 0.1,
+        "top3": 0.3093,
+        "top5": 0.4047
+      }
+    },
+    "baseline_meta": {
+      "all": {
+        "n": 860,
+        "top1": 0.0837,
+        "top3": 0.2593,
+        "top5": 0.364
+      },
+      "picks": {
+        "n": 430,
+        "top1": 0.0767,
+        "top3": 0.2163,
+        "top5": 0.3209
+      },
+      "bans": {
+        "n": 430,
+        "top1": 0.0907,
+        "top3": 0.3023,
+        "top5": 0.407
+      }
+    },
+    "baseline_team": {
+      "all": {
+        "n": 860,
+        "top1": 0.0593,
+        "top3": 0.1233,
+        "top5": 0.1884
+      },
+      "picks": {
+        "n": 430,
+        "top1": 0.0581,
+        "top3": 0.1093,
+        "top5": 0.1767
+      },
+      "bans": {
+        "n": 430,
+        "top1": 0.0605,
+        "top3": 0.1372,
+        "top5": 0.2
+      }
+    }
+  },
+  "v0": {
+    "cutoff": "2026-07-15 09:41:28",
+    "features": [
+      "pick_rate",
+      "ban_rate",
+      "presence",
+      "team_usage",
+      "opp_usage",
+      "is_ban",
+      "phase2",
+      "is_blue",
+      "ordinal",
+      "fearless",
+      "game_in_series"
+    ],
+    "val": {
+      "model": {
+        "all": {
+          "n": 1080,
+          "top1": 0.0852,
+          "top3": 0.2231,
+          "top5": 0.3194
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.0796,
+          "top3": 0.1833,
+          "top5": 0.2741
+        },
+        "bans": {
+          "n": 540,
+          "top1": 0.0907,
+          "top3": 0.263,
+          "top5": 0.3648
+        }
+      },
+      "baseline_meta": {
+        "all": {
+          "n": 1080,
+          "top1": 0.0657,
+          "top3": 0.2241,
+          "top5": 0.3037
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.0593,
+          "top3": 0.1722,
+          "top5": 0.2333
+        },
+        "bans": {
+          "n": 540,
+          "top1": 0.0722,
+          "top3": 0.2759,
+          "top5": 0.3741
+        }
+      },
+      "baseline_team": {
+        "all": {
+          "n": 1080,
+          "top1": 0.0481,
+          "top3": 0.1139,
+          "top5": 0.1907
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.037,
+          "top3": 0.1167,
+          "top5": 0.1889
+        },
+        "bans": {
+          "n": 540,
+          "top1": 0.0593,
+          "top3": 0.1111,
+          "top5": 0.1926
+        }
+      }
+    },
+    "test_ewc_main": {
+      "model": {
+        "all": {
+          "n": 860,
+          "top1": 0.107,
+          "top3": 0.2477,
+          "top5": 0.3605
+        },
+        "picks": {
+          "n": 430,
+          "top1": 0.1023,
+          "top3": 0.2349,
+          "top5": 0.3349
+        },
+        "bans": {
+          "n": 430,
+          "top1": 0.1116,
+          "top3": 0.2605,
+          "top5": 0.386
+        }
+      },
+      "baseline_meta": {
+        "all": {
+          "n": 860,
+          "top1": 0.0837,
+          "top3": 0.2593,
+          "top5": 0.364
+        },
+        "picks": {
+          "n": 430,
+          "top1": 0.0767,
+          "top3": 0.2163,
+          "top5": 0.3209
+        },
+        "bans": {
+          "n": 430,
+          "top1": 0.0907,
+          "top3": 0.3023,
+          "top5": 0.407
+        }
+      },
+      "baseline_team": {
+        "all": {
+          "n": 860,
+          "top1": 0.0593,
+          "top3": 0.1233,
+          "top5": 0.1884
+        },
+        "picks": {
+          "n": 430,
+          "top1": 0.0581,
+          "top3": 0.1093,
+          "top5": 0.1767
+        },
+        "bans": {
+          "n": 430,
+          "top1": 0.0605,
+          "top3": 0.1372,
+          "top5": 0.2
+        }
+      }
+    }
+  },
+  "v0.5": {
+    "version": "v0.5",
+    "cutoff": "2026-07-15 09:41:28",
+    "features": [
+      "pick_rate",
+      "ban_rate",
+      "presence",
+      "team_usage",
+      "opp_usage",
+      "is_ban",
+      "phase2",
+      "is_blue",
+      "ordinal",
+      "fearless",
+      "game_in_series",
+      "role_need",
+      "role_overlap_max"
+    ],
+    "val": {
+      "model": {
+        "all": {
+          "n": 1080,
+          "top1": 0.1204,
+          "top3": 0.2963,
+          "top5": 0.4111
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.113,
+          "top3": 0.2648,
+          "top5": 0.3815
+        },
+        "bans": {
+          "n": 540,
+          "top1": 0.1278,
+          "top3": 0.3278,
+          "top5": 0.4407
+        }
+      },
+      "baseline_meta": {
+        "all": {
+          "n": 1080,
+          "top1": 0.0657,
+          "top3": 0.2241,
+          "top5": 0.3037
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.0593,
+          "top3": 0.1722,
+          "top5": 0.2333
+        },
+        "bans": {
+          "n": 540,
+          "top1": 0.0722,
+          "top3": 0.2759,
+          "top5": 0.3741
+        }
+      },
+      "baseline_team": {
+        "all": {
+          "n": 1080,
+          "top1": 0.0481,
+          "top3": 0.1139,
+          "top5": 0.1907
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.037,
+          "top3": 0.1167,
+          "top5": 0.1889
+        },
+        "bans": {
+          "n": 540,
+          "top1": 0.0593,
+          "top3": 0.1111,
+          "top5": 0.1926
+        }
+      }
+    },
+    "test_ewc_main": {
+      "model": {
+        "all": {
+          "n": 860,
+          "top1": 0.1174,
+          "top3": 0.293,
+          "top5": 0.4093
+        },
+        "picks": {
+          "n": 430,
+          "top1": 0.1209,
+          "top3": 0.307,
+          "top5": 0.4302
+        },
+        "bans": {
+          "n": 430,
+          "top1": 0.114,
+          "top3": 0.2791,
+          "top5": 0.3884
+        }
+      },
+      "baseline_meta": {
+        "all": {
+          "n": 860,
+          "top1": 0.0837,
+          "top3": 0.2593,
+          "top5": 0.364
+        },
+        "picks": {
+          "n": 430,
+          "top1": 0.0767,
+          "top3": 0.2163,
+          "top5": 0.3209
+        },
+        "bans": {
+          "n": 430,
+          "top1": 0.0907,
+          "top3": 0.3023,
+          "top5": 0.407
+        }
+      },
+      "baseline_team": {
+        "all": {
+          "n": 860,
+          "top1": 0.0593,
+          "top3": 0.1233,
+          "top5": 0.1884
+        },
+        "picks": {
+          "n": 430,
+          "top1": 0.0581,
+          "top3": 0.1093,
+          "top5": 0.1767
+        },
+        "bans": {
+          "n": 430,
+          "top1": 0.0605,
+          "top3": 0.1372,
+          "top5": 0.2
+        }
+      }
+    }
+  },
+  "v0.6": {
+    "version": "v0.6",
+    "cutoff": "2026-07-15 09:41:28",
+    "features": [
+      "pick_rate",
+      "ban_rate",
+      "presence",
+      "team_usage",
+      "opp_usage",
+      "is_ban",
+      "phase2",
+      "is_blue",
+      "ordinal",
+      "fearless",
+      "game_in_series",
+      "role_need",
+      "role_overlap_max",
+      "player_pool",
+      "player_wr"
+    ],
+    "val": {
+      "model": {
+        "all": {
+          "n": 1080,
+          "top1": 0.087,
+          "top3": 0.2907,
+          "top5": 0.4241
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.1,
+          "top3": 0.2704,
+          "top5": 0.4056
+        },
+        "bans": {
+          "n": 540,
+          "top1": 0.0741,
+          "top3": 0.3111,
+          "top5": 0.4426
+        }
+      },
+      "baseline_meta": {
+        "all": {
+          "n": 1080,
+          "top1": 0.0657,
+          "top3": 0.2241,
+          "top5": 0.3037
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.0593,
+          "top3": 0.1722,
+          "top5": 0.2333
+        },
+        "bans": {
+          "n": 540,
+          "top1": 0.0722,
+          "top3": 0.2759,
+          "top5": 0.3741
+        }
+      },
+      "baseline_team": {
+        "all": {
+          "n": 1080,
+          "top1": 0.0481,
+          "top3": 0.1139,
+          "top5": 0.1907
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.037,
+          "top3": 0.1167,
+          "top5": 0.1889
+        },
+        "bans": {
+          "n": 540,
+          "top1": 0.0593,
+          "top3": 0.1111,
+          "top5": 0.1926
+        }
+      }
+    },
+    "test_ewc_main": {
+      "model": {
+        "all": {
+          "n": 860,
+          "top1": 0.107,
+          "top3": 0.3174,
+          "top5": 0.4279
+        },
+        "picks": {
+          "n": 430,
+          "top1": 0.1116,
+          "top3": 0.3209,
+          "top5": 0.4512
+        },
+        "bans": {
+          "n": 430,
+          "top1": 0.1023,
+          "top3": 0.314,
+          "top5": 0.4047
+        }
+      },
+      "baseline_meta": {
+        "all": {
+          "n": 860,
+          "top1": 0.0837,
+          "top3": 0.2593,
+          "top5": 0.364
+        },
+        "picks": {
+          "n": 430,
+          "top1": 0.0767,
+          "top3": 0.2163,
+          "top5": 0.3209
+        },
+        "bans": {
+          "n": 430,
+          "top1": 0.0907,
+          "top3": 0.3023,
+          "top5": 0.407
+        }
+      },
+      "baseline_team": {
+        "all": {
+          "n": 860,
+          "top1": 0.0593,
+          "top3": 0.1233,
+          "top5": 0.1884
+        },
+        "picks": {
+          "n": 430,
+          "top1": 0.0581,
+          "top3": 0.1093,
+          "top5": 0.1767
+        },
+        "bans": {
+          "n": 430,
+          "top1": 0.0605,
+          "top3": 0.1372,
+          "top5": 0.2
+        }
+      }
+    }
+  }
+}

@@ -1,6 +1,6 @@
 # Roadmap & Pickup Notes
 
-*Last updated: 2026-07-19 (draft model v0.6 session). This doc is the "where
+*Last updated: 2026-07-19 (draft model v0.7 session). This doc is the "where
 were we" file — read it first when resuming work.*
 
 ## Current state (all working, all verified)
@@ -17,15 +17,18 @@ were we" file — read it first when resuming work.*
   leagues). Defaults to 2026-07-22 (summer start); auto-falls-back to last 8 weeks
   until then.
 - **Draft next-pick model**: `scripts/draft_dataset.py` + `scripts/train_draft_model.py`.
-  v0.6 (per-player pool features: trailing-180d player-champion history composed
-  with the v0.5 open-role probabilities; rosters inferred by recency with
-  majority-role assignment) blind-tested on the EWC July main event:
-  top-1/3/5 = 10.7/31.7/42.8 vs meta baseline 8.4/25.9/36.4 (v0.5: 11.7/29.3/40.9).
-  Bans 10.2/31.4/40.5 now beat the meta baseline (9.1/30.2/40.7) at top-1/3 and
-  tie at top-5 — the v0.5 ban gap is closed. The ~1pt top-1 dip vs v0.5 is within
-  early-stopping seed noise (verified on val with seeds 17/42). Comparison in
-  `data/processed/draft_model_metrics_v06.json` (v0.5 + v0 blocks included; the
-  train script auto-refits the v0.5 feature set if the test set ever grows).
+  v0.7 (pair synergy/counter features + a 10-model ensemble: 5 seeds x
+  {HistGBM classifier, LGBM LambdaRank}, equal-weight rank-averaged) blind-tested
+  on the EWC July main event: top-1/3/5 = 11.2/32.0/41.4 vs meta 8.4/25.9/36.4
+  (v0.6: 10.7/31.7/42.8; v0.5: 11.7/29.3/40.9). Picks 12.3/33.0/42.3; bans
+  10.0/30.9/40.5 keep beating meta bans (9.1/30.2/40.7) at top-1/3, tie top-5.
+  Config chosen on val only (`scripts/experiment_v07*.py`): ranker family wins
+  top-1, classifier family wins top-5, blend dominates both; ensembling kills the
+  ±1.5pt top-1 seed/platform noise any single fit shows. Comparison in
+  `data/processed/draft_model_metrics_v07.json` (v0.6/v0.5/v0 blocks; auto-refits
+  older feature sets if the test set grows). Runs in Codespaces via
+  `.devcontainer/` (lightgbm needs libomp locally on macOS — decided to keep the
+  Mac clean).
 
 ## Open loops (near-term, in order)
 
@@ -39,12 +42,16 @@ were we" file — read it first when resuming work.*
    draft blind test once finals games land (test set grows past 43 games —
    `train_draft_model.py` now auto-refits the v0.5 feature set for comparability
    when that happens).
-2. **Draft model rung 3** — v0.6 (per-player pool features) done; ban gap closed
-   (bans beat meta at top-1/3, tie at top-5). Next per the ladder is the small
-   transformer with learned champion embeddings (t-SNE of embeddings = flex/role
-   clusters). Data-quality note: OE scrambled position labels in one Gen.G game
-   (2026-07-17) — roster inference guards against this via majority-role
-   assignment, but spot-checks vs Leaguepedia stay cheap insurance.
+2. **Draft model rung 3** — v0.7 (pair features + clf/ranker seed ensemble) done;
+   GBM ceiling now well established. Next per the ladder is the small transformer
+   with learned champion embeddings (t-SNE of embeddings = flex/role clusters).
+   Pair it with pulling the 2024-2025 CSVs (file IDs already in download_data.py)
+   — 31k decisions from 2026 alone is thin for sequence models. Observed v0.7
+   lesson: val gains compress on test; picks top-5 dipped vs v0.6 (42.3 vs 45.1)
+   while top-1/3 improved — report both when comparing. Data-quality note: OE
+   scrambled position labels in one Gen.G game (2026-07-17) — roster inference
+   guards against this via majority-role assignment, but spot-checks vs
+   Leaguepedia stay cheap insurance.
 3. **Write the "meta entering summer" debut piece** — full EWC + MSI patch 16.13
    sample (115 international games), framed for @lolmetatracker's first thread
    (handle being grabbed). Prediction scorecard = credibility receipt.
