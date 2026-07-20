@@ -16,6 +16,9 @@ Requires the multi-year dataset: draft_dataset.py --years 2024 2025 2026.
 
 from __future__ import annotations
 
+import gc
+import re
+
 import numpy as np
 import pandas as pd
 import torch
@@ -31,13 +34,27 @@ SEEDS3 = [16, 17, 42]
 
 
 def load_multi() -> tuple[pd.DataFrame, pd.DataFrame]:
-    """Multi-year candidate + sequence tables, floats downcast to fit in RAM."""
+    """Multi-year candidate + sequence tables, slimmed to fit a 16GB box.
+
+    The raw candidate table is 15.8M rows; object-dtype gameids alone are >1GB
+    and sklearn casts features to float64 internally, so without this the GBM
+    fits get OOM-killed. Gameids become int32 codes (shared with the sequence
+    table so attach_scores still lines up), flags become int8, floats float32.
+    """
     ds = pd.read_parquet(DATA_PROCESSED / "draft_decisions_multi.parquet")
+    ds = ds.drop(columns=["team"])
     for c in ds.columns[ds.dtypes == "float64"]:
         ds[c] = ds[c].astype("float32")
+    for c in ("is_ban", "phase2", "is_blue", "ordinal", "fearless",
+              "game_in_series", "seq", "label"):
+        ds[c] = ds[c].astype("int8")
+    ds["candidate"] = ds["candidate"].astype("category")
     ds["date"] = pd.to_datetime(ds["date"])
     seq = pd.read_parquet(DATA_PROCESSED / "draft_sequences_multi.parquet")
     seq["date"] = pd.to_datetime(seq["date"])
+    codes = {g: i for i, g in enumerate(seq.gameid.unique())}
+    ds["gameid"] = ds.gameid.map(codes).astype("int32")
+    seq["gameid"] = seq.gameid.map(codes).astype("int32")
     return ds, seq
 
 
@@ -93,11 +110,23 @@ def main() -> None:
         Config(d_model=192, n_layers=4, n_heads=6),
         Config(d_model=128, n_layers=3, n_heads=4, time_decay_tau_days=365),
     ]
-    probs_by_tag: dict[str, np.ndarray] = {}
-    for cfg in configs:
+    # Cache val probs per config so an OOM/restart doesn't refit transformers.
+    cache_dir = DATA_PROCESSED / "expcache_v08"
+    cache_dir.mkdir(exist_ok=True)
+
+    def val_probs(cfg: Config) -> np.ndarray:
+        key = re.sub(r"[^A-Za-z0-9.]+", "_", f"{cfg.tag()}_s{cfg.seed}")
+        f = cache_dir / f"{key}.npy"
+        if f.exists():
+            return np.load(f)
         model = train_model(cfg, t_train, t_val, vocab.size, n_leagues, verbose=False)
         p = probs_for(model, t_val).numpy()
-        probs_by_tag[cfg.tag()] = p
+        np.save(f, p)
+        return p
+
+    probs_by_tag: dict[str, np.ndarray] = {}
+    for cfg in configs:
+        p = probs_by_tag[cfg.tag()] = val_probs(cfg)
         print(f"{cfg.tag():34s} {fmt(val_metrics(p, 's'))}")
 
     # --- 2. seed ensemble on the best-looking base config ---
@@ -108,13 +137,13 @@ def main() -> None:
     print(f"\nseed ensemble on {base.tag()}:")
     seed_probs = [probs_by_tag[best]]
     for s in SEEDS3[1:]:
-        cfg = Config(**{**base.__dict__, "seed": s})
-        model = train_model(cfg, t_train, t_val, vocab.size, n_leagues, verbose=False)
-        seed_probs.append(probs_for(model, t_val).numpy())
+        seed_probs.append(val_probs(Config(**{**base.__dict__, "seed": s})))
     ens = np.mean(seed_probs, axis=0)
     print(f"{'ens3 ' + base.tag():34s} {fmt(val_metrics(ens, 's'))}")
 
     # --- 3. blend with a reduced v0.7 GBM ensemble ---
+    del ds, pre, probs_by_tag, seed_probs, t_train, t_val, games
+    gc.collect()
     print("\nfitting reduced GBM ensemble (2 seeds x clf/ranker) for blend...")
     gbm_scores = []
     for s in [16, 17]:

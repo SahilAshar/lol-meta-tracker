@@ -23,6 +23,7 @@ Output: data/processed/draft_model_metrics_v08.json
 
 from __future__ import annotations
 
+import gc
 import json
 import platform
 
@@ -34,7 +35,7 @@ from common import DATA_PROCESSED
 from draft_transformer import (
     Config, Vocab, attach_scores, build_games, probs_for, to_tensors, train_model,
 )
-from experiment_v08 import split_dates
+from experiment_v08 import load_multi, split_dates
 from train_draft_model import (
     FEATURES, FEATURES_V05, FEATURES_V06, SEEDS,
     ensemble_score, fit_clf, fit_ranker, score_splits,
@@ -47,11 +48,7 @@ VERSION = "v0.8"
 
 
 def main() -> None:
-    ds = pd.read_parquet(DATA_PROCESSED / "draft_decisions_multi.parquet")
-    ds["date"] = pd.to_datetime(ds["date"])
-    seq = pd.read_parquet(DATA_PROCESSED / "draft_sequences_multi.parquet")
-    seq["date"] = pd.to_datetime(seq["date"])
-
+    ds, seq = load_multi()
     is_test, cutoff, val_start = split_dates(ds)
     pre = ds[~is_test & (ds.date < cutoff)]
     train, val, test = pre[pre.date < val_start], pre[pre.date >= val_start], ds[is_test]
@@ -62,7 +59,8 @@ def main() -> None:
 
     vocab = Vocab(list(ds.candidate.unique()), list(seq.champion.unique()))
     games = build_games(seq, vocab)
-    n_leagues = len(games.attrs["leagues"])
+    leagues = games.attrs["leagues"]
+    n_leagues = len(leagues)
     g_train = games[games.gameid.isin(train.gameid.unique())].reset_index(drop=True)
     g_val = games[games.gameid.isin(val.gameid.unique())].reset_index(drop=True)
     t_train, t_val = to_tensors(g_train), to_tensors(g_val)
@@ -79,6 +77,11 @@ def main() -> None:
 
     def tf_score(part: pd.DataFrame) -> np.ndarray:
         return attach_scores(part, tf_probs, all_pos, vocab)
+
+    # Free everything the GBM stage doesn't need — 16GB box, sklearn casts
+    # the 13M-row feature matrix to float64 internally.
+    del ds, pre, t_train, t_val, t_all, g_train, g_val, games, seq
+    gc.collect()
 
     # --- GBM lineages refit on the same multi-year train ---
     gbm = {"clf": [fit_clf(FEATURES, train, s) for s in SEEDS],
@@ -125,7 +128,7 @@ def main() -> None:
 
     torch.save({"state_dict": tf_models[0].state_dict(),
                 "config": CHOSEN.__dict__, "vocab_champs": vocab.champs,
-                "vocab_ids": vocab.id_of, "leagues": games.attrs["leagues"]},
+                "vocab_ids": vocab.id_of, "leagues": leagues},
                DATA_PROCESSED / "draft_model_v08_seed16.pt")
     emb = tf_models[0].champ_emb.weight.detach().numpy()
     ids = np.array([vocab.id_of[c] for c in vocab.champs])
