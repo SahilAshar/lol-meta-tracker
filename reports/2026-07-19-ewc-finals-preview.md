@@ -118,3 +118,74 @@ Vi/Jayce/Orianna triangle and won on whichever side solves red-side draft first.
 *Data: [Oracle's Elixir](https://oracleselixir.com). Predictions are heuristic reads
 of team-level stats, not a trained model. Written before finals day; results will be
 scored honestly afterward.*
+
+---
+
+## Scorecard — how the predictions actually did
+
+*Added July 20 with full results in hand. Verified against Oracle's Elixir match
+data; drafts cross-checked with gol.gg and Liquipedia game pages.*
+
+### Series calls
+
+| Series | Predicted | Actual | Verdict |
+|---|---|---|---|
+| 3rd place | Gen.G 2-1 (~55/45) | **Gen.G 2-1** | Exact — winner and scoreline |
+| Grand Final | Dplus Kia 3-2 (~55/45) | **Dplus Kia 3-0** | Right winner, wrong shape — called a five-game war, got a sweep |
+
+Both winners called at ~55/45; both landed. The Bo5 read badly overrated how
+competitive it would be: DK's three wins ran 31:20, 33:40, 27:09 with a combined
+57-22 kill score. "DK's macro edge and side flexibility should decide a long
+series" — the macro edge decided it, but there was nothing long about it.
+
+### Game-level reads
+
+- "A Bo3 with alternating sides exposes T1's red-side problem at least once" —
+  **mechanism wrong, outcome right.** T1's only win came on red side (game 2);
+  they lost game 3 from blue, their supposed 73% side.
+- "The upset case is real: blue-side KC wins fast games" — **wrong.** KC had blue
+  in game 1 of the final and lost it; the side seam never mattered because DK
+  never let it matter.
+
+### Draft reads
+
+**Hits:**
+
+- **The Vi/Jayce/Orianna triangle** ("games decided in the Vi/Jayce/Orianna
+  triangle", Vi "likely ban-or-first-pick"): Vi, Jayce, and Poppy were banned in
+  **all six games** of finals day and never played; Orianna was banned in five
+  and picked once — Faker's game 3, a loss. The contested-pool table was the map
+  of the ban phase.
+- **The Nocturne paradox** held: Nocturne went unpicked all day. In the final
+  itself DK never banned it — and KC burned a phase-1 ban on it in game 1
+  anyway, the exact "wasted ban" scenario flagged, in a game KC lost.
+- **Camille support as live tech**: it appeared in game 1 of both series —
+  Keria and Busio, both at support.
+- **Viktor as DK's scariest release**: KC never banned it, ShowMaker
+  first-picked it in game 1 of the final and won with it. The threat model was
+  right; the prediction that KC would respect it with a ban was not.
+- **"If Vi and Orianna are both banned out, KC's blue-side plan A disappears"**:
+  in KC's one blue game DK opened exactly Orianna/Jayce/Vi, and KC's draft never
+  recovered.
+
+**Misses:**
+
+- **Rumble respect**: predicted DK would open with a Rumble ban every game. DK
+  never banned it once — they dared KC to pick it. Canna finally did in game 3
+  and lost 23-5. The market was wrong about KC's scariest card, and DK read that
+  better than we did.
+- **Lucian+Milio "the premier bot duo"**: Milio appeared zero times in six
+  games — no pick, no ban. Lucian drew three respect-bans but was never played.
+- **KC's expected targets (Lee Sin, Taliyah, Viktor)**: none of the three was
+  ever banned by KC. KC picked Lee Sin themselves in game 1.
+- **Caliste's 12-champion pool as KC's edge**: the flexibility showed up (Ziggs,
+  Ezreal, Xayah — no repeats under fearless) but bought exactly zero games.
+  Smash's narrow-but-efficient pool won finals MVP.
+
+### Honest summary
+
+Team-level form stats called both winners, one exact scoreline. Champion-level
+reads went roughly 5-for-9: excellent on which champions would define the ban
+phase, wrong whenever a read required a team to fear what we feared (Rumble,
+Viktor, Lucian). The model-shaped lesson: presence stats say what's contested;
+they don't say which team blinks.
