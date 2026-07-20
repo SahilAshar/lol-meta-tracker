@@ -12,7 +12,18 @@ dependencies = [
     "pyarrow>=15.0",
     "scikit-learn>=1.7.2",
     "lightgbm>=4.7.0",
+    "torch>=2.13.0",
 ]
 
 [tool.uv]
 package = false
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[tool.uv.sources]
+# CUDA wheels are ~2.5GB and useless on Codespaces CPU boxes; macOS PyPI
+# wheels are already CPU-only (the cpu index has no macOS builds).
+torch = [{ index = "pytorch-cpu", marker = "sys_platform == 'linux'" }]

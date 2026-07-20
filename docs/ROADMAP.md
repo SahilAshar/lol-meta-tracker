@@ -1,7 +1,7 @@
 # Roadmap & Pickup Notes
 
-*Last updated: 2026-07-19 (draft model v0.7 session). This doc is the "where
-were we" file — read it first when resuming work.*
+*Last updated: 2026-07-20 (finals scorecard + draft model v0.8 session). This
+doc is the "where were we" file — read it first when resuming work.*
 
 ## Current state (all working, all verified)
 
@@ -16,45 +16,66 @@ were we" file — read it first when resuming work.*
 - **Analysis window**: date-based (not split names — they're inconsistent across
   leagues). Defaults to 2026-07-22 (summer start); auto-falls-back to last 8 weeks
   until then.
-- **Draft next-pick model**: `scripts/draft_dataset.py` + `scripts/train_draft_model.py`.
-  v0.7 (pair synergy/counter features + a 10-model ensemble: 5 seeds x
-  {HistGBM classifier, LGBM LambdaRank}, equal-weight rank-averaged) blind-tested
-  on the EWC July main event: top-1/3/5 = 11.2/32.0/41.4 vs meta 8.4/25.9/36.4
-  (v0.6: 10.7/31.7/42.8; v0.5: 11.7/29.3/40.9). Picks 12.3/33.0/42.3; bans
-  10.0/30.9/40.5 keep beating meta bans (9.1/30.2/40.7) at top-1/3, tie top-5.
-  Config chosen on val only (`scripts/experiment_v07*.py`): ranker family wins
-  top-1, classifier family wins top-5, blend dominates both; ensembling kills the
-  ±1.5pt top-1 seed/platform noise any single fit shows. Comparison in
-  `data/processed/draft_model_metrics_v07.json` (v0.6/v0.5/v0 blocks; auto-refits
-  older feature sets if the test set grows). Runs in Codespaces via
-  `.devcontainer/` (lightgbm needs libomp locally on macOS — decided to keep the
-  Mac clean).
+- **Draft next-pick model**: `scripts/draft_dataset.py` (now multi-year:
+  `--years 2024 2025 2026`, per-league-per-year fearless detection, plus a
+  compact `draft_sequences*.parquet` for sequence models) +
+  `scripts/train_draft_model.py` (v0.7 GBM lineage) +
+  `scripts/draft_transformer.py` / `train_draft_model_v08.py` (v0.8).
+  Test set is now the EWC July 2026 main event **including finals: 50 games /
+  1000 decisions** (was 43/860; year guard matters — EWC 2024/2025 July games
+  exist in the multi-year data).
+  - **v0.7 on the grown test** (2026-only train): 13.0/32.5/42.8 vs meta
+    9.9/26.6/38.0. Finals games were unusually draft-predictable; every model
+    rose. Caveat: refit v0.6 (13.0/33.5/45.3) and v0.5 (13.2/32.1/43.6) single
+    fits now match/beat the ensemble at top-3/5 — the ±1.5pt single-fit noise
+    band in action.
+  - **v0.8** = small causal transformer over the 20-slot draft sequence,
+    learned weight-tied champion embeddings, d192x4L6H, 5-seed mean-prob
+    ensemble, trained on 2024-2026 (102,916 decisions); config + 0.25-blend
+    with the v0.7 GBM ensemble selected on val only (`experiment_v08.py`).
+    Blind test: **transformer solo 10.2/22.7/30.9 — does NOT beat the
+    multi-year GBM ensemble (14.9/32.8/45.2)**; the blend ties it overall
+    (14.1/32.6/44.5) and clearly wins picks (17.2/35.2/48.0 vs 14.8/32.2/45.4
+    top-1/3/5). Division of labor is stark: transformer owns picks, GBM owns
+    bans (transformer bans 7.6 top-1 vs GBM 15.0 — it is date-blind and can't
+    see current meta). Multi-year training itself lifted the v0.7 feature set
+    +1.9 top-1 over 2026-only. Full lineage blocks in
+    `data/processed/draft_model_metrics_v08.json`.
+  - **Embeddings learned real structure**: 5-NN role purity 0.682 vs 0.20
+    chance; `charts/champion_embeddings_tsne_v08.png` (debut-thread artifact)
+    shows role clusters with flex picks (Poppy, Camille, Sett, Nasus, TF)
+    sitting between them, no role labels ever shown to the model.
+  - Codespaces note: "standardLinux32gb" = 16GB **RAM** (32 = storage); the
+    GBM stages need the slim-dtype loading in `experiment_v08.load_multi` or
+    they get OOM-killed.
 
 ## Open loops (near-term, in order)
 
-1. **Score the EWC finals predictions** — `reports/2026-07-19-ewc-finals-preview.md`
-   predicted Gen.G 2-1 over T1 and Dplus Kia 3-2 over Karmine Corp, plus draft
-   reads (Nocturne paradox, expected bans). Finals were July 19; results land in
-   the CSV ~July 20. Append an honest scorecard section to the preview.
-   NOTE 2026-07-19: Drive download is returning "Quota exceeded" for the 2026 CSV
-   (transient, popular-file limit — not a stale ID; still failing as of the v0.6
-   session, evening of 7/19). Retry the download before scoring; also re-run the
-   draft blind test once finals games land (test set grows past 43 games —
-   `train_draft_model.py` now auto-refits the v0.5 feature set for comparability
-   when that happens).
-2. **Draft model rung 3** — v0.7 (pair features + clf/ranker seed ensemble) done;
-   GBM ceiling now well established. Next per the ladder is the small transformer
-   with learned champion embeddings (t-SNE of embeddings = flex/role clusters).
-   Pair it with pulling the 2024-2025 CSVs (file IDs already in download_data.py)
-   — 31k decisions from 2026 alone is thin for sequence models. Observed v0.7
-   lesson: val gains compress on test; picks top-5 dipped vs v0.6 (42.3 vs 45.1)
-   while top-1/3 improved — report both when comparing. Data-quality note: OE
-   scrambled position labels in one Gen.G game (2026-07-17) — roster inference
-   guards against this via majority-role assignment, but spot-checks vs
-   Leaguepedia stay cheap insurance.
+1. ~~Score the EWC finals predictions~~ **Done 2026-07-20** — scorecard appended
+   to `reports/2026-07-19-ewc-finals-preview.md`, verified against the CSV +
+   gol.gg/Liquipedia. Both series winners hit (Gen.G 2-1 exact; DK won but 3-0
+   not 3-2); draft reads ~5/9 (ban triangle + Nocturne paradox excellent; wrong
+   whenever a read required a team to fear what the market feared). 2024/2025
+   CSVs came from a GitHub LFS mirror
+   (`Matthew-Paoletta/The-Snowballing-Effect`) while Drive was quota-blocked;
+   the 2026 quota cleared after ~5h of spaced retries.
+2. ~~Draft model rung 3 (transformer)~~ **Done 2026-07-20** — see Current state.
+   Honest verdict: at this data size the transformer does not beat the well-fed
+   GBM ensemble; it is a picks specialist and an embeddings machine. Next rungs
+   worth trying, in order of expected value:
+   - **Per-decision-type blend weights** selected on val (val already showed
+     picks want w≈0.75 transformer, bans want w≈0 — the shipped single w=0.25
+     was a compromise; this is a val-legal selection, just run it).
+   - **Give the transformer time signal** for bans: patch embedding or the
+     trailing meta-rate features injected at the output layer — its 7.6 ban
+     top-1 vs GBM's 15.0 is entirely current-meta blindness.
+   - **Series-prior tokens** (fearless context: which champs each side burned
+     earlier in the series) — currently only enters availability masks.
 3. **Write the "meta entering summer" debut piece** — full EWC + MSI patch 16.13
    sample (115 international games), framed for @lolmetatracker's first thread
-   (handle being grabbed). Prediction scorecard = credibility receipt.
+   (handle being grabbed). Prediction scorecard = credibility receipt (now
+   written, both series winners called); the embeddings t-SNE
+   (`charts/champion_embeddings_tsne_v08.png`) is the visual hook.
 4. **Summer split coverage begins**: LPL Jul 22, LEC Jul 24, LCS Jul 25, LCK Jul 29.
    The default window goes live automatically. First "Week 1 cross-league" report
    ~Aug 3-4 → Reddit/Twitter debut per the engagement plan.
@@ -96,3 +117,8 @@ were we" file — read it first when resuming work.*
   Full stat glossary now at `docs/oracle-elixir-definitions.md`.
 - The ~50MB download happens every daily run even when data is unchanged
   (unavoidable — hash requires the file; Drive gives no usable checksum header).
+- LPL 2025 shows 8 champion overlaps across 797 same-series game pairs, so
+  per-year fearless detection marks it non-fearless even though most of the
+  season was fearless (format changed mid-year / a few irregular series). Cost
+  is a few phantom candidates in those games' candidate sets — acceptable;
+  per-split detection would fix it if it ever matters.
