@@ -36,17 +36,28 @@ first. NOTE: as of 2026 blue is no longer guaranteed to pick first; Oracle's
 Elixir data does not record which team opened the draft, so sequence indices are
 approximate for a minority of games. Team-level ban/pick ordinals are exact.
 
-Output: data/processed/draft_decisions.parquet
+v0.8 extends the build across seasons (--years 2024 2025 2026). All rolling
+windows are date-based and end the day before each game, so multi-year data
+composes without leakage; windows that span the off-season simply see the tail
+of the previous season, which is exactly what a trailing window should do.
+Fearless detection runs per (league, year) because leagues switched formats
+between seasons. A compact per-decision sequence table is also written for
+sequence models (draft_sequences*.parquet).
+
+Output: data/processed/draft_decisions.parquet (single year)
+        data/processed/draft_decisions_multi.parquet (multi-year)
+        plus draft_sequences[_multi].parquet
 """
 
 from __future__ import annotations
 
+import argparse
 import itertools
 
 import numpy as np
 import pandas as pd
 
-from common import DATA_PROCESSED, raw_csv_path
+from common import CURRENT_YEAR, DATA_PROCESSED, raw_csv_path
 
 LEAGUES = ["LCK", "LPL", "LEC", "LCS", "MSI", "EWC", "FST"]
 
@@ -72,8 +83,14 @@ DRAFT_SEQUENCE = [
 ]
 
 
-def load_games() -> tuple[pd.DataFrame, pd.DataFrame]:
-    df = pd.read_csv(raw_csv_path(), low_memory=False)
+def load_games(years: list[int]) -> tuple[pd.DataFrame, pd.DataFrame]:
+    frames = []
+    for year in years:
+        path = raw_csv_path(year)
+        if not path.exists():
+            raise FileNotFoundError(f"missing {path} — run download_data.py --year {year}")
+        frames.append(pd.read_csv(path, low_memory=False))
+    df = pd.concat(frames, ignore_index=True)
     df = df[df.league.isin(LEAGUES)].copy()
     df["date"] = pd.to_datetime(df["date"])
     df["day"] = df["date"].dt.normalize()
@@ -98,23 +115,30 @@ def load_games() -> tuple[pd.DataFrame, pd.DataFrame]:
     return players, teams
 
 
-def detect_fearless(players: pd.DataFrame) -> set[str]:
-    """A league is fearless if champions never repeat across games of a series."""
+def detect_fearless(players: pd.DataFrame) -> set[tuple[str, int]]:
+    """A (league, year) is fearless if champions never repeat within a series.
+
+    Detected per season: several leagues adopted fearless draft between 2024
+    and 2026, so a single all-time flag per league would mislabel early years.
+    """
     fearless = set()
-    for lg, lgdf in players.groupby("league"):
+    for (lg, yr), lgdf in players.groupby(["league", players.day.dt.year]):
         game_info = lgdf.groupby("gameid").agg(
             day=("day", "first"),
             teams=("teamname", lambda s: tuple(sorted(s.unique()))),
         )
         champs = lgdf.groupby("gameid")["champion"].apply(set)
-        overlaps = 0
+        overlaps = pairs = 0
         for _, gids in game_info.groupby(["day", "teams"]).groups.items():
             gids = list(gids)
             for i in range(len(gids)):
                 for j in range(i + 1, len(gids)):
+                    pairs += 1
                     overlaps += len(champs[gids[i]] & champs[gids[j]])
         if overlaps == 0:
-            fearless.add(lg)
+            fearless.add((lg, yr))
+        print(f"  fearless[{lg} {yr}]: {overlaps == 0} "
+              f"({pairs} same-series game pairs, {overlaps} champion overlaps)")
     return fearless
 
 
@@ -439,12 +463,12 @@ def role_open_probs(
     return (open_p - filled / total).astype(np.float32)
 
 
-def build() -> pd.DataFrame:
-    players, teams = load_games()
+def build(years: list[int]) -> pd.DataFrame:
+    players, teams = load_games(years)
     champs = sorted(players.champion.dropna().unique())
     cidx = {c: i for i, c in enumerate(champs)}
     fearless_leagues = detect_fearless(players)
-    print(f"champions: {len(champs)}, fearless leagues: {sorted(fearless_leagues)}")
+    print(f"champions: {len(champs)}, fearless league-years: {sorted(fearless_leagues)}")
 
     rates = RollingRates(players, teams, champs)
     pools = PlayerPools(players, champs, cidx, rates.didx)
@@ -470,6 +494,7 @@ def build() -> pd.DataFrame:
     roster_cache: dict[tuple[str, pd.Timestamp], dict[str, str]] = {}
     bad_rosters: set[str] = set()
     out = []
+    seq_rows = []  # compact per-decision table for sequence models
     skipped = 0
     for gameid, rec in sorted(game_rows.items(), key=lambda kv: kv[1]["date"]):
         if "Blue" not in rec or "Red" not in rec:
@@ -487,7 +512,7 @@ def build() -> pd.DataFrame:
         league, day = rec["league"], rec["day"]
         pair = tuple(sorted([rec["Blue"]["team"], rec["Red"]["team"]]))
         skey = (league, day, pair)
-        fearless = league in fearless_leagues
+        fearless = (league, day.year) in fearless_leagues
         unavailable_series = (
             set().union(*series_prior.get(skey, [set()])) if fearless else set()
         )
@@ -504,10 +529,23 @@ def build() -> pd.DataFrame:
         taken = set(unavailable_series)  # champs unavailable at draft start
         picks_so_far: dict[str, list[str]] = {"Blue": [], "Red": []}
         game_num = len(series_prior.get(skey, []))
+        series_prior_str = "|".join(sorted(unavailable_series))
         for seq, dtype, side, ordinal in DRAFT_SEQUENCE:
             actual = rec[side]["bans" if dtype == "ban" else "picks"][ordinal - 1]
             if not isinstance(actual, str):
                 continue  # missed ban: no decision was made, state unchanged
+            seq_rows.append({
+                "gameid": gameid, "date": rec["date"], "league": league,
+                "seq": seq, "is_ban": int(dtype == "ban"),
+                "is_blue": int(side == "Blue"), "ordinal": ordinal,
+                "fearless": int(fearless), "game_in_series": game_num + 1,
+                "team": rec[side]["team"], "champion": actual,
+                "series_prior": series_prior_str,
+                # decisions whose champion was never picked in-sample have no
+                # candidate rows in the pointwise dataset; sequence models must
+                # skip them at loss/eval time to stay comparable
+                "in_candidates": int(actual in cidx),
+            })
             if actual not in cidx:
                 taken.add(actual)
                 if dtype == "pick":
@@ -597,10 +635,24 @@ def build() -> pd.DataFrame:
     n_games = ds.gameid.nunique()
     n_decisions = ds.groupby(["gameid", "seq"]).ngroups
     print(f"games: {n_games}, decisions: {n_decisions}, rows: {len(ds)}, skipped games: {skipped}")
+    uniq = ds.drop_duplicates(["gameid", "seq"])
+    for yr, ydf in uniq.groupby(uniq.date.dt.year):
+        print(f"  {yr}: {ydf.gameid.nunique()} games, {len(ydf)} decisions")
+
+    suffix = "" if years == [CURRENT_YEAR] else "_multi"
     DATA_PROCESSED.mkdir(parents=True, exist_ok=True)
-    ds.to_parquet(DATA_PROCESSED / "draft_decisions.parquet", index=False)
+    ds.to_parquet(DATA_PROCESSED / f"draft_decisions{suffix}.parquet", index=False)
+    seq_ds = pd.DataFrame(seq_rows)
+    seq_ds.to_parquet(DATA_PROCESSED / f"draft_sequences{suffix}.parquet", index=False)
+    print(f"sequence table: {len(seq_ds)} decisions "
+          f"({(seq_ds.in_candidates == 0).sum()} outside the candidate vocab)")
     return ds
 
 
 if __name__ == "__main__":
-    build()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--years", type=int, nargs="+", default=[CURRENT_YEAR],
+        help="seasons to include (default: current year only)",
+    )
+    build(sorted(parser.parse_args().years))
