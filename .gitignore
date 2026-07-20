@@ -17,3 +17,6 @@ __pycache__/
 # OS
 .DS_Store
 data/processed/*.joblib
+
+# Model binaries (torch checkpoints live with joblib outside git)
+data/processed/*.pt

@@ -122,11 +122,10 @@ def main() -> None:
                     label="Flex (top role < 70%)")]
     ax.legend(handles=handles, loc="upper right", frameon=False, fontsize=8.5,
               labelcolor=INK)
-    ax.set_title(
-        "What a draft model learns about champions\n",
-        fontsize=15, color=INK, loc="left", fontweight="bold",
-    )
-    ax.text(0, 1.015,
+    ax.text(0, 1.075, "What a draft model learns about champions",
+            transform=ax.transAxes, fontsize=15, color=INK, fontweight="bold",
+            va="bottom")
+    ax.text(0, 1.012,
             "t-SNE of champion embeddings learned by the lol-meta-tracker v0.8 draft "
             "transformer from 2024–2026 pro drafts.\nColor = majority role. "
             "Ringed champions are flex picks — the model places them between "
