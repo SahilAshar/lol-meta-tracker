@@ -41,9 +41,12 @@ from train_draft_model import (
     ensemble_score, fit_clf, fit_ranker, score_splits,
 )
 
-# Promoted from experiment_v08.py (val-only selection) — do not tune here.
-CHOSEN = Config(d_model=128, n_layers=3, n_heads=4)
-BLEND_W: float | None = None  # transformer share of rank-average blend with v0.7 GBM
+# Promoted from experiment_v08.py (val-only selection, 2026-07-20) — do not
+# tune here. d192x4 won the config sweep on val top-1; the 0.25-transformer
+# rank-average blend dominated both parents on val top-1/top-3 (transformer
+# carries picks, GBM carries bans).
+CHOSEN = Config(d_model=192, n_layers=4, n_heads=6)
+BLEND_W: float | None = 0.25  # transformer share of rank-average blend with v0.7 GBM
 VERSION = "v0.8"
 
 
