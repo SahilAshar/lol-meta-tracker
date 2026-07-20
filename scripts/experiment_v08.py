@@ -30,6 +30,17 @@ BLEND_WEIGHTS = [0.25, 0.5, 0.75]  # transformer share of the blend
 SEEDS3 = [16, 17, 42]
 
 
+def load_multi() -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Multi-year candidate + sequence tables, floats downcast to fit in RAM."""
+    ds = pd.read_parquet(DATA_PROCESSED / "draft_decisions_multi.parquet")
+    for c in ds.columns[ds.dtypes == "float64"]:
+        ds[c] = ds[c].astype("float32")
+    ds["date"] = pd.to_datetime(ds["date"])
+    seq = pd.read_parquet(DATA_PROCESSED / "draft_sequences_multi.parquet")
+    seq["date"] = pd.to_datetime(seq["date"])
+    return ds, seq
+
+
 def split_dates(ds: pd.DataFrame) -> tuple[pd.Series, pd.Timestamp, pd.Timestamp]:
     """Test = EWC July 2026 only — the year guard matters now that EWC 2024/2025
     July games are in the multi-year data."""
@@ -46,11 +57,7 @@ def fmt(r: dict) -> str:
 
 
 def main() -> None:
-    ds = pd.read_parquet(DATA_PROCESSED / "draft_decisions_multi.parquet")
-    ds["date"] = pd.to_datetime(ds["date"])
-    seq = pd.read_parquet(DATA_PROCESSED / "draft_sequences_multi.parquet")
-    seq["date"] = pd.to_datetime(seq["date"])
-
+    ds, seq = load_multi()
     is_test, cutoff, val_start = split_dates(ds)
     pre = ds[~is_test & (ds.date < cutoff)]
     train = pre[pre.date < val_start]
