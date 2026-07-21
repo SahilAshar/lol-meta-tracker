@@ -1,5 +1,5 @@
 {
-  "version": "v0.8",
+  "version": "v0.8.1",
   "cutoff": "2026-07-15 09:41:28",
   "data": "multi-year 2024-2026",
   "platform": "Linux-6.8.0-1052-azure-x86_64-with-glibc2.41",
@@ -349,6 +349,135 @@
           "top1": 0.11,
           "top3": 0.3,
           "top5": 0.41
+        }
+      },
+      "baseline_meta": {
+        "all": {
+          "n": 1000,
+          "top1": 0.099,
+          "top3": 0.266,
+          "top5": 0.38
+        },
+        "picks": {
+          "n": 500,
+          "top1": 0.074,
+          "top3": 0.216,
+          "top5": 0.328
+        },
+        "bans": {
+          "n": 500,
+          "top1": 0.124,
+          "top3": 0.316,
+          "top5": 0.432
+        }
+      },
+      "baseline_team": {
+        "all": {
+          "n": 1000,
+          "top1": 0.059,
+          "top3": 0.131,
+          "top5": 0.201
+        },
+        "picks": {
+          "n": 500,
+          "top1": 0.06,
+          "top3": 0.124,
+          "top5": 0.198
+        },
+        "bans": {
+          "n": 500,
+          "top1": 0.058,
+          "top3": 0.138,
+          "top5": 0.204
+        }
+      }
+    }
+  },
+  "v0.8.1_blend_pertype": {
+    "blend_w_picks": 0.75,
+    "blend_w_bans": 0.0,
+    "note": "second look at the same EWC test set (v0.8 was the first); per-type weights selected on val only; scored on test once, no further test iteration",
+    "val": {
+      "model": {
+        "all": {
+          "n": 1080,
+          "top1": 0.1648,
+          "top3": 0.3713,
+          "top5": 0.4824
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.1907,
+          "top3": 0.387,
+          "top5": 0.5037
+        },
+        "bans": {
+          "n": 540,
+          "top1": 0.1389,
+          "top3": 0.3556,
+          "top5": 0.4611
+        }
+      },
+      "baseline_meta": {
+        "all": {
+          "n": 1080,
+          "top1": 0.0657,
+          "top3": 0.2241,
+          "top5": 0.3037
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.0593,
+          "top3": 0.1722,
+          "top5": 0.2333
+        },
+        "bans": {
+          "n": 540,
+          "top1": 0.0722,
+          "top3": 0.2759,
+          "top5": 0.3741
+        }
+      },
+      "baseline_team": {
+        "all": {
+          "n": 1080,
+          "top1": 0.0481,
+          "top3": 0.113,
+          "top5": 0.1907
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.037,
+          "top3": 0.1148,
+          "top5": 0.1889
+        },
+        "bans": {
+          "n": 540,
+          "top1": 0.0593,
+          "top3": 0.1111,
+          "top5": 0.1926
+        }
+      }
+    },
+    "test_ewc_main": {
+      "model": {
+        "all": {
+          "n": 1000,
+          "top1": 0.16,
+          "top3": 0.331,
+          "top5": 0.446
+        },
+        "picks": {
+          "n": 500,
+          "top1": 0.17,
+          "top3": 0.328,
+          "top5": 0.442
+        },
+        "bans": {
+          "n": 500,
+          "top1": 0.15,
+          "top3": 0.334,
+          "top5": 0.45
         }
       },
       "baseline_meta": {

@@ -1,7 +1,8 @@
 # Roadmap & Pickup Notes
 
-*Last updated: 2026-07-20 (finals scorecard + draft model v0.8 session). This
-doc is the "where were we" file — read it first when resuming work.*
+*Last updated: 2026-07-20 (v0.8.1 per-type blend + debut draft + artifact
+refresh session). This doc is the "where were we" file — read it first when
+resuming work.*
 
 ## Current state (all working, all verified)
 
@@ -41,10 +42,24 @@ doc is the "where were we" file — read it first when resuming work.*
     see current meta). Multi-year training itself lifted the v0.7 feature set
     +1.9 top-1 over 2026-only. Full lineage blocks in
     `data/processed/draft_model_metrics_v08.json`.
+  - **v0.8.1** = per-decision-type blend weights (picks w=0.75 transformer,
+    bans w=0.0 i.e. pure GBM), selected on the extended experiment_v08 val
+    sweep (picks val top-1 19.1 at 0.75; bans 14.3 at 0). Single test look:
+    **16.0/33.1/44.6 all — best top-1 of any lineage** (GBM 14.9, flat blend
+    14.1); picks 17.0/32.8/44.2, bans 15.0/33.4/45.0. Honest caveats, also
+    flagged in the metrics json: (a) this was the SECOND evaluation against
+    the same EWC test set — frozen now, no further iteration against it;
+    (b) the picks val edge did not transfer (17.0 vs the flat blend's 17.2
+    top-1, and behind at top-3/5) — the whole overall gain is bans returning
+    to the GBM. Split sizes from the run: train 100,836 / val 1,080 / test
+    1,000 decisions (the previously quoted 102,916 is the three-way total).
+    Recomputed v0.8/v0.7 blocks reproduced the stored json exactly.
   - **Embeddings learned real structure**: 5-NN role purity 0.682 vs 0.20
     chance; `charts/champion_embeddings_tsne_v08.png` (debut-thread artifact)
     shows role clusters with flex picks (Poppy, Camille, Sett, Nasus, TF)
-    sitting between them, no role labels ever shown to the model.
+    sitting between them, no role labels ever shown to the model. Labels are
+    now collision-aware and a dark variant renders via
+    `chart_embeddings_v08.py --dark` (both under 400KB for data-URI embeds).
   - Codespaces note: "standardLinux32gb" = 16GB **RAM** (32 = storage); the
     GBM stages need the slim-dtype loading in `experiment_v08.load_multi` or
     they get OOM-killed.
@@ -63,19 +78,23 @@ doc is the "where were we" file — read it first when resuming work.*
    Honest verdict: at this data size the transformer does not beat the well-fed
    GBM ensemble; it is a picks specialist and an embeddings machine. Next rungs
    worth trying, in order of expected value:
-   - **Per-decision-type blend weights** selected on val (val already showed
-     picks want w≈0.75 transformer, bans want w≈0 — the shipped single w=0.25
-     was a compromise; this is a val-legal selection, just run it).
+   - ~~Per-decision-type blend weights~~ **Done 2026-07-20 as v0.8.1** — see
+     Current state. Best overall top-1 (16.0); gain came from bans, not picks.
    - **Give the transformer time signal** for bans: patch embedding or the
      trailing meta-rate features injected at the output layer — its 7.6 ban
      top-1 vs GBM's 15.0 is entirely current-meta blindness.
    - **Series-prior tokens** (fearless context: which champs each side burned
      earlier in the series) — currently only enters availability masks.
-3. **Write the "meta entering summer" debut piece** — full EWC + MSI patch 16.13
-   sample (115 international games), framed for @lolmetatracker's first thread
-   (handle being grabbed). Prediction scorecard = credibility receipt (now
-   written, both series winners called); the embeddings t-SNE
-   (`charts/champion_embeddings_tsne_v08.png`) is the visual hook.
+3. ~~Write the "meta entering summer" debut piece~~ **Drafted 2026-07-20** —
+   `drafts/2026-07-20-meta-entering-summer-debut-thread.md`: 10-tweet thread
+   with full stat-provenance appendix (16.13 intl sample is now 121 games
+   incl. finals; leads: Camille is 34/34 support at 44% WR, ban quartet
+   Poppy/Vi/Jayce/Orianna, Nocturne 60 bans at 31% WR, blue side 61%).
+   NOT posted. Blockers before posting: grab the @lolmetatracker handle and
+   give the finals scorecard a public link (README anchor or gist). The
+   claude.ai explainer artifact ("How the Draft Model Actually Works") was
+   refreshed in place the same day: v0.7/v0.8/v0.8.1 scoreboard, finals
+   scorecard section, collision-fixed t-SNE embedded light+dark.
 4. **Summer split coverage begins**: LPL Jul 22, LEC Jul 24, LCS Jul 25, LCK Jul 29.
    The default window goes live automatically. First "Week 1 cross-league" report
    ~Aug 3-4 → Reddit/Twitter debut per the engagement plan.

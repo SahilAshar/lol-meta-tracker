@@ -60,7 +60,7 @@ leagues come back? Side-selection edges this large usually get patched or
 drafted away. Usually.
 
 **8/** *(attach: champion_embeddings_tsne_v08.png)*
-We trained a small transformer on ~103k pro draft decisions (2024–26). We
+We trained a small transformer on ~101k pro draft decisions (2024–26). We
 never told it champion roles.
 
 It learned them anyway — 5-NN role purity 0.682 vs 0.20 by chance. And the
@@ -69,9 +69,10 @@ role clusters. The map drew itself.
 
 **9/**
 Honest model note: that transformer does NOT beat our boring gradient-boosted
-ensemble overall. But it owns *picks* — 17.2% top-1 on exact-next-pick vs
-14.8 for the GBM, blind-tested on EWC. Bans still belong to plain meta
-stats. Division of labor, measured, published.
+ensemble overall. But it owns *picks* (17.2% top-1 on exact-next-pick vs 14.8
+for the GBM, blind-tested on EWC) while the GBM owns bans. So the shipped
+model pairs them — 16.0% top-1 overall, our best yet. Division of labor,
+measured, published.
 
 **10/**
 Week 1 calendar: LPL Jul 22 · LEC Jul 24 · LCS Jul 25 · LCK Jul 29.
@@ -100,10 +101,13 @@ finals-day games).
 | Nocturne 16 games, 31% WR | player rows |
 | Gnar 30g 63% (all top); Ezreal 36g 58%; Akali 11g 82% + 47 bans; Ryze 30g 37% | player rows + ban counts |
 | Blue side 61% (61.2) | team rows, side == Blue, mean(result) |
-| ~103k decisions (102,916), 2024–26 training | `docs/ROADMAP.md` v0.8 block / `draft_model_metrics_v08.json` lineage |
+| ~101k decisions (100,836 train; 102,916 incl. val+test), 2024–26 | v0.8.1 run log split counts / `draft_model_metrics_v08.json` lineage |
+| 16.0% top-1 overall (v0.8.1, best lineage) | `draft_model_metrics_v08.json` → v0.8.1_blend_pertype → test_ewc_main → model.all.top1 |
 | 5-NN role purity 0.682 vs 0.20 | `docs/ROADMAP.md` v0.8 block; `charts/champion_embeddings_tsne_v08.png` |
 | Picks top-1 17.2 vs 14.8 (blend vs GBM, EWC blind test) | `data/processed/draft_model_metrics_v08.json` → v0.8_blend / v0.7_refit_multi → test_ewc_main → picks.top1 |
 | Split start dates | project plan (roadmap open loop 4) |
 
-**Pending update:** if v0.8.1 (per-decision-type blend) lands with a better
-picks number, tweet 9 should cite v0.8.1 instead — same provenance file.
+**v0.8.1 note (landed 2026-07-20):** per-type blend scored 16.0/33.1/44.6
+overall on the one permitted test look — best lineage, so tweet 9 cites it.
+Picks did NOT improve over the flat blend (17.0 vs 17.2 top-1), so the picks
+claim stays on v0.8_blend numbers.
