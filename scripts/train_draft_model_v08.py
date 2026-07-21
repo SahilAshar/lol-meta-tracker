@@ -47,7 +47,14 @@ from train_draft_model import (
 # carries picks, GBM carries bans).
 CHOSEN = Config(d_model=192, n_layers=4, n_heads=6)
 BLEND_W: float | None = 0.25  # transformer share of rank-average blend with v0.7 GBM
-VERSION = "v0.8"
+
+# v0.8.1: per-decision-type blend weights, promoted from the experiment_v08.py
+# per-type val sweep (w in {0, 0.25, 0.5, 0.75, 1.0} per type, selected on val
+# top-1 only). Picks want the transformer-heavy blend; bans want the GBM alone
+# (the transformer is date-blind and can't see the current meta).
+BLEND_W_PICKS: float = 0.75
+BLEND_W_BANS: float = 0.0
+VERSION = "v0.8.1"
 
 
 def main() -> None:
@@ -110,6 +117,27 @@ def main() -> None:
             return BLEND_W * t + (1 - BLEND_W) * g
         results["v0.8_blend"] = score_splits(blend_score, val, test)
 
+    # --- v0.8.1: per-decision-type blend weights ---
+    # HONESTY FLAG: this is the project's SECOND evaluation against the same
+    # EWC test set (the v0.8 run on 2026-07-20 was the first). The weights
+    # themselves were selected on val only, and the pick/ban asymmetry that
+    # motivated them is visible on val — but we had already seen the v0.8
+    # test split when we chose to run this. Scored on test exactly once; no
+    # further iteration against this test set regardless of the result.
+    def pertype_score(part: pd.DataFrame) -> np.ndarray:
+        t = pd.Series(tf_score(part)).rank(pct=True).to_numpy()
+        g = pd.Series(gbm_score(part)).rank(pct=True).to_numpy()
+        w = np.where(part.is_ban.to_numpy() == 1, BLEND_W_BANS, BLEND_W_PICKS)
+        return w * t + (1 - w) * g
+
+    results["v0.8.1_blend_pertype"] = {
+        "blend_w_picks": BLEND_W_PICKS, "blend_w_bans": BLEND_W_BANS,
+        "note": ("second look at the same EWC test set (v0.8 was the first); "
+                 "per-type weights selected on val only; scored on test once, "
+                 "no further test iteration"),
+        **score_splits(pertype_score, val, test),
+    }
+
     for tag, feats in [("v0.5", FEATURES_V05), ("v0.6", FEATURES_V06)]:
         m = fit_clf(feats, train, 16)
         results[f"{tag}_refit_multi"] = score_splits(
@@ -124,7 +152,16 @@ def main() -> None:
             "val": stored.get("val"), "test_ewc_main": stored.get("test_ewc_main"),
         }
 
+    # Rewriting the json regenerates the v0.8 blocks; with fixed seeds they
+    # should reproduce exactly. Flag any drift loudly instead of hiding it.
     out = DATA_PROCESSED / "draft_model_metrics_v08.json"
+    if out.exists():
+        prev = json.loads(out.read_text())
+        for k in ("v0.8_transformer", "v0.7_refit_multi", "v0.8_blend"):
+            if k in prev and prev[k] != results.get(k):
+                print(f"WARNING: recomputed {k} differs from the stored "
+                      "metrics json — nondeterministic refit, review before "
+                      "committing")
     out.write_text(json.dumps(results, indent=2))
     print(json.dumps({k: results[k] for k in
                       ("v0.8_transformer", "v0.7_refit_multi")}, indent=2))

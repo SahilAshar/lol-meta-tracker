@@ -29,7 +29,7 @@ from draft_transformer import (
 )
 from train_draft_model import FEATURES, VAL_DAYS, fit_clf, fit_ranker, topk_accuracy
 
-BLEND_WEIGHTS = [0.25, 0.5, 0.75]  # transformer share of the blend
+BLEND_WEIGHTS = [0.0, 0.25, 0.5, 0.75, 1.0]  # transformer share of the blend
 SEEDS3 = [16, 17, 42]
 
 
@@ -157,9 +157,24 @@ def main() -> None:
     val["s"] = gbm
     print(f"{'GBM v0.7-feats (reduced ens4)':34s} {fmt(topk_accuracy(val, 's'))}")
     tr = pd.Series(attach_scores(val, ens, val_pos, vocab)).rank(pct=True).to_numpy()
+    sweep: dict[float, dict] = {}
     for w in BLEND_WEIGHTS:
         val["s"] = w * tr + (1 - w) * gbm
-        print(f"{f'blend w_transformer={w}':34s} {fmt(topk_accuracy(val, 's'))}")
+        sweep[w] = topk_accuracy(val, "s")
+        print(f"{f'blend w_transformer={w}':34s} {fmt(sweep[w])}")
+
+    # --- 4. per-decision-type weight selection (v0.8.1) ---
+    # Picks and bans are graded independently by topk_accuracy, so the best
+    # weight per type reads straight off the sweep columns. Ties break toward
+    # lower w (lean on the GBM). Winners get promoted to BLEND_W_PICKS /
+    # BLEND_W_BANS in train_draft_model_v08.py.
+    print("\nper-type selection (val top-1, ties -> lower w):")
+    for kind in ("picks", "bans"):
+        w_best = max(BLEND_WEIGHTS, key=lambda w: (sweep[w][kind]["top1"], -w))
+        m = sweep[w_best][kind]
+        print(f"  {kind}: w_transformer={w_best}  "
+              f"top1={m['top1'] * 100:.1f} top3={m['top3'] * 100:.1f} "
+              f"top5={m['top5'] * 100:.1f}")
 
 
 if __name__ == "__main__":
