@@ -4,11 +4,15 @@ Oracle's Elixir hosts yearly CSVs in a public Google Drive folder (linked from
 oracleselixir.com/tools/downloads — the old S3 bucket is dead). Known file IDs
 are hardcoded below; if a year is missing or an ID goes stale, the folder page
 is scraped to rediscover IDs.
+
+Google Drive blocks direct downloads from cloud/CI IPs. We try multiple
+URL patterns with a persistent session (cookies) and fall back across them.
 """
 
 import argparse
 import re
 import sys
+import time
 
 import requests
 
@@ -16,7 +20,6 @@ from common import CURRENT_YEAR, DATA_RAW, raw_csv_path
 
 DRIVE_FOLDER_ID = "1gLSw0RLjBbtaNy0dgnGQDAZOHIgCe-HH"
 DRIVE_FOLDER_URL = f"https://drive.google.com/drive/folders/{DRIVE_FOLDER_ID}"
-DOWNLOAD_URL = "https://drive.usercontent.google.com/download"
 
 FILE_IDS = {
     2020: "1dlSIczXShnv1vIfGNvBjgk-thMKA5j7d",
@@ -28,16 +31,65 @@ FILE_IDS = {
     2026: "1hnpbrUpBMS1TZI7IovfpKeZfWJH1Aptm",
 }
 
-UA = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)"}
+UA = {
+    "User-Agent": (
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+    )
+}
+
+DOWNLOAD_URLS = [
+    # Pattern 1: usercontent endpoint (current default)
+    lambda fid: (
+        "https://drive.usercontent.google.com/download",
+        {"id": fid, "export": "download", "confirm": "t"},
+    ),
+    # Pattern 2: /uc?export=download (older, sometimes bypasses blocks)
+    lambda fid: (
+        f"https://drive.google.com/uc",
+        {"export": "download", "id": fid, "confirm": "t"},
+    ),
+    # Pattern 3: direct file download via open link
+    lambda fid: (
+        f"https://drive.google.com/uc",
+        {"export": "download", "id": fid},
+    ),
+]
 
 
 def csv_filename(year: int) -> str:
     return f"{year}_LoL_esports_match_data_from_OraclesElixir.csv"
 
 
-def discover_file_id(year: int) -> str:
+def _make_session() -> requests.Session:
+    """Create a session with browser-like headers for cookie persistence."""
+    s = requests.Session()
+    s.headers.update(UA)
+    s.headers["Accept"] = "text/html,application/xhtml+xml,*/*"
+    s.headers["Accept-Language"] = "en-US,en;q=0.9"
+    return s
+
+
+def _extract_confirm_url(html: str) -> str | None:
+    """Parse Drive's virus-scan interstitial for the real download link."""
+    # Drive sometimes shows a form with a confirm action
+    m = re.search(r'href="(/uc\?export=download[^"]+)"', html)
+    if m:
+        return "https://drive.google.com" + m.group(1).replace("&amp;", "&")
+    m = re.search(r'action="([^"]+)"', html)
+    if m:
+        url = m.group(1).replace("&amp;", "&")
+        if "download" in url or "uc" in url:
+            if not url.startswith("http"):
+                url = "https://drive.google.com" + url
+            return url
+    return None
+
+
+def discover_file_id(year: int, session: requests.Session | None = None) -> str:
     """Scrape the public Drive folder listing to find the file ID for a year."""
-    resp = requests.get(DRIVE_FOLDER_URL, headers=UA, timeout=60)
+    s = session or requests
+    resp = s.get(DRIVE_FOLDER_URL, headers=UA, timeout=60)
     resp.raise_for_status()
     html = resp.text
     idx = html.find(csv_filename(year))
@@ -51,6 +103,36 @@ def discover_file_id(year: int) -> str:
     return ids[-1]
 
 
+def _try_download(session: requests.Session, file_id: str) -> requests.Response | None:
+    """Try all URL patterns, returning the first that yields non-HTML content."""
+    for i, make_url in enumerate(DOWNLOAD_URLS):
+        url, params = make_url(file_id)
+        label = f"pattern {i + 1}"
+        print(f"  Trying {label}: {url.split('/')[-1]}...")
+        resp = session.get(url, params=params, timeout=300, stream=True)
+        resp.raise_for_status()
+
+        ct = resp.headers.get("Content-Type", "")
+        if "text/html" not in ct:
+            print(f"  {label} succeeded (Content-Type: {ct})")
+            return resp
+
+        # Got HTML — check for a virus-scan interstitial with a confirm link
+        body = resp.text
+        confirm_url = _extract_confirm_url(body)
+        if confirm_url:
+            print(f"  {label} returned interstitial, following confirm link...")
+            resp2 = session.get(confirm_url, timeout=300, stream=True)
+            resp2.raise_for_status()
+            if "text/html" not in resp2.headers.get("Content-Type", ""):
+                print(f"  Confirm link succeeded")
+                return resp2
+
+        print(f"  {label} returned HTML, trying next...")
+
+    return None
+
+
 def download(year: int, force: bool = False) -> None:
     dest = raw_csv_path(year)
     DATA_RAW.mkdir(parents=True, exist_ok=True)
@@ -61,22 +143,30 @@ def download(year: int, force: bool = False) -> None:
         file_id = discover_file_id(year)
         print(f"Discovered file ID: {file_id}")
 
-    params = {"id": file_id, "export": "download", "confirm": "t"}
-    print(f"Downloading {csv_filename(year)} ...")
-    resp = requests.get(DOWNLOAD_URL, params=params, headers=UA, timeout=300, stream=True)
-    resp.raise_for_status()
+    session = _make_session()
 
-    content_type = resp.headers.get("Content-Type", "")
-    if "text/html" in content_type:
-        # Drive returned an interstitial page instead of the file — the
-        # hardcoded ID is likely stale. Retry once with a freshly scraped ID.
-        print("Got HTML instead of CSV (stale file ID?), rescraping folder...")
-        file_id = discover_file_id(year)
-        params["id"] = file_id
-        resp = requests.get(DOWNLOAD_URL, params=params, headers=UA, timeout=300, stream=True)
-        resp.raise_for_status()
-        if "text/html" in resp.headers.get("Content-Type", ""):
-            raise RuntimeError("Drive keeps returning HTML — download flow may have changed")
+    # Warm the session by visiting the folder page first (gets cookies)
+    print(f"Downloading {csv_filename(year)} ...")
+    try:
+        session.get(DRIVE_FOLDER_URL, timeout=30)
+    except Exception:
+        pass  # non-fatal; we just want cookies if available
+
+    resp = _try_download(session, file_id)
+
+    # If all patterns failed, rescrape for a new file ID and retry
+    if resp is None:
+        print("All URL patterns returned HTML. Rescraping folder for new file ID...")
+        file_id = discover_file_id(year, session)
+        print(f"Discovered file ID: {file_id}")
+        time.sleep(2)
+        resp = _try_download(session, file_id)
+
+    if resp is None:
+        raise RuntimeError(
+            "Drive keeps returning HTML for all URL patterns — "
+            "download may require manual intervention or a different approach"
+        )
 
     tmp = dest.with_suffix(".csv.part")
     size = 0
