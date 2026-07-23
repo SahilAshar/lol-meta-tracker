@@ -1,4 +1,4 @@
-# Cross-League Meta Report — 2026-07-19
+# Cross-League Meta Report — 2026-07-23
 
 Games from **2026-04-19** through **2026-06-14**.
 
