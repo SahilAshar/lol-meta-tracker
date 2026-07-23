@@ -335,7 +335,21 @@ def main() -> None:
                     help="only pull matches newer than this many days")
     ap.add_argument("--export", metavar="PATH",
                     help="export done matches to jsonl.gz and exit")
+    ap.add_argument("--snapshot", action="store_true",
+                    help="write a consistent backup.db next to the db and exit "
+                         "(safe against a live WAL writer; for off-box backups)")
     args = ap.parse_args()
+
+    if args.snapshot:
+        src = connect()
+        dst_path = OUT_DIR / "backup.db"
+        dst_path.unlink(missing_ok=True)
+        dst = sqlite3.connect(dst_path)
+        with dst:
+            src.backup(dst)
+        dst.close()
+        print(f"snapshot written to {dst_path}")
+        return
 
     if args.export:
         export(args.export)
