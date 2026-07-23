@@ -1,0 +1,89 @@
+{
+  "experiment": "v0.9 rung 0 \u2014 outcome-head falsifiable baseline",
+  "question": "does the completed draft improve win-prediction log-loss over side + team-strength (online Elo)?",
+  "splits": {
+    "train_end": "2026-03-15",
+    "val_end": "2026-05-15",
+    "n_train": 4099,
+    "n_val": 625,
+    "n_holdout": 374,
+    "frozen_ewc_main_event_excluded": 50
+  },
+  "elo_k": 10.0,
+  "logistic_c": {
+    "M1_elo": 1000000.0,
+    "M2a_elo_champs": 0.01,
+    "M2b_elo_meta": 1000000.0,
+    "M2c_elo_meta_champs": 0.01
+  },
+  "val": {
+    "M1_elo": {
+      "log_loss": 0.61073,
+      "auc": 0.7148,
+      "acc": 0.6672
+    },
+    "M2a_elo_champs": {
+      "log_loss": 0.60657,
+      "auc": 0.721,
+      "acc": 0.68
+    },
+    "M2b_elo_meta": {
+      "log_loss": 0.60743,
+      "auc": 0.7201,
+      "acc": 0.6704
+    },
+    "M2c_elo_meta_champs": {
+      "log_loss": 0.60657,
+      "auc": 0.721,
+      "acc": 0.6784
+    },
+    "M0_baserate": {
+      "log_loss": 0.68929,
+      "auc": 0.5,
+      "acc": 0.5488
+    }
+  },
+  "holdout": {
+    "M0_baserate": {
+      "log_loss": 0.68558,
+      "auc": 0.5,
+      "acc": 0.5775
+    },
+    "M1_elo": {
+      "log_loss": 0.61439,
+      "auc": 0.7077,
+      "acc": 0.6578
+    },
+    "M2a_elo_champs": {
+      "log_loss": 0.60235,
+      "auc": 0.7289,
+      "acc": 0.6952
+    },
+    "M2b_elo_meta": {
+      "log_loss": 0.60618,
+      "auc": 0.7224,
+      "acc": 0.6738
+    },
+    "M2c_elo_meta_champs": {
+      "log_loss": 0.60233,
+      "auc": 0.729,
+      "acc": 0.6952
+    }
+  },
+  "gate": {
+    "challenger": "M2a_elo_champs",
+    "holdout_ll_diff_mean": 0.01204,
+    "holdout_ll_diff_ci95": [
+      0.0026,
+      0.02148
+    ],
+    "p_challenger_better": 0.993
+  },
+  "caveats": [
+    "holdout is ~a few hundred games; only coarse effects are detectable \u2014 treat the CI, not the point estimate, as the result",
+    "team strength = online Elo over teamname; rebrands reset ratings",
+    "draft features see the COMPLETED draft \u2014 this is the easiest possible setting for draft signal; a per-slot head can only have less",
+    "champion indicators can proxy residual team identity (signature picks of strong teams) beyond Elo \u2014 part of the edge may be who-picks-it, not what-wins; M2b (trailing champ winrate, team-agnostic) also beating M1 suggests the signal is not only that",
+    "holdout scored once per design listed here; no further iteration against it"
+  ]
+}

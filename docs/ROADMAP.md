@@ -1,8 +1,8 @@
 # Roadmap & Pickup Notes
 
-*Last updated: 2026-07-20 (v0.8.1 per-type blend + debut draft + artifact
-refresh session). This doc is the "where were we" file — read it first when
-resuming work.*
+*Last updated: 2026-07-22 (v0.9 rung 0: outcome-head falsifiable baseline —
+draft signal in win prediction is REAL). This doc is the "where were we"
+file — read it first when resuming work.*
 
 ## Current state (all working, all verified)
 
@@ -54,6 +54,23 @@ resuming work.*
     to the GBM. Split sizes from the run: train 100,836 / val 1,080 / test
     1,000 decisions (the previously quoted 102,916 is the three-way total).
     Recomputed v0.8/v0.7 blocks reproduced the stored json exactly.
+  - **v0.9 rung 0 (2026-07-22)** = the falsifiable gate for the
+    win-probability outcome head, and it PASSED:
+    `experiment_v09_outcome_baseline.py` asks whether the completed draft
+    improves win-prediction log-loss over side + online-Elo team strength.
+    Chronological splits (train <2026-03-15: 4,099 / val to 05-15: 625 /
+    holdout after: 374 games; the frozen EWC July main event's 50 games
+    excluded from every slice). Holdout, scored once: Elo-only 0.6144
+    log-loss / 0.708 AUC; + signed champion indicators (C=0.01, val-chosen)
+    0.6024 / 0.729 / 69.5% acc. Paired bootstrap on the log-loss diff:
+    +0.012 mean, 95% CI [+0.003, +0.021], challenger better in 99.3% of
+    resamples. A team-agnostic trailing-champ-winrate scalar also beats
+    Elo-only, so the edge is not purely signature-pick team leakage (caveat
+    recorded). Full numbers + caveats in
+    `data/processed/outcome_baseline_v09.json`. Implication: the outcome
+    head is alive — the completed draft carries real win signal beyond team
+    strength; a per-slot head can only see less, so per-slot value remains
+    to be shown.
   - **Embeddings learned real structure**: 5-NN role purity 0.682 vs 0.20
     chance; `charts/champion_embeddings_tsne_v08.png` (debut-thread artifact)
     shows role clusters with flex picks (Poppy, Camille, Sett, Nasus, TF)
@@ -80,6 +97,15 @@ resuming work.*
    worth trying, in order of expected value:
    - ~~Per-decision-type blend weights~~ **Done 2026-07-20 as v0.8.1** — see
      Current state. Best overall top-1 (16.0); gain came from bans, not picks.
+   - ~~Outcome-head falsifiable baseline~~ **Done 2026-07-22 as v0.9 rung 0**
+     — PASSED, see Current state. Next outcome-head rungs, if pursued: (a)
+     per-slot win-prob (does partial draft carry signal?), (b) the
+     transformer outcome head proper (second output head on the v0.8
+     transformer, mimicry head proposes / outcome head ranks), (c) team
+     embeddings instead of Elo. NOTE: the outcome head is a real pivot
+     (different labels, different audience) — the north-star conversation
+     (vault `drafts/2026-07-20-handoff-lol-meta-tracker-northstar.md`) is
+     still unhad and should gate the full build, not this cheap probe.
    - **Give the transformer time signal** for bans: patch embedding or the
      trailing meta-rate features injected at the output layer — its 7.6 ban
      top-1 vs GBM's 15.0 is entirely current-meta blindness.
