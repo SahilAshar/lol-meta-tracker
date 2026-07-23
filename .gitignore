@@ -20,3 +20,7 @@ data/processed/*.joblib
 
 # Model binaries (torch checkpoints live with joblib outside git)
 data/processed/*.pt
+
+# Riot API (personal key + scraped soloq data — never commit)
+.riot-api-key
+data/raw/soloq/
