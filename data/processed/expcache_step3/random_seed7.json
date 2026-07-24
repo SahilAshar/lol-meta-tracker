@@ -1,0 +1,1 @@
+{"condition": "random", "seed": 7, "best_val_loss": 3.5654, "top1": 0.1213, "top3": 0.2694, "top5": 0.3898, "picks": {"n": 540, "top1": 0.1741, "top3": 0.3278, "top5": 0.4333}, "bans": {"n": 540, "top1": 0.0685, "top3": 0.2111, "top5": 0.3463}, "epochs": 32, "wall_s": 129.5}

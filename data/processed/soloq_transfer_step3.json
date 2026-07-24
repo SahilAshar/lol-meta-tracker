@@ -1,0 +1,272 @@
+{
+  "note": "Step 3 soloq->pro embedding transfer: soloq-init champ_emb vs random init, 5 paired seeds, pro validation only",
+  "runs": [
+    {
+      "condition": "random",
+      "seed": 16,
+      "best_val_loss": 3.5855,
+      "top1": 0.1389,
+      "top3": 0.3009,
+      "top5": 0.4074,
+      "picks": {
+        "n": 540,
+        "top1": 0.1833,
+        "top3": 0.3574,
+        "top5": 0.463
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.0944,
+        "top3": 0.2444,
+        "top5": 0.3519
+      },
+      "epochs": 47,
+      "wall_s": 192.5
+    },
+    {
+      "condition": "soloq",
+      "seed": 16,
+      "best_val_loss": 3.5322,
+      "top1": 0.1306,
+      "top3": 0.2741,
+      "top5": 0.3981,
+      "picks": {
+        "n": 540,
+        "top1": 0.1759,
+        "top3": 0.3315,
+        "top5": 0.4556
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.0852,
+        "top3": 0.2167,
+        "top5": 0.3407
+      },
+      "epochs": 35,
+      "wall_s": 142.1
+    },
+    {
+      "condition": "random",
+      "seed": 17,
+      "best_val_loss": 3.5623,
+      "top1": 0.1222,
+      "top3": 0.2833,
+      "top5": 0.3972,
+      "picks": {
+        "n": 540,
+        "top1": 0.1704,
+        "top3": 0.3444,
+        "top5": 0.4574
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.0741,
+        "top3": 0.2222,
+        "top5": 0.337
+      },
+      "epochs": 36,
+      "wall_s": 146.0
+    },
+    {
+      "condition": "soloq",
+      "seed": 17,
+      "best_val_loss": 3.6332,
+      "top1": 0.1083,
+      "top3": 0.2704,
+      "top5": 0.3815,
+      "picks": {
+        "n": 540,
+        "top1": 0.1463,
+        "top3": 0.2944,
+        "top5": 0.4185
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.0704,
+        "top3": 0.2463,
+        "top5": 0.3444
+      },
+      "epochs": 24,
+      "wall_s": 96.8
+    },
+    {
+      "condition": "random",
+      "seed": 42,
+      "best_val_loss": 3.5244,
+      "top1": 0.1167,
+      "top3": 0.2704,
+      "top5": 0.3861,
+      "picks": {
+        "n": 540,
+        "top1": 0.1574,
+        "top3": 0.3111,
+        "top5": 0.4241
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.0759,
+        "top3": 0.2296,
+        "top5": 0.3481
+      },
+      "epochs": 34,
+      "wall_s": 138.0
+    },
+    {
+      "condition": "soloq",
+      "seed": 42,
+      "best_val_loss": 3.5126,
+      "top1": 0.1278,
+      "top3": 0.3028,
+      "top5": 0.4185,
+      "picks": {
+        "n": 540,
+        "top1": 0.1556,
+        "top3": 0.3593,
+        "top5": 0.4667
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.1,
+        "top3": 0.2463,
+        "top5": 0.3704
+      },
+      "epochs": 38,
+      "wall_s": 152.7
+    },
+    {
+      "condition": "random",
+      "seed": 7,
+      "best_val_loss": 3.5654,
+      "top1": 0.1213,
+      "top3": 0.2694,
+      "top5": 0.3898,
+      "picks": {
+        "n": 540,
+        "top1": 0.1741,
+        "top3": 0.3278,
+        "top5": 0.4333
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.0685,
+        "top3": 0.2111,
+        "top5": 0.3463
+      },
+      "epochs": 32,
+      "wall_s": 129.5
+    },
+    {
+      "condition": "soloq",
+      "seed": 7,
+      "best_val_loss": 3.6462,
+      "top1": 0.113,
+      "top3": 0.2639,
+      "top5": 0.3769,
+      "picks": {
+        "n": 540,
+        "top1": 0.1259,
+        "top3": 0.2944,
+        "top5": 0.4
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.1,
+        "top3": 0.2333,
+        "top5": 0.3537
+      },
+      "epochs": 21,
+      "wall_s": 84.6
+    },
+    {
+      "condition": "random",
+      "seed": 23,
+      "best_val_loss": 3.5766,
+      "top1": 0.1185,
+      "top3": 0.2722,
+      "top5": 0.387,
+      "picks": {
+        "n": 540,
+        "top1": 0.1648,
+        "top3": 0.3278,
+        "top5": 0.4333
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.0722,
+        "top3": 0.2167,
+        "top5": 0.3407
+      },
+      "epochs": 40,
+      "wall_s": 160.9
+    },
+    {
+      "condition": "soloq",
+      "seed": 23,
+      "best_val_loss": 3.6335,
+      "top1": 0.112,
+      "top3": 0.2676,
+      "top5": 0.3639,
+      "picks": {
+        "n": 540,
+        "top1": 0.1296,
+        "top3": 0.3019,
+        "top5": 0.3815
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.0944,
+        "top3": 0.2333,
+        "top5": 0.3463
+      },
+      "epochs": 24,
+      "wall_s": 96.6
+    }
+  ],
+  "paired_deltas": {
+    "seeds": [
+      16,
+      17,
+      42,
+      7,
+      23
+    ],
+    "d_loss (random - soloq, >0 favors soloq)": [
+      0.0533,
+      -0.0709,
+      0.0118,
+      -0.0808,
+      -0.0569
+    ],
+    "d_top1 (soloq - random, >0 favors soloq)": [
+      -0.0083,
+      -0.0139,
+      0.0111,
+      -0.0083,
+      -0.0065
+    ],
+    "mean_d_loss": -0.0287,
+    "mean_d_top1": -0.0052,
+    "d_loss_positive_seeds": "2/5",
+    "bootstrap_95ci_mean_d_loss": [
+      -0.0721,
+      0.0202
+    ]
+  },
+  "verdict": "NO-GO",
+  "verdict_detail": {
+    "ci_excludes_0_favorably": false,
+    "mean_d_top1_ge_1.5pts": false
+  },
+  "provenance": {
+    "projection_seed": 1234,
+    "target_norm": 0.27712812921102037,
+    "mapping_size": 21,
+    "champs_injected": 168,
+    "split_cutoff": "2026-07-15",
+    "val_days": 14,
+    "config": "d192x4L6H,lr=0.0003,do=0.1",
+    "device": "cpu",
+    "soloq_purity": 0.7225,
+    "bootstrap_resamples": 10000
+  }
+}

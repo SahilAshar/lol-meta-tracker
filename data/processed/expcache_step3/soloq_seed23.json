@@ -1,0 +1,1 @@
+{"condition": "soloq", "seed": 23, "best_val_loss": 3.6335, "top1": 0.112, "top3": 0.2676, "top5": 0.3639, "picks": {"n": 540, "top1": 0.1296, "top3": 0.3019, "top5": 0.3815}, "bans": {"n": 540, "top1": 0.0944, "top3": 0.2333, "top5": 0.3463}, "epochs": 24, "wall_s": 96.6}
