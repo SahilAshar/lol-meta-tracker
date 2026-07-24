@@ -90,7 +90,9 @@ status_lock = threading.Lock()
 
 def connect() -> sqlite3.Connection:
     OUT_DIR.mkdir(parents=True, exist_ok=True)
-    con = sqlite3.connect(DB_PATH, timeout=60)
+    # Autocommit: a write txn must never span the rate-limited HTTP calls in
+    # drain(), or the other region threads time out with "database is locked".
+    con = sqlite3.connect(DB_PATH, timeout=60, isolation_level=None)
     con.execute("PRAGMA journal_mode=WAL")
     con.execute("PRAGMA synchronous=NORMAL")
     con.executescript(SCHEMA)

@@ -1,0 +1,22 @@
+{
+  "games_used": 78164,
+  "champions": 173,
+  "min_games": 30,
+  "emb_dim": 128,
+  "cooc_pairs_total": 7033590.0,
+  "purity_5nn": 0.7225,
+  "pro_baseline": 0.704,
+  "chance": 0.2,
+  "per_role_purity": {
+    "TOP": 0.6974,
+    "JUNGLE": 0.8595,
+    "MIDDLE": 0.5871,
+    "BOTTOM": 0.6941,
+    "UTILITY": 0.7563
+  },
+  "gate": {
+    "go_ge": 0.55,
+    "nogo_lt": 0.4
+  },
+  "verdict": "GO-eligible (purity >= 0.55; run Step 3 pro refit)"
+}
