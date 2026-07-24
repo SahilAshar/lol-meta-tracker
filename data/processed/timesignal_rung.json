@@ -1,0 +1,349 @@
+{
+  "note": "Ban time-signal rung: 28-day trailing global pick/ban rates injected at the transformer output layer (4 slot-type-gated scalars), baseline vs meta, 5 paired seeds, pro validation only. Primary metric: ban val top-1.",
+  "runs": [
+    {
+      "condition": "baseline",
+      "seed": 16,
+      "best_val_loss": 3.5855,
+      "top1": 0.1389,
+      "top3": 0.3009,
+      "top5": 0.4074,
+      "picks": {
+        "n": 540,
+        "top1": 0.1833,
+        "top3": 0.3574,
+        "top5": 0.463
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.0944,
+        "top3": 0.2444,
+        "top5": 0.3519
+      },
+      "epochs": 47,
+      "wall_s": 193.7
+    },
+    {
+      "condition": "meta",
+      "seed": 16,
+      "best_val_loss": 3.4623,
+      "top1": 0.1509,
+      "top3": 0.3167,
+      "top5": 0.437,
+      "picks": {
+        "n": 540,
+        "top1": 0.1833,
+        "top3": 0.3648,
+        "top5": 0.4574
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.1185,
+        "top3": 0.2685,
+        "top5": 0.4167
+      },
+      "epochs": 48,
+      "wall_s": 197.4,
+      "meta_w": [
+        [
+          0.1928,
+          0.1746
+        ],
+        [
+          0.2007,
+          0.2348
+        ]
+      ]
+    },
+    {
+      "condition": "baseline",
+      "seed": 17,
+      "best_val_loss": 3.5623,
+      "top1": 0.1222,
+      "top3": 0.2833,
+      "top5": 0.3972,
+      "picks": {
+        "n": 540,
+        "top1": 0.1704,
+        "top3": 0.3444,
+        "top5": 0.4574
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.0741,
+        "top3": 0.2222,
+        "top5": 0.337
+      },
+      "epochs": 36,
+      "wall_s": 147.7
+    },
+    {
+      "condition": "meta",
+      "seed": 17,
+      "best_val_loss": 3.4747,
+      "top1": 0.1352,
+      "top3": 0.3,
+      "top5": 0.4176,
+      "picks": {
+        "n": 540,
+        "top1": 0.1722,
+        "top3": 0.3648,
+        "top5": 0.4593
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.0981,
+        "top3": 0.2352,
+        "top5": 0.3759
+      },
+      "epochs": 36,
+      "wall_s": 152.6,
+      "meta_w": [
+        [
+          0.1536,
+          0.1384
+        ],
+        [
+          0.1554,
+          0.1789
+        ]
+      ]
+    },
+    {
+      "condition": "baseline",
+      "seed": 42,
+      "best_val_loss": 3.5244,
+      "top1": 0.1167,
+      "top3": 0.2704,
+      "top5": 0.3861,
+      "picks": {
+        "n": 540,
+        "top1": 0.1574,
+        "top3": 0.3111,
+        "top5": 0.4241
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.0759,
+        "top3": 0.2296,
+        "top5": 0.3481
+      },
+      "epochs": 34,
+      "wall_s": 138.8
+    },
+    {
+      "condition": "meta",
+      "seed": 42,
+      "best_val_loss": 3.4287,
+      "top1": 0.1231,
+      "top3": 0.3,
+      "top5": 0.425,
+      "picks": {
+        "n": 540,
+        "top1": 0.1611,
+        "top3": 0.3519,
+        "top5": 0.4407
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.0852,
+        "top3": 0.2481,
+        "top5": 0.4093
+      },
+      "epochs": 34,
+      "wall_s": 139.4,
+      "meta_w": [
+        [
+          0.1455,
+          0.1315
+        ],
+        [
+          0.1481,
+          0.1696
+        ]
+      ]
+    },
+    {
+      "condition": "baseline",
+      "seed": 7,
+      "best_val_loss": 3.5654,
+      "top1": 0.1213,
+      "top3": 0.2694,
+      "top5": 0.3898,
+      "picks": {
+        "n": 540,
+        "top1": 0.1741,
+        "top3": 0.3278,
+        "top5": 0.4333
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.0685,
+        "top3": 0.2111,
+        "top5": 0.3463
+      },
+      "epochs": 32,
+      "wall_s": 128.4
+    },
+    {
+      "condition": "meta",
+      "seed": 7,
+      "best_val_loss": 3.456,
+      "top1": 0.1315,
+      "top3": 0.2981,
+      "top5": 0.4259,
+      "picks": {
+        "n": 540,
+        "top1": 0.1704,
+        "top3": 0.3556,
+        "top5": 0.4685
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.0926,
+        "top3": 0.2407,
+        "top5": 0.3833
+      },
+      "epochs": 32,
+      "wall_s": 129.3,
+      "meta_w": [
+        [
+          0.141,
+          0.1276
+        ],
+        [
+          0.1412,
+          0.1612
+        ]
+      ]
+    },
+    {
+      "condition": "baseline",
+      "seed": 23,
+      "best_val_loss": 3.5766,
+      "top1": 0.1185,
+      "top3": 0.2722,
+      "top5": 0.387,
+      "picks": {
+        "n": 540,
+        "top1": 0.1648,
+        "top3": 0.3278,
+        "top5": 0.4333
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.0722,
+        "top3": 0.2167,
+        "top5": 0.3407
+      },
+      "epochs": 40,
+      "wall_s": 162.3
+    },
+    {
+      "condition": "meta",
+      "seed": 23,
+      "best_val_loss": 3.4682,
+      "top1": 0.1287,
+      "top3": 0.2963,
+      "top5": 0.4065,
+      "picks": {
+        "n": 540,
+        "top1": 0.1704,
+        "top3": 0.337,
+        "top5": 0.4333
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.087,
+        "top3": 0.2556,
+        "top5": 0.3796
+      },
+      "epochs": 40,
+      "wall_s": 161.3,
+      "meta_w": [
+        [
+          0.1718,
+          0.1543
+        ],
+        [
+          0.177,
+          0.2019
+        ]
+      ]
+    }
+  ],
+  "baseline_ban_top1_mean": 0.077,
+  "meta_ban_top1_mean": 0.0963,
+  "paired_deltas": {
+    "seeds": [
+      16,
+      17,
+      42,
+      7,
+      23
+    ],
+    "d_ban_top1 (meta - baseline, >0 favors meta)": [
+      0.0241,
+      0.024,
+      0.0093,
+      0.0241,
+      0.0148
+    ],
+    "d_pick_top1 (meta - baseline)": [
+      0.0,
+      0.0018,
+      0.0037,
+      -0.0037,
+      0.0056
+    ],
+    "d_loss (baseline - meta, >0 favors meta)": [
+      0.1232,
+      0.0876,
+      0.0957,
+      0.1094,
+      0.1084
+    ],
+    "mean_d_ban_top1": 0.0193,
+    "mean_d_pick_top1": 0.0015,
+    "mean_d_loss": 0.1049,
+    "d_loss_positive_seeds": "5/5",
+    "bootstrap_95ci_mean_d_loss": [
+      0.0947,
+      0.1149
+    ]
+  },
+  "verdict": "GO",
+  "verdict_detail": {
+    "mean_d_ban_top1_ge_1.5pts": true,
+    "loss_ci_excludes_0_favorably": true,
+    "pick_top1_within_noise_band": true
+  },
+  "provenance": {
+    "features": "28-day trailing global pick_rate/ban_rate (draft_decisions_multi, causal by construction)",
+    "standardization": {
+      "population": "train games only",
+      "train_mean": [
+        0.055881,
+        0.055946
+      ],
+      "train_std": [
+        0.091013,
+        0.116199
+      ]
+    },
+    "injection": "output-layer bias, meta_w[slot_type, feature], zero-init, no RNG consumed",
+    "split_cutoff": "2026-07-15",
+    "val_days": 14,
+    "config": "d192x4L6H,lr=0.0003,do=0.1",
+    "device": "cpu",
+    "seeds": [
+      16,
+      17,
+      42,
+      7,
+      23
+    ],
+    "bootstrap_resamples": 10000,
+    "baseline_canary_seed16": 3.5855
+  }
+}
