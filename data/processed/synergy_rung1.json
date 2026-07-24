@@ -1,0 +1,307 @@
+{
+  "experiment": "synergy_rung1",
+  "question": "do champion-pair interactions predict soloq wins beyond main effects?",
+  "verdict": "NO-GO",
+  "gates": {
+    "M1_vs_M2": {
+      "mean_delta": 1.7e-05,
+      "ci95": [
+        -0.000711,
+        0.000739
+      ],
+      "go": false
+    },
+    "M1_vs_M3": {
+      "mean_delta": 0.000676,
+      "ci95": [
+        -0.000347,
+        0.00171
+      ],
+      "go": false
+    }
+  },
+  "models": {
+    "M0": {
+      "C": null,
+      "val": {
+        "log_loss": 0.6924341195317417
+      },
+      "holdout": {
+        "log_loss": 0.6929506423591244,
+        "auc": 0.5,
+        "acc": 0.5136796536796537
+      }
+    },
+    "M1": {
+      "C": 0.01,
+      "val": {
+        "log_loss": 0.6877642273902893
+      },
+      "holdout": {
+        "log_loss": 0.6901001334190369,
+        "auc": 0.5439681301445154,
+        "acc": 0.531948051948052
+      }
+    },
+    "M2": {
+      "C": 0.003,
+      "val": {
+        "log_loss": 0.6883096694946289
+      },
+      "holdout": {
+        "log_loss": 0.6900829672813416,
+        "auc": 0.5431231506555865,
+        "acc": 0.5325541125541126
+      }
+    },
+    "M3": {
+      "C": 0.003,
+      "val": {
+        "log_loss": 0.6880707740783691
+      },
+      "holdout": {
+        "log_loss": 0.6894239783287048,
+        "auc": 0.5483097994665432,
+        "acc": 0.5357575757575758
+      }
+    }
+  },
+  "provenance": {
+    "clean_games": 76995,
+    "champions": 173,
+    "blue_win_rate": 0.4789,
+    "patch_mix": {
+      "16.11": 1347,
+      "16.12": 14802,
+      "16.13": 39940,
+      "16.14": 20906
+    },
+    "split_boundaries": {
+      "train_end": "2026-07-14 07:25 UTC",
+      "val_end": "2026-07-19 01:52 UTC",
+      "holdout_end": "2026-07-23 21:50 UTC"
+    },
+    "split_sizes": {
+      "train": 53896,
+      "val": 11549,
+      "holdout": 11550
+    },
+    "c_grid": [
+      3e-05,
+      0.0001,
+      0.0003,
+      0.001,
+      0.003,
+      0.01,
+      0.03,
+      0.1,
+      0.3,
+      1.0
+    ],
+    "n_bootstrap": 10000
+  },
+  "top_synergy_pairs": [
+    {
+      "pair": "Alistar+Taliyah",
+      "games": 180,
+      "lift": 0.0672
+    },
+    {
+      "pair": "Hecarim+Locke",
+      "games": 150,
+      "lift": 0.064
+    },
+    {
+      "pair": "Galio+MasterYi",
+      "games": 141,
+      "lift": 0.0617
+    },
+    {
+      "pair": "LeeSin+Sivir",
+      "games": 215,
+      "lift": 0.0584
+    },
+    {
+      "pair": "Nidalee+Qiyana",
+      "games": 197,
+      "lift": 0.0573
+    },
+    {
+      "pair": "Poppy+Syndra",
+      "games": 390,
+      "lift": 0.0556
+    },
+    {
+      "pair": "Camille+Nidalee",
+      "games": 404,
+      "lift": 0.0528
+    },
+    {
+      "pair": "Katarina+Syndra",
+      "games": 127,
+      "lift": 0.0511
+    },
+    {
+      "pair": "Sylas+Taliyah",
+      "games": 179,
+      "lift": 0.0505
+    },
+    {
+      "pair": "Riven+Vi",
+      "games": 61,
+      "lift": 0.0486
+    },
+    {
+      "pair": "Poppy+Senna",
+      "games": 340,
+      "lift": 0.0483
+    },
+    {
+      "pair": "Riven+Senna",
+      "games": 320,
+      "lift": 0.0478
+    },
+    {
+      "pair": "Senna+Vex",
+      "games": 106,
+      "lift": 0.0476
+    },
+    {
+      "pair": "Khazix+Pantheon",
+      "games": 113,
+      "lift": 0.0473
+    },
+    {
+      "pair": "Aatrox+Singed",
+      "games": 62,
+      "lift": 0.0473
+    },
+    {
+      "pair": "FiddleSticks+Jayce",
+      "games": 181,
+      "lift": 0.0468
+    },
+    {
+      "pair": "Pantheon+Ryze",
+      "games": 139,
+      "lift": 0.0461
+    },
+    {
+      "pair": "Kayn+Syndra",
+      "games": 133,
+      "lift": 0.046
+    },
+    {
+      "pair": "Karthus+Locke",
+      "games": 100,
+      "lift": 0.0458
+    },
+    {
+      "pair": "Jhin+TwistedFate",
+      "games": 284,
+      "lift": 0.0455
+    }
+  ],
+  "top_counter_pairs": [
+    {
+      "pair": "Locke+Riven",
+      "games": 215,
+      "lift": -0.0702
+    },
+    {
+      "pair": "Aphelios+Thresh",
+      "games": 162,
+      "lift": -0.0699
+    },
+    {
+      "pair": "Malphite+Sylas",
+      "games": 341,
+      "lift": -0.0663
+    },
+    {
+      "pair": "Diana+Yunara",
+      "games": 102,
+      "lift": 0.0655
+    },
+    {
+      "pair": "Jayce+Yone",
+      "games": 712,
+      "lift": 0.0647
+    },
+    {
+      "pair": "Qiyana+Viego",
+      "games": 191,
+      "lift": 0.0639
+    },
+    {
+      "pair": "Caitlyn+Taliyah",
+      "games": 168,
+      "lift": -0.0627
+    },
+    {
+      "pair": "Nasus+Yasuo",
+      "games": 163,
+      "lift": 0.0612
+    },
+    {
+      "pair": "MasterYi+Vladimir",
+      "games": 103,
+      "lift": 0.0597
+    },
+    {
+      "pair": "Ryze+Zyra",
+      "games": 80,
+      "lift": -0.0573
+    },
+    {
+      "pair": "Gnar+Hwei",
+      "games": 106,
+      "lift": -0.0573
+    },
+    {
+      "pair": "Annie+Aurora",
+      "games": 65,
+      "lift": -0.0566
+    },
+    {
+      "pair": "Anivia+Taliyah",
+      "games": 119,
+      "lift": -0.0565
+    },
+    {
+      "pair": "Mel+Qiyana",
+      "games": 260,
+      "lift": 0.0554
+    },
+    {
+      "pair": "Fiora+Skarner",
+      "games": 50,
+      "lift": -0.0554
+    },
+    {
+      "pair": "Ambessa+Kindred",
+      "games": 163,
+      "lift": -0.055
+    },
+    {
+      "pair": "Trundle+Yasuo",
+      "games": 63,
+      "lift": 0.0545
+    },
+    {
+      "pair": "Mel+Skarner",
+      "games": 74,
+      "lift": -0.0539
+    },
+    {
+      "pair": "Blitzcrank+Viktor",
+      "games": 122,
+      "lift": 0.0536
+    },
+    {
+      "pair": "Elise+Yunara",
+      "games": 82,
+      "lift": -0.0536
+    }
+  ]
+}
