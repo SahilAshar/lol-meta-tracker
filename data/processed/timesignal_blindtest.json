@@ -1,0 +1,165 @@
+{
+  "note": "Blind test of the meta-aware (ban time-signal) transformer on the frozen EWC July-2026 set. THIRD look at this test set; gated on the timesignal_rung GO and Sahil's explicit approval; scored once, no further test iteration.",
+  "protocol": "train_draft_model_v08.py transformer lineage + rung meta injection: 5-seed mean-softmax ensemble, train split fit, val early-stop, full-data vocab",
+  "runs": [
+    {
+      "seed": 16,
+      "best_val_loss": 3.4623,
+      "epochs": 48
+    },
+    {
+      "seed": 17,
+      "best_val_loss": 3.4747,
+      "epochs": 36
+    },
+    {
+      "seed": 42,
+      "best_val_loss": 3.4287,
+      "epochs": 34
+    },
+    {
+      "seed": 7,
+      "best_val_loss": 3.456,
+      "epochs": 32
+    },
+    {
+      "seed": 23,
+      "best_val_loss": 3.4682,
+      "epochs": 40
+    }
+  ],
+  "meta_transformer": {
+    "val": {
+      "all": {
+        "n": 1080,
+        "top1": 0.137,
+        "top3": 0.3157,
+        "top5": 0.4509
+      },
+      "picks": {
+        "n": 540,
+        "top1": 0.1852,
+        "top3": 0.3833,
+        "top5": 0.4926
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.0889,
+        "top3": 0.2481,
+        "top5": 0.4093
+      }
+    },
+    "test_ewc_main": {
+      "all": {
+        "n": 1000,
+        "top1": 0.118,
+        "top3": 0.251,
+        "top5": 0.361
+      },
+      "picks": {
+        "n": 500,
+        "top1": 0.154,
+        "top3": 0.3,
+        "top5": 0.414
+      },
+      "bans": {
+        "n": 500,
+        "top1": 0.082,
+        "top3": 0.202,
+        "top5": 0.308
+      }
+    }
+  },
+  "test_top1_delta_vs_stored_v0.8_transformer": {
+    "all": 0.016,
+    "picks": 0.026,
+    "bans": 0.006
+  },
+  "stored_reference": {
+    "v0.8_transformer_test": {
+      "all": {
+        "n": 1000,
+        "top1": 0.102,
+        "top3": 0.227,
+        "top5": 0.309
+      },
+      "picks": {
+        "n": 500,
+        "top1": 0.128,
+        "top3": 0.286,
+        "top5": 0.374
+      },
+      "bans": {
+        "n": 500,
+        "top1": 0.076,
+        "top3": 0.168,
+        "top5": 0.244
+      }
+    },
+    "v0.7_refit_multi_test": {
+      "all": {
+        "n": 1000,
+        "top1": 0.149,
+        "top3": 0.328,
+        "top5": 0.452
+      },
+      "picks": {
+        "n": 500,
+        "top1": 0.148,
+        "top3": 0.322,
+        "top5": 0.454
+      },
+      "bans": {
+        "n": 500,
+        "top1": 0.15,
+        "top3": 0.334,
+        "top5": 0.45
+      }
+    },
+    "v0.8.1_blend_pertype_test": {
+      "all": {
+        "n": 1000,
+        "top1": 0.16,
+        "top3": 0.331,
+        "top5": 0.446
+      },
+      "picks": {
+        "n": 500,
+        "top1": 0.17,
+        "top3": 0.328,
+        "top5": 0.442
+      },
+      "bans": {
+        "n": 500,
+        "top1": 0.15,
+        "top3": 0.334,
+        "top5": 0.45
+      }
+    }
+  },
+  "provenance": {
+    "seeds": [
+      16,
+      17,
+      42,
+      7,
+      23
+    ],
+    "config": "d192x4L6H,lr=0.0003,do=0.1",
+    "standardization": {
+      "population": "train games only",
+      "train_mean": [
+        0.055881,
+        0.055946
+      ],
+      "train_std": [
+        0.091013,
+        0.116199
+      ]
+    },
+    "split_cutoff": "2026-07-15",
+    "val_days": 14,
+    "device": "cpu",
+    "rung": "timesignal_rung.json (GO)"
+  }
+}
