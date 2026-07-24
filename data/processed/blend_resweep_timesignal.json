@@ -1,0 +1,160 @@
+{
+  "note": "v0.8.1 blend re-sweep on VAL ONLY with the meta-aware transformer (cached blind-test ensemble probs, val slice) vs freshly refit production GBM ensemble. No test look; any weight promotion ships on this evidence alone.",
+  "sweep": {
+    "0.0": {
+      "all": {
+        "n": 1080,
+        "top1": 0.1324,
+        "top3": 0.3204,
+        "top5": 0.4417
+      },
+      "picks": {
+        "n": 540,
+        "top1": 0.1315,
+        "top3": 0.2889,
+        "top5": 0.4185
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.1333,
+        "top3": 0.3519,
+        "top5": 0.4648
+      }
+    },
+    "0.25": {
+      "all": {
+        "n": 1080,
+        "top1": 0.1454,
+        "top3": 0.3611,
+        "top5": 0.487
+      },
+      "picks": {
+        "n": 540,
+        "top1": 0.1648,
+        "top3": 0.3741,
+        "top5": 0.4833
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.1259,
+        "top3": 0.3481,
+        "top5": 0.4907
+      }
+    },
+    "0.5": {
+      "all": {
+        "n": 1080,
+        "top1": 0.15,
+        "top3": 0.3657,
+        "top5": 0.5056
+      },
+      "picks": {
+        "n": 540,
+        "top1": 0.187,
+        "top3": 0.3796,
+        "top5": 0.5111
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.113,
+        "top3": 0.3519,
+        "top5": 0.5
+      }
+    },
+    "0.75": {
+      "all": {
+        "n": 1080,
+        "top1": 0.1491,
+        "top3": 0.3565,
+        "top5": 0.5019
+      },
+      "picks": {
+        "n": 540,
+        "top1": 0.1833,
+        "top3": 0.4,
+        "top5": 0.5148
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.1148,
+        "top3": 0.313,
+        "top5": 0.4889
+      }
+    },
+    "1.0": {
+      "all": {
+        "n": 1080,
+        "top1": 0.137,
+        "top3": 0.3157,
+        "top5": 0.4509
+      },
+      "picks": {
+        "n": 540,
+        "top1": 0.1852,
+        "top3": 0.3833,
+        "top5": 0.4926
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.0889,
+        "top3": 0.2481,
+        "top5": 0.4093
+      }
+    }
+  },
+  "selected_per_type": {
+    "picks": {
+      "w_transformer": 0.5,
+      "n": 540,
+      "top1": 0.187,
+      "top3": 0.3796,
+      "top5": 0.5111
+    },
+    "bans": {
+      "w_transformer": 0.0,
+      "n": 540,
+      "top1": 0.1333,
+      "top3": 0.3519,
+      "top5": 0.4648
+    }
+  },
+  "production_reference": {
+    "current_weights": {
+      "picks": 0.75,
+      "bans": 0.0
+    },
+    "v0.8.1_val": {
+      "all": {
+        "n": 1080,
+        "top1": 0.1648,
+        "top3": 0.3713,
+        "top5": 0.4824
+      },
+      "picks": {
+        "n": 540,
+        "top1": 0.1907,
+        "top3": 0.387,
+        "top5": 0.5037
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.1389,
+        "top3": 0.3556,
+        "top5": 0.4611
+      }
+    }
+  },
+  "provenance": {
+    "transformer": "meta-aware, expcache_timesignal_blind mean of seeds [16, 17, 42, 7, 23] (bit-identical to timesignal_blindtest.json)",
+    "gbm": "10-model production ensemble refit on train, this run",
+    "grid": [
+      0.0,
+      0.25,
+      0.5,
+      0.75,
+      1.0
+    ],
+    "split_cutoff": "2026-07-15",
+    "platform": "Linux-6.8.0-1052-azure-x86_64-with-glibc2.41"
+  }
+}
