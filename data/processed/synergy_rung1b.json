@@ -1,0 +1,1480 @@
+{
+  "experiment": "synergy_rung1b",
+  "question": "does role-aware slotting/synergy predict soloq wins beyond champ effects?",
+  "verdict": "GO",
+  "gates": {
+    "M1_vs_A": {
+      "mean_delta": 0.00098,
+      "ci95": [
+        0.000441,
+        0.001524
+      ],
+      "go": true
+    },
+    "A_vs_B": {
+      "mean_delta": 0.000164,
+      "ci95": [
+        -0.000246,
+        0.000568
+      ],
+      "go": false
+    },
+    "B_vs_C": {
+      "mean_delta": 0.000496,
+      "ci95": [
+        0.000274,
+        0.000713
+      ],
+      "go": true
+    }
+  },
+  "models": {
+    "M1": {
+      "C": 0.01,
+      "n_cols": 173,
+      "val": {
+        "log_loss": 0.6880258321762085
+      },
+      "holdout": {
+        "log_loss": 0.6897108554840088,
+        "auc": 0.5404460564498506,
+        "acc": 0.538063531982437
+      }
+    },
+    "A": {
+      "C": 0.03,
+      "n_cols": 778,
+      "val": {
+        "log_loss": 0.6866285800933838
+      },
+      "holdout": {
+        "log_loss": 0.6887308955192566,
+        "auc": 0.5478472671253426,
+        "acc": 0.5393828203912515
+      }
+    },
+    "B": {
+      "C": 0.003,
+      "n_cols": 8169,
+      "val": {
+        "log_loss": 0.6869582533836365
+      },
+      "holdout": {
+        "log_loss": 0.6885666251182556,
+        "auc": 0.5476615787555736,
+        "acc": 0.5401043062398219
+      }
+    },
+    "C": {
+      "C": 0.003,
+      "n_cols": 12786,
+      "val": {
+        "log_loss": 0.6865063905715942
+      },
+      "holdout": {
+        "log_loss": 0.6880702376365662,
+        "auc": 0.5507214295312586,
+        "acc": 0.5407639504442291
+      }
+    }
+  },
+  "vector_ablations": {
+    "BOTTOM+UTILITY": {
+      "C": 0.003,
+      "holdout_log_loss": 0.6885802149772644,
+      "delta_vs_full_B": {
+        "mean": 1.4e-05,
+        "ci95": [
+          -0.00013,
+          0.000156
+        ]
+      }
+    },
+    "MIDDLE+JUNGLE": {
+      "C": 0.003,
+      "holdout_log_loss": 0.6887329816818237,
+      "delta_vs_full_B": {
+        "mean": 0.000166,
+        "ci95": [
+          5.1e-05,
+          0.000281
+        ]
+      }
+    },
+    "TOP+JUNGLE": {
+      "C": 0.003,
+      "holdout_log_loss": 0.6886126399040222,
+      "delta_vs_full_B": {
+        "mean": 4.6e-05,
+        "ci95": [
+          -5.8e-05,
+          0.000153
+        ]
+      }
+    },
+    "JUNGLE+UTILITY": {
+      "C": 0.003,
+      "holdout_log_loss": 0.6884709596633911,
+      "delta_vs_full_B": {
+        "mean": -9.6e-05,
+        "ci95": [
+          -0.000221,
+          3.3e-05
+        ]
+      }
+    }
+  },
+  "provenance": {
+    "clean_games": 323401,
+    "dropped": {
+      "bad_roles": 23
+    },
+    "champions": 173,
+    "blue_win_rate": 0.4755,
+    "patch_mix": {
+      "16.11": 3120,
+      "16.12": 74814,
+      "16.13": 159330,
+      "16.14": 86137
+    },
+    "split_boundaries": {
+      "train_end": "2026-07-13 21:17 UTC",
+      "val_end": "2026-07-19 14:40 UTC",
+      "holdout_end": "2026-07-25 16:18 UTC"
+    },
+    "split_sizes": {
+      "train": 226380,
+      "val": 48510,
+      "holdout": 48511
+    },
+    "c_grid": [
+      3e-05,
+      0.0001,
+      0.0003,
+      0.001,
+      0.003,
+      0.01,
+      0.03,
+      0.1,
+      0.3,
+      1.0
+    ],
+    "n_bootstrap": 10000,
+    "min_train_games": {
+      "champ_role": 50,
+      "pair": 50,
+      "permutation_row": 150
+    },
+    "feature_counts": {
+      "champions": 173,
+      "champ_role_combos_retained": 605,
+      "syn_cols_per_vector": {
+        "BOTTOM+UTILITY": 1439,
+        "MIDDLE+JUNGLE": 1986,
+        "TOP+JUNGLE": 2185,
+        "JUNGLE+UTILITY": 1781
+      },
+      "counter_cols_per_role": {
+        "TOP": 1128,
+        "JUNGLE": 1003,
+        "MIDDLE": 980,
+        "BOTTOM": 746,
+        "UTILITY": 760
+      }
+    },
+    "runtime_seconds": 41
+  },
+  "permutation_table_top50": [
+    {
+      "pair": "Kled+Senna",
+      "n_slottings": 2,
+      "lift_spread": 0.086,
+      "slottings": [
+        {
+          "slotting": "Kled@TOP + Senna@BOTTOM",
+          "games": 288,
+          "raw_wr": 0.6215,
+          "expected_wr": 0.5288,
+          "lift": 0.0547
+        },
+        {
+          "slotting": "Kled@TOP + Senna@UTILITY",
+          "games": 155,
+          "raw_wr": 0.4516,
+          "expected_wr": 0.5234,
+          "lift": -0.0313
+        }
+      ]
+    },
+    {
+      "pair": "Akali+Sylas",
+      "n_slottings": 3,
+      "lift_spread": 0.0794,
+      "slottings": [
+        {
+          "slotting": "Akali@TOP + Sylas@MIDDLE",
+          "games": 257,
+          "raw_wr": 0.5681,
+          "expected_wr": 0.5011,
+          "lift": 0.0377
+        },
+        {
+          "slotting": "Akali@MIDDLE + Sylas@JUNGLE",
+          "games": 441,
+          "raw_wr": 0.4807,
+          "expected_wr": 0.4991,
+          "lift": -0.0126
+        },
+        {
+          "slotting": "Akali@TOP + Sylas@JUNGLE",
+          "games": 171,
+          "raw_wr": 0.4094,
+          "expected_wr": 0.4997,
+          "lift": -0.0417
+        }
+      ]
+    },
+    {
+      "pair": "Elise+Kaisa",
+      "n_slottings": 2,
+      "lift_spread": 0.0781,
+      "slottings": [
+        {
+          "slotting": "Elise@UTILITY + Kaisa@BOTTOM",
+          "games": 290,
+          "raw_wr": 0.5414,
+          "expected_wr": 0.5009,
+          "lift": 0.024
+        },
+        {
+          "slotting": "Elise@JUNGLE + Kaisa@BOTTOM",
+          "games": 304,
+          "raw_wr": 0.398,
+          "expected_wr": 0.4876,
+          "lift": -0.0541
+        }
+      ]
+    },
+    {
+      "pair": "Riven+Sylas",
+      "n_slottings": 3,
+      "lift_spread": 0.0767,
+      "slottings": [
+        {
+          "slotting": "Riven@MIDDLE + Sylas@JUNGLE",
+          "games": 401,
+          "raw_wr": 0.6259,
+          "expected_wr": 0.5249,
+          "lift": 0.0674
+        },
+        {
+          "slotting": "Riven@TOP + Sylas@JUNGLE",
+          "games": 407,
+          "raw_wr": 0.5602,
+          "expected_wr": 0.5142,
+          "lift": 0.0308
+        },
+        {
+          "slotting": "Riven@TOP + Sylas@MIDDLE",
+          "games": 381,
+          "raw_wr": 0.5013,
+          "expected_wr": 0.5155,
+          "lift": -0.0093
+        }
+      ]
+    },
+    {
+      "pair": "Nautilus+Pantheon",
+      "n_slottings": 3,
+      "lift_spread": 0.0754,
+      "slottings": [
+        {
+          "slotting": "Nautilus@UTILITY + Pantheon@JUNGLE",
+          "games": 245,
+          "raw_wr": 0.5224,
+          "expected_wr": 0.4889,
+          "lift": 0.0185
+        },
+        {
+          "slotting": "Nautilus@UTILITY + Pantheon@TOP",
+          "games": 395,
+          "raw_wr": 0.4937,
+          "expected_wr": 0.5028,
+          "lift": -0.0061
+        },
+        {
+          "slotting": "Nautilus@UTILITY + Pantheon@MIDDLE",
+          "games": 151,
+          "raw_wr": 0.3642,
+          "expected_wr": 0.4966,
+          "lift": -0.0569
+        }
+      ]
+    },
+    {
+      "pair": "Aatrox+Sylas",
+      "n_slottings": 3,
+      "lift_spread": 0.0752,
+      "slottings": [
+        {
+          "slotting": "Aatrox@JUNGLE + Sylas@MIDDLE",
+          "games": 269,
+          "raw_wr": 0.6059,
+          "expected_wr": 0.512,
+          "lift": 0.0539
+        },
+        {
+          "slotting": "Aatrox@TOP + Sylas@JUNGLE",
+          "games": 649,
+          "raw_wr": 0.4869,
+          "expected_wr": 0.4977,
+          "lift": -0.0083
+        },
+        {
+          "slotting": "Aatrox@TOP + Sylas@MIDDLE",
+          "games": 595,
+          "raw_wr": 0.4706,
+          "expected_wr": 0.4991,
+          "lift": -0.0213
+        }
+      ]
+    },
+    {
+      "pair": "Milio+Sylas",
+      "n_slottings": 2,
+      "lift_spread": 0.0734,
+      "slottings": [
+        {
+          "slotting": "Milio@UTILITY + Sylas@MIDDLE",
+          "games": 410,
+          "raw_wr": 0.5463,
+          "expected_wr": 0.495,
+          "lift": 0.0345
+        },
+        {
+          "slotting": "Milio@UTILITY + Sylas@JUNGLE",
+          "games": 391,
+          "raw_wr": 0.4348,
+          "expected_wr": 0.4936,
+          "lift": -0.0389
+        }
+      ]
+    },
+    {
+      "pair": "Senna+TwistedFate",
+      "n_slottings": 2,
+      "lift_spread": 0.0732,
+      "slottings": [
+        {
+          "slotting": "Senna@UTILITY + TwistedFate@MIDDLE",
+          "games": 382,
+          "raw_wr": 0.6204,
+          "expected_wr": 0.5156,
+          "lift": 0.0688
+        },
+        {
+          "slotting": "Senna@BOTTOM + TwistedFate@MIDDLE",
+          "games": 956,
+          "raw_wr": 0.5157,
+          "expected_wr": 0.521,
+          "lift": -0.0044
+        }
+      ]
+    },
+    {
+      "pair": "Lux+Talon",
+      "n_slottings": 2,
+      "lift_spread": 0.073,
+      "slottings": [
+        {
+          "slotting": "Lux@MIDDLE + Talon@JUNGLE",
+          "games": 165,
+          "raw_wr": 0.6061,
+          "expected_wr": 0.5058,
+          "lift": 0.0453
+        },
+        {
+          "slotting": "Lux@UTILITY + Talon@JUNGLE",
+          "games": 186,
+          "raw_wr": 0.4409,
+          "expected_wr": 0.4983,
+          "lift": -0.0277
+        }
+      ]
+    },
+    {
+      "pair": "Sylas+Teemo",
+      "n_slottings": 2,
+      "lift_spread": 0.0722,
+      "slottings": [
+        {
+          "slotting": "Sylas@MIDDLE + Teemo@TOP",
+          "games": 268,
+          "raw_wr": 0.5597,
+          "expected_wr": 0.5077,
+          "lift": 0.0298
+        },
+        {
+          "slotting": "Sylas@JUNGLE + Teemo@TOP",
+          "games": 195,
+          "raw_wr": 0.4205,
+          "expected_wr": 0.5063,
+          "lift": -0.0424
+        }
+      ]
+    },
+    {
+      "pair": "Jhin+Zoe",
+      "n_slottings": 2,
+      "lift_spread": 0.0712,
+      "slottings": [
+        {
+          "slotting": "Jhin@BOTTOM + Zoe@MIDDLE",
+          "games": 689,
+          "raw_wr": 0.553,
+          "expected_wr": 0.5082,
+          "lift": 0.0347
+        },
+        {
+          "slotting": "Jhin@BOTTOM + Zoe@UTILITY",
+          "games": 374,
+          "raw_wr": 0.4332,
+          "expected_wr": 0.4892,
+          "lift": -0.0365
+        }
+      ]
+    },
+    {
+      "pair": "Jayce+Viktor",
+      "n_slottings": 3,
+      "lift_spread": 0.0704,
+      "slottings": [
+        {
+          "slotting": "Jayce@TOP + Viktor@BOTTOM",
+          "games": 165,
+          "raw_wr": 0.5939,
+          "expected_wr": 0.51,
+          "lift": 0.0379
+        },
+        {
+          "slotting": "Jayce@TOP + Viktor@MIDDLE",
+          "games": 1073,
+          "raw_wr": 0.4939,
+          "expected_wr": 0.4954,
+          "lift": -0.0012
+        },
+        {
+          "slotting": "Jayce@JUNGLE + Viktor@MIDDLE",
+          "games": 486,
+          "raw_wr": 0.4342,
+          "expected_wr": 0.4801,
+          "lift": -0.0325
+        }
+      ]
+    },
+    {
+      "pair": "Nidalee+Riven",
+      "n_slottings": 2,
+      "lift_spread": 0.0683,
+      "slottings": [
+        {
+          "slotting": "Nidalee@JUNGLE + Riven@MIDDLE",
+          "games": 218,
+          "raw_wr": 0.6514,
+          "expected_wr": 0.5427,
+          "lift": 0.0567
+        },
+        {
+          "slotting": "Nidalee@JUNGLE + Riven@TOP",
+          "games": 237,
+          "raw_wr": 0.5105,
+          "expected_wr": 0.532,
+          "lift": -0.0116
+        }
+      ]
+    },
+    {
+      "pair": "Belveth+Yone",
+      "n_slottings": 2,
+      "lift_spread": 0.0675,
+      "slottings": [
+        {
+          "slotting": "Belveth@JUNGLE + Yone@MIDDLE",
+          "games": 225,
+          "raw_wr": 0.5422,
+          "expected_wr": 0.5077,
+          "lift": 0.0183
+        },
+        {
+          "slotting": "Belveth@JUNGLE + Yone@TOP",
+          "games": 298,
+          "raw_wr": 0.4362,
+          "expected_wr": 0.5184,
+          "lift": -0.0492
+        }
+      ]
+    },
+    {
+      "pair": "Ezreal+Pantheon",
+      "n_slottings": 4,
+      "lift_spread": 0.0674,
+      "slottings": [
+        {
+          "slotting": "Ezreal@BOTTOM + Pantheon@UTILITY",
+          "games": 492,
+          "raw_wr": 0.5102,
+          "expected_wr": 0.4858,
+          "lift": 0.0173
+        },
+        {
+          "slotting": "Ezreal@BOTTOM + Pantheon@TOP",
+          "games": 485,
+          "raw_wr": 0.4742,
+          "expected_wr": 0.4899,
+          "lift": -0.0111
+        },
+        {
+          "slotting": "Ezreal@BOTTOM + Pantheon@MIDDLE",
+          "games": 173,
+          "raw_wr": 0.4393,
+          "expected_wr": 0.4837,
+          "lift": -0.0206
+        },
+        {
+          "slotting": "Ezreal@BOTTOM + Pantheon@JUNGLE",
+          "games": 263,
+          "raw_wr": 0.3878,
+          "expected_wr": 0.476,
+          "lift": -0.0501
+        }
+      ]
+    },
+    {
+      "pair": "Ambessa+Camille",
+      "n_slottings": 2,
+      "lift_spread": 0.0671,
+      "slottings": [
+        {
+          "slotting": "Ambessa@TOP + Camille@UTILITY",
+          "games": 798,
+          "raw_wr": 0.5125,
+          "expected_wr": 0.4906,
+          "lift": 0.0175
+        },
+        {
+          "slotting": "Ambessa@JUNGLE + Camille@UTILITY",
+          "games": 250,
+          "raw_wr": 0.396,
+          "expected_wr": 0.4852,
+          "lift": -0.0496
+        }
+      ]
+    },
+    {
+      "pair": "Jayce+Senna",
+      "n_slottings": 6,
+      "lift_spread": 0.0665,
+      "slottings": [
+        {
+          "slotting": "Jayce@TOP + Senna@BOTTOM",
+          "games": 1503,
+          "raw_wr": 0.5383,
+          "expected_wr": 0.5138,
+          "lift": 0.0216
+        },
+        {
+          "slotting": "Jayce@MIDDLE + Senna@BOTTOM",
+          "games": 263,
+          "raw_wr": 0.5437,
+          "expected_wr": 0.5168,
+          "lift": 0.0153
+        },
+        {
+          "slotting": "Jayce@JUNGLE + Senna@BOTTOM",
+          "games": 630,
+          "raw_wr": 0.4968,
+          "expected_wr": 0.4985,
+          "lift": -0.0013
+        },
+        {
+          "slotting": "Jayce@TOP + Senna@UTILITY",
+          "games": 573,
+          "raw_wr": 0.5061,
+          "expected_wr": 0.5084,
+          "lift": -0.0017
+        },
+        {
+          "slotting": "Jayce@MIDDLE + Senna@UTILITY",
+          "games": 156,
+          "raw_wr": 0.4872,
+          "expected_wr": 0.5114,
+          "lift": -0.0106
+        },
+        {
+          "slotting": "Jayce@JUNGLE + Senna@UTILITY",
+          "games": 203,
+          "raw_wr": 0.4039,
+          "expected_wr": 0.4931,
+          "lift": -0.0449
+        }
+      ]
+    },
+    {
+      "pair": "Lux+Seraphine",
+      "n_slottings": 3,
+      "lift_spread": 0.0661,
+      "slottings": [
+        {
+          "slotting": "Lux@BOTTOM + Seraphine@UTILITY",
+          "games": 203,
+          "raw_wr": 0.5862,
+          "expected_wr": 0.5118,
+          "lift": 0.0375
+        },
+        {
+          "slotting": "Lux@MIDDLE + Seraphine@UTILITY",
+          "games": 159,
+          "raw_wr": 0.478,
+          "expected_wr": 0.5041,
+          "lift": -0.0116
+        },
+        {
+          "slotting": "Lux@UTILITY + Seraphine@BOTTOM",
+          "games": 189,
+          "raw_wr": 0.4497,
+          "expected_wr": 0.5087,
+          "lift": -0.0286
+        }
+      ]
+    },
+    {
+      "pair": "Braum+Katarina",
+      "n_slottings": 2,
+      "lift_spread": 0.0661,
+      "slottings": [
+        {
+          "slotting": "Braum@UTILITY + Katarina@MIDDLE",
+          "games": 453,
+          "raw_wr": 0.5938,
+          "expected_wr": 0.5149,
+          "lift": 0.0547
+        },
+        {
+          "slotting": "Braum@UTILITY + Katarina@BOTTOM",
+          "games": 195,
+          "raw_wr": 0.4872,
+          "expected_wr": 0.5103,
+          "lift": -0.0114
+        }
+      ]
+    },
+    {
+      "pair": "Hwei+Renekton",
+      "n_slottings": 2,
+      "lift_spread": 0.0657,
+      "slottings": [
+        {
+          "slotting": "Hwei@BOTTOM + Renekton@TOP",
+          "games": 202,
+          "raw_wr": 0.5891,
+          "expected_wr": 0.5015,
+          "lift": 0.044
+        },
+        {
+          "slotting": "Hwei@MIDDLE + Renekton@TOP",
+          "games": 337,
+          "raw_wr": 0.454,
+          "expected_wr": 0.4886,
+          "lift": -0.0217
+        }
+      ]
+    },
+    {
+      "pair": "Alistar+Jayce",
+      "n_slottings": 3,
+      "lift_spread": 0.0656,
+      "slottings": [
+        {
+          "slotting": "Alistar@UTILITY + Jayce@MIDDLE",
+          "games": 219,
+          "raw_wr": 0.5936,
+          "expected_wr": 0.5116,
+          "lift": 0.0429
+        },
+        {
+          "slotting": "Alistar@UTILITY + Jayce@TOP",
+          "games": 946,
+          "raw_wr": 0.5233,
+          "expected_wr": 0.5086,
+          "lift": 0.0121
+        },
+        {
+          "slotting": "Alistar@UTILITY + Jayce@JUNGLE",
+          "games": 356,
+          "raw_wr": 0.4579,
+          "expected_wr": 0.4933,
+          "lift": -0.0227
+        }
+      ]
+    },
+    {
+      "pair": "Mel+Talon",
+      "n_slottings": 2,
+      "lift_spread": 0.0655,
+      "slottings": [
+        {
+          "slotting": "Mel@BOTTOM + Talon@MIDDLE",
+          "games": 160,
+          "raw_wr": 0.575,
+          "expected_wr": 0.4889,
+          "lift": 0.0383
+        },
+        {
+          "slotting": "Mel@BOTTOM + Talon@JUNGLE",
+          "games": 336,
+          "raw_wr": 0.4435,
+          "expected_wr": 0.4868,
+          "lift": -0.0272
+        }
+      ]
+    },
+    {
+      "pair": "Ekko+Gnar",
+      "n_slottings": 2,
+      "lift_spread": 0.0649,
+      "slottings": [
+        {
+          "slotting": "Ekko@MIDDLE + Gnar@TOP",
+          "games": 183,
+          "raw_wr": 0.5519,
+          "expected_wr": 0.4913,
+          "lift": 0.0289
+        },
+        {
+          "slotting": "Ekko@JUNGLE + Gnar@TOP",
+          "games": 202,
+          "raw_wr": 0.4158,
+          "expected_wr": 0.4875,
+          "lift": -0.036
+        }
+      ]
+    },
+    {
+      "pair": "Alistar+Irelia",
+      "n_slottings": 2,
+      "lift_spread": 0.0638,
+      "slottings": [
+        {
+          "slotting": "Alistar@UTILITY + Irelia@TOP",
+          "games": 397,
+          "raw_wr": 0.5466,
+          "expected_wr": 0.5116,
+          "lift": 0.0233
+        },
+        {
+          "slotting": "Alistar@UTILITY + Irelia@MIDDLE",
+          "games": 227,
+          "raw_wr": 0.4273,
+          "expected_wr": 0.5036,
+          "lift": -0.0405
+        }
+      ]
+    },
+    {
+      "pair": "Graves+Senna",
+      "n_slottings": 2,
+      "lift_spread": 0.0637,
+      "slottings": [
+        {
+          "slotting": "Graves@JUNGLE + Senna@BOTTOM",
+          "games": 1431,
+          "raw_wr": 0.5437,
+          "expected_wr": 0.5103,
+          "lift": 0.0293
+        },
+        {
+          "slotting": "Graves@JUNGLE + Senna@UTILITY",
+          "games": 646,
+          "raw_wr": 0.4598,
+          "expected_wr": 0.5048,
+          "lift": -0.0344
+        }
+      ]
+    },
+    {
+      "pair": "Karma+Locke",
+      "n_slottings": 2,
+      "lift_spread": 0.0628,
+      "slottings": [
+        {
+          "slotting": "Karma@UTILITY + Locke@MIDDLE",
+          "games": 537,
+          "raw_wr": 0.5028,
+          "expected_wr": 0.5007,
+          "lift": 0.0015
+        },
+        {
+          "slotting": "Karma@UTILITY + Locke@JUNGLE",
+          "games": 209,
+          "raw_wr": 0.3541,
+          "expected_wr": 0.4741,
+          "lift": -0.0613
+        }
+      ]
+    },
+    {
+      "pair": "Irelia+Naafiri",
+      "n_slottings": 2,
+      "lift_spread": 0.0625,
+      "slottings": [
+        {
+          "slotting": "Irelia@MIDDLE + Naafiri@JUNGLE",
+          "games": 183,
+          "raw_wr": 0.5301,
+          "expected_wr": 0.4869,
+          "lift": 0.0206
+        },
+        {
+          "slotting": "Irelia@TOP + Naafiri@JUNGLE",
+          "games": 418,
+          "raw_wr": 0.433,
+          "expected_wr": 0.4949,
+          "lift": -0.0419
+        }
+      ]
+    },
+    {
+      "pair": "Ekko+Yunara",
+      "n_slottings": 2,
+      "lift_spread": 0.0623,
+      "slottings": [
+        {
+          "slotting": "Ekko@MIDDLE + Yunara@BOTTOM",
+          "games": 259,
+          "raw_wr": 0.5483,
+          "expected_wr": 0.4993,
+          "lift": 0.0276
+        },
+        {
+          "slotting": "Ekko@JUNGLE + Yunara@BOTTOM",
+          "games": 282,
+          "raw_wr": 0.4362,
+          "expected_wr": 0.4955,
+          "lift": -0.0347
+        }
+      ]
+    },
+    {
+      "pair": "Elise+Yunara",
+      "n_slottings": 2,
+      "lift_spread": 0.062,
+      "slottings": [
+        {
+          "slotting": "Elise@JUNGLE + Yunara@BOTTOM",
+          "games": 214,
+          "raw_wr": 0.5748,
+          "expected_wr": 0.4922,
+          "lift": 0.0427
+        },
+        {
+          "slotting": "Elise@UTILITY + Yunara@BOTTOM",
+          "games": 154,
+          "raw_wr": 0.461,
+          "expected_wr": 0.5054,
+          "lift": -0.0193
+        }
+      ]
+    },
+    {
+      "pair": "Darius+Seraphine",
+      "n_slottings": 2,
+      "lift_spread": 0.0618,
+      "slottings": [
+        {
+          "slotting": "Darius@TOP + Seraphine@BOTTOM",
+          "games": 288,
+          "raw_wr": 0.5868,
+          "expected_wr": 0.5183,
+          "lift": 0.0404
+        },
+        {
+          "slotting": "Darius@TOP + Seraphine@UTILITY",
+          "games": 413,
+          "raw_wr": 0.4746,
+          "expected_wr": 0.5063,
+          "lift": -0.0214
+        }
+      ]
+    },
+    {
+      "pair": "Brand+Senna",
+      "n_slottings": 2,
+      "lift_spread": 0.0616,
+      "slottings": [
+        {
+          "slotting": "Brand@UTILITY + Senna@BOTTOM",
+          "games": 156,
+          "raw_wr": 0.6026,
+          "expected_wr": 0.5035,
+          "lift": 0.0434
+        },
+        {
+          "slotting": "Brand@BOTTOM + Senna@UTILITY",
+          "games": 214,
+          "raw_wr": 0.472,
+          "expected_wr": 0.5072,
+          "lift": -0.0182
+        }
+      ]
+    },
+    {
+      "pair": "Jinx+Yasuo",
+      "n_slottings": 2,
+      "lift_spread": 0.0613,
+      "slottings": [
+        {
+          "slotting": "Jinx@BOTTOM + Yasuo@MIDDLE",
+          "games": 384,
+          "raw_wr": 0.5521,
+          "expected_wr": 0.502,
+          "lift": 0.033
+        },
+        {
+          "slotting": "Jinx@BOTTOM + Yasuo@TOP",
+          "games": 232,
+          "raw_wr": 0.4526,
+          "expected_wr": 0.5053,
+          "lift": -0.0283
+        }
+      ]
+    },
+    {
+      "pair": "Irelia+Seraphine",
+      "n_slottings": 4,
+      "lift_spread": 0.0607,
+      "slottings": [
+        {
+          "slotting": "Irelia@TOP + Seraphine@BOTTOM",
+          "games": 230,
+          "raw_wr": 0.5957,
+          "expected_wr": 0.5189,
+          "lift": 0.0411
+        },
+        {
+          "slotting": "Irelia@MIDDLE + Seraphine@BOTTOM",
+          "games": 162,
+          "raw_wr": 0.5494,
+          "expected_wr": 0.5109,
+          "lift": 0.0172
+        },
+        {
+          "slotting": "Irelia@MIDDLE + Seraphine@UTILITY",
+          "games": 212,
+          "raw_wr": 0.5,
+          "expected_wr": 0.4989,
+          "lift": 0.0006
+        },
+        {
+          "slotting": "Irelia@TOP + Seraphine@UTILITY",
+          "games": 402,
+          "raw_wr": 0.4776,
+          "expected_wr": 0.5069,
+          "lift": -0.0196
+        }
+      ]
+    },
+    {
+      "pair": "Elise+Sylas",
+      "n_slottings": 3,
+      "lift_spread": 0.0599,
+      "slottings": [
+        {
+          "slotting": "Elise@UTILITY + Sylas@JUNGLE",
+          "games": 216,
+          "raw_wr": 0.5694,
+          "expected_wr": 0.5112,
+          "lift": 0.0302
+        },
+        {
+          "slotting": "Elise@JUNGLE + Sylas@MIDDLE",
+          "games": 190,
+          "raw_wr": 0.4789,
+          "expected_wr": 0.4993,
+          "lift": -0.0099
+        },
+        {
+          "slotting": "Elise@UTILITY + Sylas@MIDDLE",
+          "games": 238,
+          "raw_wr": 0.458,
+          "expected_wr": 0.5126,
+          "lift": -0.0297
+        }
+      ]
+    },
+    {
+      "pair": "Senna+Sett",
+      "n_slottings": 2,
+      "lift_spread": 0.0599,
+      "slottings": [
+        {
+          "slotting": "Senna@BOTTOM + Sett@TOP",
+          "games": 346,
+          "raw_wr": 0.5549,
+          "expected_wr": 0.5056,
+          "lift": 0.0313
+        },
+        {
+          "slotting": "Senna@UTILITY + Sett@TOP",
+          "games": 186,
+          "raw_wr": 0.4409,
+          "expected_wr": 0.5001,
+          "lift": -0.0286
+        }
+      ]
+    },
+    {
+      "pair": "Aatrox+Jhin",
+      "n_slottings": 2,
+      "lift_spread": 0.0592,
+      "slottings": [
+        {
+          "slotting": "Aatrox@JUNGLE + Jhin@BOTTOM",
+          "games": 317,
+          "raw_wr": 0.5521,
+          "expected_wr": 0.5035,
+          "lift": 0.0298
+        },
+        {
+          "slotting": "Aatrox@TOP + Jhin@BOTTOM",
+          "games": 865,
+          "raw_wr": 0.4543,
+          "expected_wr": 0.4906,
+          "lift": -0.0294
+        }
+      ]
+    },
+    {
+      "pair": "Jayce+Leona",
+      "n_slottings": 3,
+      "lift_spread": 0.0591,
+      "slottings": [
+        {
+          "slotting": "Jayce@TOP + Leona@UTILITY",
+          "games": 827,
+          "raw_wr": 0.5417,
+          "expected_wr": 0.5079,
+          "lift": 0.0273
+        },
+        {
+          "slotting": "Jayce@MIDDLE + Leona@UTILITY",
+          "games": 191,
+          "raw_wr": 0.5288,
+          "expected_wr": 0.5109,
+          "lift": 0.0088
+        },
+        {
+          "slotting": "Jayce@JUNGLE + Leona@UTILITY",
+          "games": 322,
+          "raw_wr": 0.441,
+          "expected_wr": 0.4926,
+          "lift": -0.0318
+        }
+      ]
+    },
+    {
+      "pair": "JarvanIV+Varus",
+      "n_slottings": 2,
+      "lift_spread": 0.0587,
+      "slottings": [
+        {
+          "slotting": "JarvanIV@JUNGLE + Varus@BOTTOM",
+          "games": 248,
+          "raw_wr": 0.5323,
+          "expected_wr": 0.4851,
+          "lift": 0.0261
+        },
+        {
+          "slotting": "JarvanIV@JUNGLE + Varus@TOP",
+          "games": 150,
+          "raw_wr": 0.4067,
+          "expected_wr": 0.4828,
+          "lift": -0.0326
+        }
+      ]
+    },
+    {
+      "pair": "Akali+Ashe",
+      "n_slottings": 2,
+      "lift_spread": 0.0587,
+      "slottings": [
+        {
+          "slotting": "Akali@TOP + Ashe@BOTTOM",
+          "games": 243,
+          "raw_wr": 0.5432,
+          "expected_wr": 0.4973,
+          "lift": 0.0252
+        },
+        {
+          "slotting": "Akali@MIDDLE + Ashe@BOTTOM",
+          "games": 537,
+          "raw_wr": 0.4507,
+          "expected_wr": 0.4967,
+          "lift": -0.0335
+        }
+      ]
+    },
+    {
+      "pair": "Anivia+Kaisa",
+      "n_slottings": 2,
+      "lift_spread": 0.0584,
+      "slottings": [
+        {
+          "slotting": "Anivia@MIDDLE + Kaisa@BOTTOM",
+          "games": 366,
+          "raw_wr": 0.4754,
+          "expected_wr": 0.4893,
+          "lift": -0.009
+        },
+        {
+          "slotting": "Anivia@TOP + Kaisa@BOTTOM",
+          "games": 236,
+          "raw_wr": 0.3729,
+          "expected_wr": 0.4974,
+          "lift": -0.0674
+        }
+      ]
+    },
+    {
+      "pair": "Caitlyn+Jayce",
+      "n_slottings": 3,
+      "lift_spread": 0.0576,
+      "slottings": [
+        {
+          "slotting": "Caitlyn@BOTTOM + Jayce@MIDDLE",
+          "games": 198,
+          "raw_wr": 0.5455,
+          "expected_wr": 0.4986,
+          "lift": 0.0233
+        },
+        {
+          "slotting": "Caitlyn@BOTTOM + Jayce@TOP",
+          "games": 1026,
+          "raw_wr": 0.4756,
+          "expected_wr": 0.4956,
+          "lift": -0.0167
+        },
+        {
+          "slotting": "Caitlyn@BOTTOM + Jayce@JUNGLE",
+          "games": 401,
+          "raw_wr": 0.4289,
+          "expected_wr": 0.4804,
+          "lift": -0.0343
+        }
+      ]
+    },
+    {
+      "pair": "Camille+Khazix",
+      "n_slottings": 2,
+      "lift_spread": 0.0573,
+      "slottings": [
+        {
+          "slotting": "Camille@TOP + Khazix@JUNGLE",
+          "games": 185,
+          "raw_wr": 0.5459,
+          "expected_wr": 0.5043,
+          "lift": 0.02
+        },
+        {
+          "slotting": "Camille@UTILITY + Khazix@JUNGLE",
+          "games": 516,
+          "raw_wr": 0.4419,
+          "expected_wr": 0.4937,
+          "lift": -0.0373
+        }
+      ]
+    },
+    {
+      "pair": "Ryze+Senna",
+      "n_slottings": 3,
+      "lift_spread": 0.0569,
+      "slottings": [
+        {
+          "slotting": "Ryze@TOP + Senna@BOTTOM",
+          "games": 156,
+          "raw_wr": 0.6026,
+          "expected_wr": 0.5105,
+          "lift": 0.0403
+        },
+        {
+          "slotting": "Ryze@MIDDLE + Senna@UTILITY",
+          "games": 268,
+          "raw_wr": 0.5149,
+          "expected_wr": 0.4934,
+          "lift": 0.0123
+        },
+        {
+          "slotting": "Ryze@MIDDLE + Senna@BOTTOM",
+          "games": 828,
+          "raw_wr": 0.4783,
+          "expected_wr": 0.4988,
+          "lift": -0.0166
+        }
+      ]
+    },
+    {
+      "pair": "Hwei+Jayce",
+      "n_slottings": 3,
+      "lift_spread": 0.0568,
+      "slottings": [
+        {
+          "slotting": "Hwei@MIDDLE + Jayce@TOP",
+          "games": 635,
+          "raw_wr": 0.5181,
+          "expected_wr": 0.5001,
+          "lift": 0.0137
+        },
+        {
+          "slotting": "Hwei@BOTTOM + Jayce@TOP",
+          "games": 347,
+          "raw_wr": 0.5216,
+          "expected_wr": 0.5129,
+          "lift": 0.0055
+        },
+        {
+          "slotting": "Hwei@MIDDLE + Jayce@JUNGLE",
+          "games": 307,
+          "raw_wr": 0.4137,
+          "expected_wr": 0.4848,
+          "lift": -0.0431
+        }
+      ]
+    },
+    {
+      "pair": "Ekko+Sona",
+      "n_slottings": 2,
+      "lift_spread": 0.0568,
+      "slottings": [
+        {
+          "slotting": "Ekko@MIDDLE + Sona@UTILITY",
+          "games": 215,
+          "raw_wr": 0.6093,
+          "expected_wr": 0.5162,
+          "lift": 0.0483
+        },
+        {
+          "slotting": "Ekko@JUNGLE + Sona@UTILITY",
+          "games": 182,
+          "raw_wr": 0.4945,
+          "expected_wr": 0.5124,
+          "lift": -0.0085
+        }
+      ]
+    },
+    {
+      "pair": "Malphite+Qiyana",
+      "n_slottings": 2,
+      "lift_spread": 0.0567,
+      "slottings": [
+        {
+          "slotting": "Malphite@TOP + Qiyana@JUNGLE",
+          "games": 273,
+          "raw_wr": 0.5495,
+          "expected_wr": 0.4956,
+          "lift": 0.0311
+        },
+        {
+          "slotting": "Malphite@TOP + Qiyana@MIDDLE",
+          "games": 198,
+          "raw_wr": 0.4495,
+          "expected_wr": 0.501,
+          "lift": -0.0256
+        }
+      ]
+    },
+    {
+      "pair": "Caitlyn+Camille",
+      "n_slottings": 2,
+      "lift_spread": 0.0567,
+      "slottings": [
+        {
+          "slotting": "Caitlyn@BOTTOM + Camille@TOP",
+          "games": 296,
+          "raw_wr": 0.5338,
+          "expected_wr": 0.5001,
+          "lift": 0.0201
+        },
+        {
+          "slotting": "Caitlyn@BOTTOM + Camille@UTILITY",
+          "games": 482,
+          "raw_wr": 0.4378,
+          "expected_wr": 0.4895,
+          "lift": -0.0366
+        }
+      ]
+    },
+    {
+      "pair": "Diana+Senna",
+      "n_slottings": 4,
+      "lift_spread": 0.0561,
+      "slottings": [
+        {
+          "slotting": "Diana@JUNGLE + Senna@BOTTOM",
+          "games": 580,
+          "raw_wr": 0.5569,
+          "expected_wr": 0.5058,
+          "lift": 0.038
+        },
+        {
+          "slotting": "Diana@JUNGLE + Senna@UTILITY",
+          "games": 315,
+          "raw_wr": 0.5333,
+          "expected_wr": 0.5004,
+          "lift": 0.0202
+        },
+        {
+          "slotting": "Diana@MIDDLE + Senna@UTILITY",
+          "games": 222,
+          "raw_wr": 0.482,
+          "expected_wr": 0.5118,
+          "lift": -0.0157
+        },
+        {
+          "slotting": "Diana@MIDDLE + Senna@BOTTOM",
+          "games": 468,
+          "raw_wr": 0.4915,
+          "expected_wr": 0.5173,
+          "lift": -0.0181
+        }
+      ]
+    },
+    {
+      "pair": "Nasus+Thresh",
+      "n_slottings": 2,
+      "lift_spread": 0.0557,
+      "slottings": [
+        {
+          "slotting": "Nasus@JUNGLE + Thresh@UTILITY",
+          "games": 312,
+          "raw_wr": 0.5897,
+          "expected_wr": 0.5202,
+          "lift": 0.0424
+        },
+        {
+          "slotting": "Nasus@TOP + Thresh@UTILITY",
+          "games": 198,
+          "raw_wr": 0.4798,
+          "expected_wr": 0.5066,
+          "lift": -0.0133
+        }
+      ]
+    },
+    {
+      "pair": "Locke+Nautilus",
+      "n_slottings": 3,
+      "lift_spread": 0.0555,
+      "slottings": [
+        {
+          "slotting": "Locke@TOP + Nautilus@UTILITY",
+          "games": 179,
+          "raw_wr": 0.5419,
+          "expected_wr": 0.4882,
+          "lift": 0.0254
+        },
+        {
+          "slotting": "Locke@MIDDLE + Nautilus@UTILITY",
+          "games": 1013,
+          "raw_wr": 0.5044,
+          "expected_wr": 0.507,
+          "lift": -0.0021
+        },
+        {
+          "slotting": "Locke@JUNGLE + Nautilus@UTILITY",
+          "games": 391,
+          "raw_wr": 0.4348,
+          "expected_wr": 0.4803,
+          "lift": -0.0301
+        }
+      ]
+    }
+  ],
+  "permutation_pairs_qualifying": 1306,
+  "camille_galio_all_slottings": [
+    {
+      "slotting": "Camille@UTILITY + Galio@MIDDLE",
+      "games": 938,
+      "raw_wr": 0.5192,
+      "expected_wr": 0.4989,
+      "lift": 0.0167
+    },
+    {
+      "slotting": "Camille@TOP + Galio@MIDDLE",
+      "games": 293,
+      "raw_wr": 0.5017,
+      "expected_wr": 0.5095,
+      "lift": -0.0046
+    },
+    {
+      "slotting": "Camille@UTILITY + Galio@TOP",
+      "games": 62,
+      "raw_wr": 0.5484,
+      "expected_wr": 0.5007,
+      "lift": 0.0113
+    },
+    {
+      "slotting": "Camille@TOP + Galio@UTILITY",
+      "games": 52,
+      "raw_wr": 0.5577,
+      "expected_wr": 0.5104,
+      "lift": 0.0097
+    },
+    {
+      "slotting": "Camille@JUNGLE + Galio@MIDDLE",
+      "games": 12,
+      "raw_wr": 0.5,
+      "expected_wr": 0.4811,
+      "lift": 0.0011
+    },
+    {
+      "slotting": "Camille@JUNGLE + Galio@UTILITY",
+      "games": 7,
+      "raw_wr": 0.5714,
+      "expected_wr": 0.482,
+      "lift": 0.003
+    },
+    {
+      "slotting": "Camille@UTILITY + Galio@BOTTOM",
+      "games": 2,
+      "raw_wr": 1.0,
+      "expected_wr": 0.489,
+      "lift": 0.0051
+    },
+    {
+      "slotting": "Camille@TOP + Galio@BOTTOM",
+      "games": 2,
+      "raw_wr": 0.0,
+      "expected_wr": 0.4995,
+      "lift": -0.0049
+    },
+    {
+      "slotting": "Camille@JUNGLE + Galio@TOP",
+      "games": 1,
+      "raw_wr": 1.0,
+      "expected_wr": 0.4829,
+      "lift": 0.0026
+    },
+    {
+      "slotting": "Camille@MIDDLE + Galio@UTILITY",
+      "games": 1,
+      "raw_wr": 0.0,
+      "expected_wr": 0.521,
+      "lift": -0.0026
+    },
+    {
+      "slotting": "Camille@MIDDLE + Galio@TOP",
+      "games": 1,
+      "raw_wr": 1.0,
+      "expected_wr": 0.5218,
+      "lift": 0.0024
+    }
+  ]
+}
