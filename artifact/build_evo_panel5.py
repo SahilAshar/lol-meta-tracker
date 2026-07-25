@@ -122,7 +122,8 @@ dim_curves = [[round(float(embs[t, ri, d]), 3) for t in range(F)]
 mid_f = F // 2
 slot_rows = [np.round(embs[f, ri, :12] * 1000).astype(int).tolist()
              for f in (0, mid_f, F - 1)]
-slot_row_names = ["random start", labels[mid_f], "final"]
+# "epoch 19" is jargon to a lay reader, and it invites the question "why 19?".
+slot_row_names = ["random start", "partway through training", "finished"]
 
 
 def cos_curve(a, b):
@@ -199,8 +200,7 @@ def pair_row(a: str, b: str, note: str) -> dict:
 pairs = [
     pair_row("Rakan", "Alistar", "both play support"),
     pair_row("Rakan", "Orianna", "support + mid"),
-    pair_row("Rakan", "Varus", "support + bot"),
-]
+]  # a third row (Rakan+Varus) made the identical point as Orianna and was cut
 print("team-comp pairs:", [(p["a"], p["b"], p["obs"], p["exp"]) for p in pairs])
 
 # ---- beat 4: the two measured reasons a dot sits in the wrong place ---------
@@ -222,8 +222,11 @@ quartiles = []
 for _i in range(4):
     _m = ((exposure >= q_edges[_i]) &
           ((exposure <= q_edges[_i + 1]) if _i == 3 else (exposure < q_edges[_i + 1])))
+    # Display the ACTUAL min/max inside each quartile, not the shared quantile
+    # edges — edges make consecutive labels overlap ("1–29", "29–334"), which
+    # reads as an error.
     quartiles.append({
-        "lo": int(q_edges[_i]), "hi": int(q_edges[_i + 1]),
+        "lo": int(exposure[_m].min()), "hi": int(exposure[_m].max()),
         "n": int(_m.sum()), "purity": round(float(champ_purity[_m].mean()), 3),
     })
 print("exposure quartiles:", [(q["lo"], q["hi"], q["purity"]) for q in quartiles])
@@ -249,15 +252,19 @@ cards = [champ_card("Rakan"), champ_card("Corki")]
 print("beat-4 cards:", cards)
 
 # ---- final-frame label subset: well-known champs, collision-checked ----
-WISH = ["Rakan", "Alistar", "Leona", "Orianna", "Ahri", "LeBlanc", "Jinx",
-        "Kai'Sa", "Ashe", "Lee Sin", "Viego", "Sejuani", "Darius", "K'Sante",
-        "Gwen", "Yuumi"]
+# Only label champions the reader has been given a reason to care about. Twelve
+# names were noise to a non-player ("I know none of them"); these four are the
+# ones the story actually builds up, and four sits inside the 3-5 annotation cap
+# that practitioner guidance recommends.
+WISH = ["Rakan", "Alistar", "Orianna", "Corki"]
 label_idx = []
 for name in WISH:
     if name not in champs:
         continue
     i = champs.index(name)
-    if all(np.linalg.norm(P_final[i] - P_final[j]) > 0.16 for j in label_idx):
+    # 0.16 dropped Alistar for sitting too close to Rakan — but that adjacency
+    # IS the payoff of beat 2, so allow a tighter spacing here.
+    if all(np.linalg.norm(P_final[i] - P_final[j]) > 0.085 for j in label_idx):
         label_idx.append(i)
 print("final-frame labels:", [champs[i] for i in label_idx])
 
@@ -280,6 +287,7 @@ payload = {
     },
     "sim": {"ali": sim_ali, "ori": sim_ori},
     "labelIdx": label_idx,
+    "aliI": ai,
     "trio": {"strips": trio_strips,
              "names": ["Rakan", "Alistar", "Orianna"],
              "roles": [int(role_idx[ri]), int(role_idx[ai]), int(role_idx[oi])]},
@@ -319,9 +327,10 @@ FRAGMENT = r"""
 
     <!-- Beat 1 -->
     <div class="evo4-beat" id="evo4-b0" role="tabpanel">
-      <p class="evo4-lead"><strong>To the model, Rakan is a list of 192 numbers.</strong> No image, no lore, not even a name. We are not going to tell you what any single number means, because nobody knows and you do not need to know. Watch the <em>pattern</em> across the whole list instead. Each square below is one of the 192 numbers: <span class="evo4-sw evo4-sw-pos"></span> above zero, <span class="evo4-sw evo4-sw-neg"></span> below.</p>
+      <p class="evo4-lead"><strong>The model has exactly one job.</strong> Before a match, the two teams take turns choosing characters &mdash; that is the draft, and the characters are called champions. There are 168 of them. Show the model the choices made so far and it guesses which champion gets taken next. That is the only thing it was ever trained to do.</p>
+      <p class="evo4-lead" style="margin-top:14px"><strong>To do that job, it keeps 192 numbers per champion.</strong> Here is Rakan, one of the 168. To the model he is nothing but those numbers &mdash; no image, no lore, not even a name. We are not going to tell you what any single number means, because nobody knows and you do not need to know. Watch the shape of the whole list instead. Each of the 192 numbers is one bar, above or below the centre line:</p>
       <div id="evo4-strips0"></div>
-      <p class="codecap">The list starts as random noise. Training nudges it millions of times, and a stable pattern settles in. That pattern is the model&rsquo;s whole idea of Rakan &mdash; so the next question is why any <em>other</em> champion would end up with a similar one.</p>
+      <p class="codecap">The list starts as random noise. Training nudges it millions of times, and it stops looking random. That shape is the model&rsquo;s entire idea of Rakan &mdash; so the next question is why any <em>other</em> champion would end up with a similar one.</p>
       <details class="evo4-more">
         <summary>Show me the actual digits</summary>
         <p class="sub" style="margin:10px 0 6px">The first 12 of Rakan&rsquo;s 192 numbers, in thousandths. The column positions carry no meaning; they are just the order the numbers happen to sit in.</p>
@@ -334,17 +343,18 @@ FRAGMENT = r"""
       <p class="evo4-lead"><strong>Champions that compete for the same job end up with the same numbers.</strong> Think of building a team. A pro team fields exactly five champions, one for each role. So if you have already chosen Rakan, you will never also choose Alistar &mdash; they want the same seat. That makes them rivals for one slot, not partners. Here is that pattern in @@NCOMPS@@ real team line-ups.</p>
       <div id="evo4-pairs" class="evo4-pairs"></div>
       <p class="codecap">Rakan and Alistar are alternatives to each other, so they never appear together. Rakan and Orianna do different jobs, so they turn up together about as often as pure chance would predict. The model is only ever asked one question &mdash; who gets picked next? &mdash; and Rakan and Alistar keep being the answer in the same spots. Every nudge that pushes one of them pushes the other the same way.</p>
-      <p class="sub" style="margin:20px 0 8px">So their lists of 192 numbers drift toward the same pattern. All three rows below are sorted the same way &mdash; by Rakan&rsquo;s values, smallest to largest &mdash; so his row runs blue to orange. Alistar&rsquo;s row follows the same slope. Orianna&rsquo;s does not:</p>
+      <p class="sub" style="margin:22px 0 8px">So their lists of 192 numbers drift toward the same shape. To make that easy to see, all three rows below are sorted in one shared order &mdash; by Rakan&rsquo;s values, smallest to largest. The order itself means nothing; it is only a way to line the rows up. The dark line on each row is a running average, so you are comparing shapes rather than individual bars.</p>
       <div id="evo4-strips1"></div>
-      <p class="codecap">Sorting only makes the comparison easy to see; the order of the 192 numbers carries no meaning of its own, and the same order is applied to all three rows.</p>
-      <p class="sub" style="margin:20px 0 6px">Measured over training, that resemblance is a single number per pair:</p>
+      <p class="codecap">Rakan&rsquo;s line climbs by construction, because the sort put his numbers in order. The question is what the other two do under that same order. Alistar&rsquo;s line climbs with it. Orianna&rsquo;s stays flat &mdash; her numbers have nothing to do with Rakan&rsquo;s.</p>
+      <p class="sub" style="margin:22px 0 6px">Measured properly, that resemblance is one number per pair. It runs from &minus;1 (opposite shapes) through 0 (nothing in common) to +1 (identical), using all 192 numbers at once. Here it is across the whole of training:</p>
       <canvas id="evo4-c1" style="width:100%;display:block" role="img" aria-label="Line chart: similarity between Rakan and Alistar rises from near zero to 0.56 over training, while Rakan and Orianna stays near zero"></canvas>
-      <p class="codecap">Similarity runs from &minus;1 (opposite patterns) through 0 (nothing in common) to +1 (identical direction), across all 192 numbers at once. Nobody ever told the model that Rakan and Alistar are supports. It only read drafts. The same pull acted on every pair of champions at the same time &mdash; that is the next beat.</p>
+      <p class="codecap">Nobody ever told the model that Rakan and Alistar play the same role. It only read drafts. The same pull acted on every pair of champions at the same time &mdash; that is the next beat.</p>
     </div>
 
     <!-- Beat 3 -->
     <div class="evo4-beat" id="evo4-b2" role="tabpanel" hidden>
-      <p class="evo4-lead"><strong>Every champion ends up surrounded by others who play its role.</strong> Press play. Each dot is one champion, colored by its true role &mdash; a label the model never saw. Watch who each dot settles next to. The purity score under the map measures exactly that: how often a champion&rsquo;s five nearest neighbours share its role. Chance is 0.20; it finishes at @@PF@@. You will count more than five groups on the finished map, and that is real &mdash; the next beat explains it.</p>
+      <p class="evo4-lead"><strong>Most champions end up next to others who play their role &mdash; @@PF@@ of the time, against 0.20 by chance.</strong> Each dot is one champion, coloured by its true role, a label the model never saw. The score under the map is that number: the share of a champion&rsquo;s five nearest neighbours that play its role. Chance is 0.20 because there are five roles, so one neighbour in five would match on luck alone. <em>Most</em> is doing real work in that sentence &mdash; parts of this map are tidy and parts are a mixed jumble, and beat 4 is about exactly who lands in the jumble and why.</p>
+      <p class="codecap" style="margin:0 0 10px"><b>Before you press play: when each dot settles is measured. Where it travels is drawn.</b> Read the timing, not the path.</p>
       <div class="evo4-legend" id="evo4-legend" aria-hidden="true"></div>
       <canvas id="evo4-map" style="width:100%;display:block" role="img" aria-label="Animated scatter map: 168 champion dots fly from a random cloud into five role clusters as training progresses"></canvas>
       <div class="evo4-controls">
@@ -353,7 +363,8 @@ FRAGMENT = r"""
         <span id="evo4-label"></span>
       </div>
       <canvas id="evo4-strip" style="width:100%;display:block" role="img" aria-label="Purity over training, with playhead"></canvas>
-      <p class="codecap"><b>When each dot settles is real. Where it passes through is drawn.</b> The final frame is a true t-SNE of the last snapshot and purity is measured in the raw 192 dimensions at every snapshot, but in between each dot simply slides toward its final spot, paced by its own measured progress &mdash; so read the timing, not the path. <span class="evo4-prov">Demo run: seed 16, config d192x4L6H, same 2024&ndash;2026 data and split as the shipped model (@@NTRAIN@@ training games), 5-NN purity @@P0@@ &rarr; @@PF@@.</span></p>
+      <p class="codecap">The finished layout is real &mdash; it is a t-SNE of the last snapshot &mdash; and the score is measured in the raw 192 numbers at every step. In between, each dot slides straight toward its final spot, paced by its own measured progress.</p>
+      <p class="codecap evo4-prov">Demo run: seed 16, config d192x4L6H, same 2024&ndash;2026 data and split as the shipped model (@@NTRAIN@@ training games), score @@P0@@ &rarr; @@PF@@.</p>
     </div>
 
     <!-- Beat 4 -->
@@ -373,13 +384,14 @@ FRAGMENT = r"""
 </div>
 
 <style>
+  #evo4-panel > h3 { font-size: 21px; line-height: 1.25; margin-bottom: 6px; }
   .evo4-steps { display:flex; gap:8px; margin:2px 0 16px; flex-wrap:wrap; align-items:center; }
   .evo4-steps .evo4-spacer { flex:1; }
   .evo4-steps button {
-    font: 600 12px/1 ui-monospace, "SF Mono", Menlo, monospace;
-    color: var(--muted); background: var(--inset);
+    font: 600 11.5px/1 ui-monospace, "SF Mono", Menlo, monospace;
+    color: var(--muted); background: transparent;
     border: 1px solid var(--hairline); border-radius: 7px;
-    padding: 8px 12px; cursor: pointer;
+    padding: 7px 10px; cursor: pointer;
   }
   .evo4-steps button[aria-selected="true"] { color: var(--ink); border-color: var(--model); }
   .evo4-steps button.evo4-nav { color: var(--card); background: var(--ink); border-color: var(--ink); }
@@ -399,7 +411,8 @@ FRAGMENT = r"""
     border: 1px solid var(--hairline); border-radius: 7px;
     padding: 7px 12px; cursor: pointer; white-space: nowrap;
   }
-  .evo4-controls input[type=range] { flex:1; accent-color: var(--model); min-width:0; }
+    /* neutral, not --model: that blue means 'Top lane' in the legend above */
+  .evo4-controls input[type=range] { flex:1; accent-color: var(--muted); min-width:0; }
   #evo4-label {
     font: 500 12px/1.3 ui-monospace, "SF Mono", Menlo, monospace;
     color: var(--muted); min-width: 19ch; text-align: right;
@@ -639,23 +652,44 @@ FRAGMENT = r"""
     return { cv: cv, values: values };
   }
 
-  function paintStrip(cv, values) {
-    var H = 30;
+  /* Sign is encoded by DIRECTION (up/down from a centre line), not by hue.
+     Two reasons. (1) A naive reader could not see the resemblance between two
+     champions in the earlier colour-alpha version -- "Alistar's row is
+     indistinguishable from Orianna's" -- and a visual the reader cannot verify
+     costs more trust than no visual at all. (2) The colour version reused
+     blue/orange, which already mean Top lane and Bot lane on the map in beat 3;
+     one hue pair cannot carry two meanings in one piece. Neutral ink here means
+     the strips collide with nothing. `trend` overlays a moving average so the
+     shared shape is perceptible rather than merely present. */
+  function paintStrip(cv, values, trend) {
+    var H = 46;
     var ctx = sizeCanvas(cv, H);
     var w = cv.clientWidth;
     ctx.clearRect(0, 0, w, H);
-    var pos = css("--meta"), neg = css("--model"), hair = css("--hairline");
-    var n = values.length, cw = w / n;
-    for (var i = 0; i < n; i++) {
-      var v = values[i] / 100;                      // -1 .. 1
-      var a = Math.min(Math.abs(v), 1);
-      ctx.globalAlpha = 0.10 + 0.90 * a * a;        // squared: pattern, not noise
-      ctx.fillStyle = v >= 0 ? pos : neg;
-      ctx.fillRect(i * cw, 0, Math.max(cw - 0.35, 0.6), H);
-    }
-    ctx.globalAlpha = 1;
+    var mut = css("--muted"), ink = css("--ink"), hair = css("--hairline");
+    var n = values.length, cw = w / n, mid = H / 2, amp = (H - 8) / 2;
     ctx.strokeStyle = hair; ctx.lineWidth = 1;
-    ctx.strokeRect(0.5, 0.5, w - 1, H - 1);
+    ctx.beginPath(); ctx.moveTo(0, mid + 0.5); ctx.lineTo(w, mid + 0.5); ctx.stroke();
+    ctx.fillStyle = mut;
+    for (var i = 0; i < n; i++) {
+      var v = Math.max(-1, Math.min(1, values[i] / 100));
+      var h = Math.abs(v) * amp;
+      ctx.fillRect(i * cw, v >= 0 ? mid - h : mid, Math.max(cw - 0.4, 0.6), h);
+    }
+    if (trend) {
+      var win = 15, half = (win - 1) / 2;
+      ctx.beginPath();
+      for (var j = 0; j < n; j++) {
+        var s = 0, c = 0;
+        for (var k = Math.max(0, j - half); k <= Math.min(n - 1, j + half); k++) {
+          s += values[k]; c++;
+        }
+        var y = mid - Math.max(-1, Math.min(1, (s / c) / 100)) * amp;
+        j ? ctx.lineTo(j * cw + cw / 2, y) : ctx.moveTo(j * cw + cw / 2, y);
+      }
+      ctx.strokeStyle = ink; ctx.lineWidth = 2; ctx.lineJoin = "round";
+      ctx.stroke();
+    }
   }
 
   var strips0 = [], strips1 = [];
@@ -674,11 +708,13 @@ FRAGMENT = r"""
     });
   })();
 
-  function drawBeat1() { strips0.forEach(function (s) { paintStrip(s.cv, s.values); }); }
+  function drawBeat1() {
+    strips0.forEach(function (s) { paintStrip(s.cv, s.values, false); });
+  }
   function paintTrio() {
     var rc = roleColors();
     strips1.forEach(function (s, i) {
-      paintStrip(s.cv, s.values);
+      paintStrip(s.cv, s.values, true);   // trend line: the whole point of beat 2
       var lab = s.cv.parentNode.querySelector(".evo4-striplab span");
       if (lab) lab.style.color = rc[D.trio.roles[i]];
     });
@@ -696,7 +732,7 @@ FRAGMENT = r"""
         " <span class='evo4-pairnote'>" + p.note + "</span>" +
         "<span class='evo4-obs'>together in <span class='" +
         (zero ? "evo4-zero" : "") + "'>" + p.obs.toLocaleString() +
-        "</span> line-ups · chance would give " + p.exp + "</span>";
+        "</span> of " + D.nComps.toLocaleString() + " line-ups · expected by chance: " + p.exp + " line-ups</span>";
       host.appendChild(row);
     });
   })();
@@ -836,6 +872,17 @@ FRAGMENT = r"""
     ctx.strokeText("Rakan", rx + 11, ry);
     ctx.fillStyle = ink;
     ctx.fillText("Rakan", rx + 11, ry);
+
+    // Alistar sits 0.04 from Rakan in this layout — they are practically stacked,
+    // which IS the payoff of beat 2. The auto-labeller drops him for collision,
+    // so label him deliberately, on the opposite side from Rakan's label.
+    var ax = cx(D.aliI), ay = cy(D.aliI);
+    ctx.textAlign = "right";
+    ctx.lineWidth = 3; ctx.strokeStyle = card;
+    ctx.strokeText("Alistar", ax - 10, ay);
+    ctx.fillStyle = ink;
+    ctx.fillText("Alistar", ax - 10, ay);
+    ctx.textAlign = "left";
 
     // final frame: named champions fade in
     var settle = Math.max(0, (ft - (nF - 3)) / 2);   // 0 -> 1 over last 2 frames
@@ -1000,6 +1047,12 @@ FRAGMENT = r"""
       ctx.lineTo(x + bw, y + h);
       ctx.closePath();
       ctx.fill();
+      // Mark the dip by WEIGHT, not by hue. A reader noted the old orange bar
+      // pre-announced "reason two" before they read the text, which is worth
+      // keeping; an ink outline does that without giving one hue two meanings.
+      if (i === n - 1) {
+        ctx.strokeStyle = css("--ink"); ctx.lineWidth = 1.5; ctx.stroke();
+      }
       bars4.push({ x: x, y: y, w: bw, h: h, d: d, i: i });
 
       ctx.textAlign = "center";
