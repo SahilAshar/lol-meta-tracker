@@ -83,6 +83,16 @@ CREATE TABLE IF NOT EXISTS ladder(
     losses INTEGER,
     PRIMARY KEY(day, region, tier, puuid)
 );
+-- Per-cycle resume cursor: which ladder players have already been walked
+-- (match-list discovered) this day/region. Lets a restart skip straight to
+-- where it left off instead of re-walking from player 0. Cleared when a cycle
+-- covers the full ladder, so the next cycle re-walks to catch new games.
+CREATE TABLE IF NOT EXISTS walked(
+    day    TEXT NOT NULL,
+    region TEXT NOT NULL,
+    puuid  TEXT NOT NULL,
+    PRIMARY KEY(day, region, puuid)
+);
 """
 
 status_lock = threading.Lock()
@@ -294,21 +304,41 @@ class RegionScraper(threading.Thread):
         cycle = 0
         while not self.expired():
             cycle += 1
+            day = time.strftime("%Y%m%d")
             puuids = self.ladder_puuids()
-            print(f"[{self.region}] cycle {cycle}: {len(puuids)} ladder players",
+            # Resume: skip players already walked this day/region (a prior run
+            # or codespace restart got to them), so we don't re-spend match-list
+            # calls re-covering ground. Keyed by puuid, robust to the ladder
+            # re-ordering between snapshots.
+            walked = {r[0] for r in self.con.execute(
+                "SELECT puuid FROM walked WHERE day = ? AND region = ?",
+                (day, self.region))}
+            remaining = [p for p in puuids if p not in walked]
+            print(f"[{self.region}] cycle {cycle}: {len(puuids)} ladder players, "
+                  f"{len(walked)} already walked, {len(remaining)} to go",
                   flush=True)
-            for i, puuid in enumerate(puuids):
+            for i, puuid in enumerate(remaining):
                 if self.expired():
                     break
                 self.discover(puuid)
+                self.con.execute(
+                    "INSERT OR IGNORE INTO walked(day, region, puuid) VALUES(?,?,?)",
+                    (day, self.region, puuid))
                 self.drain()
                 if i % 50 == 0:
-                    print(f"[{self.region}] cycle {cycle}: player {i}/{len(puuids)}, "
+                    print(f"[{self.region}] cycle {cycle}: "
+                          f"player {len(walked) + i}/{len(puuids)}, "
                           f"{self.done} done, {self.calls} calls", flush=True)
             while not self.expired() and self.drain():
                 pass  # discovery finished; clear the remaining backlog
-            if not self.expired() and time.time() + 600 < self.deadline:
-                time.sleep(600)  # new games accumulate slowly between cycles
+            if not self.expired():
+                # Full ladder covered this cycle → reset the walk so the next
+                # cycle re-discovers everyone and catches newly-played games.
+                self.con.execute(
+                    "DELETE FROM walked WHERE day = ? AND region = ?",
+                    (day, self.region))
+                if time.time() + 600 < self.deadline:
+                    time.sleep(600)  # new games accumulate slowly between cycles
         print(f"[{self.region}] finished: {self.done} matches, {self.calls} calls"
               + (f", FATAL: {self.fatal}" if self.fatal else ""), flush=True)
 
