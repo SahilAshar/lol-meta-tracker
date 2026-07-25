@@ -1,0 +1,849 @@
+{
+  "stage_A": {
+    "note": "Stage A of the denial-vector attribution study (docs/2026-07-25-ban-attribution-spec.md). Descriptive classification of all train+val bans by dominant denial vector; within-decision percentile proxies; no model, no test look.",
+    "population": {
+      "cutoff": "2026-07-15",
+      "n_ban_decisions": 50946,
+      "n_attributed": 50945,
+      "n_unattributable_target_outside_pool": 1,
+      "n_games": 5097,
+      "undefined_rates": {
+        "META": 0.0035,
+        "POCKET": 0.018,
+        "COMP": 0.6006
+      }
+    },
+    "mixture_by_ban_ordinal": {
+      "1": {
+        "COMP": 0.001,
+        "META": 0.6305,
+        "POCKET": 0.3686
+      },
+      "2": {
+        "COMP": 0.001,
+        "META": 0.5885,
+        "POCKET": 0.4105
+      },
+      "3": {
+        "COMP": 0.001,
+        "META": 0.5898,
+        "POCKET": 0.4093
+      },
+      "4": {
+        "COMP": 0.1335,
+        "META": 0.3063,
+        "POCKET": 0.5602
+      },
+      "5": {
+        "COMP": 0.1329,
+        "META": 0.3121,
+        "POCKET": 0.5551
+      }
+    },
+    "multi_motive_rate_by_ordinal": {
+      "eps=10": {
+        "1": 0.5923,
+        "2": 0.6552,
+        "3": 0.6521,
+        "4": 0.7107,
+        "5": 0.6899
+      },
+      "eps=5": {
+        "1": 0.3725,
+        "2": 0.4433,
+        "3": 0.442,
+        "4": 0.4873,
+        "5": 0.4828
+      },
+      "eps=15": {
+        "1": 0.7376,
+        "2": 0.7786,
+        "3": 0.7676,
+        "4": 0.8124,
+        "5": 0.7913
+      }
+    },
+    "lift_by_ordinal": {
+      "1": {
+        "META": {
+          "n_defined": 10158,
+          "mean_pct": 94.14,
+          "lift_vs_50": 44.14
+        },
+        "POCKET": {
+          "n_defined": 10010,
+          "mean_pct": 86.39,
+          "lift_vs_50": 36.39
+        },
+        "COMP": {
+          "n_defined": 0,
+          "mean_pct": null,
+          "lift_vs_50": null
+        },
+        "SYN": {
+          "n_defined": 0,
+          "mean_pct": null,
+          "lift_vs_50": null
+        }
+      },
+      "2": {
+        "META": {
+          "n_defined": 10158,
+          "mean_pct": 93.69,
+          "lift_vs_50": 43.69
+        },
+        "POCKET": {
+          "n_defined": 10010,
+          "mean_pct": 87.73,
+          "lift_vs_50": 37.73
+        },
+        "COMP": {
+          "n_defined": 0,
+          "mean_pct": null,
+          "lift_vs_50": null
+        },
+        "SYN": {
+          "n_defined": 0,
+          "mean_pct": null,
+          "lift_vs_50": null
+        }
+      },
+      "3": {
+        "META": {
+          "n_defined": 10153,
+          "mean_pct": 93.15,
+          "lift_vs_50": 43.15
+        },
+        "POCKET": {
+          "n_defined": 10005,
+          "mean_pct": 87.23,
+          "lift_vs_50": 37.23
+        },
+        "COMP": {
+          "n_defined": 0,
+          "mean_pct": null,
+          "lift_vs_50": null
+        },
+        "SYN": {
+          "n_defined": 0,
+          "mean_pct": null,
+          "lift_vs_50": null
+        }
+      },
+      "4": {
+        "META": {
+          "n_defined": 10151,
+          "mean_pct": 88.92,
+          "lift_vs_50": 38.92
+        },
+        "POCKET": {
+          "n_defined": 10004,
+          "mean_pct": 87.25,
+          "lift_vs_50": 37.25
+        },
+        "COMP": {
+          "n_defined": 10177,
+          "mean_pct": 52.06,
+          "lift_vs_50": 2.06
+        },
+        "SYN": {
+          "n_defined": 10177,
+          "mean_pct": 55.96,
+          "lift_vs_50": 5.96
+        }
+      },
+      "5": {
+        "META": {
+          "n_defined": 10145,
+          "mean_pct": 88.46,
+          "lift_vs_50": 38.46
+        },
+        "POCKET": {
+          "n_defined": 9998,
+          "mean_pct": 86.15,
+          "lift_vs_50": 36.15
+        },
+        "COMP": {
+          "n_defined": 10171,
+          "mean_pct": 50.55,
+          "lift_vs_50": 0.55
+        },
+        "SYN": {
+          "n_defined": 10171,
+          "mean_pct": 54.56,
+          "lift_vs_50": 4.56
+        }
+      }
+    },
+    "lift_overall": {
+      "META": {
+        "n_defined": 50765,
+        "mean_pct": 91.67,
+        "lift_vs_50": 41.67
+      },
+      "POCKET": {
+        "n_defined": 50027,
+        "mean_pct": 86.95,
+        "lift_vs_50": 36.95
+      },
+      "COMP": {
+        "n_defined": 20348,
+        "mean_pct": 51.3,
+        "lift_vs_50": 1.3
+      },
+      "SYN": {
+        "n_defined": 20348,
+        "mean_pct": 55.26,
+        "lift_vs_50": 5.26
+      }
+    },
+    "mixture_by_month": {
+      "2024-01": {
+        "COMP": 0.1142,
+        "META": 0.6145,
+        "POCKET": 0.2713
+      },
+      "2024-02": {
+        "COMP": 0.0501,
+        "META": 0.4446,
+        "POCKET": 0.5053
+      },
+      "2024-03": {
+        "COMP": 0.0574,
+        "META": 0.4204,
+        "POCKET": 0.5222
+      },
+      "2024-04": {
+        "COMP": 0.0529,
+        "META": 0.3115,
+        "POCKET": 0.6356
+      },
+      "2024-05": {
+        "COMP": 0.0655,
+        "META": 0.3825,
+        "POCKET": 0.552
+      },
+      "2024-06": {
+        "COMP": 0.0571,
+        "META": 0.4787,
+        "POCKET": 0.4642
+      },
+      "2024-07": {
+        "COMP": 0.0503,
+        "META": 0.4086,
+        "POCKET": 0.541
+      },
+      "2024-08": {
+        "COMP": 0.0349,
+        "META": 0.3931,
+        "POCKET": 0.572
+      },
+      "2024-09": {
+        "COMP": 0.0394,
+        "META": 0.3297,
+        "POCKET": 0.6308
+      },
+      "2025-01": {
+        "COMP": 0.0689,
+        "META": 0.5852,
+        "POCKET": 0.3459
+      },
+      "2025-02": {
+        "COMP": 0.0567,
+        "META": 0.5029,
+        "POCKET": 0.4404
+      },
+      "2025-03": {
+        "COMP": 0.0573,
+        "META": 0.521,
+        "POCKET": 0.4218
+      },
+      "2025-04": {
+        "COMP": 0.04,
+        "META": 0.4848,
+        "POCKET": 0.4752
+      },
+      "2025-05": {
+        "COMP": 0.0486,
+        "META": 0.4441,
+        "POCKET": 0.5073
+      },
+      "2025-06": {
+        "COMP": 0.0607,
+        "META": 0.4643,
+        "POCKET": 0.475
+      },
+      "2025-07": {
+        "COMP": 0.0466,
+        "META": 0.4995,
+        "POCKET": 0.4539
+      },
+      "2025-08": {
+        "COMP": 0.0507,
+        "META": 0.4949,
+        "POCKET": 0.4545
+      },
+      "2025-09": {
+        "COMP": 0.0466,
+        "META": 0.4089,
+        "POCKET": 0.5444
+      },
+      "2026-01": {
+        "COMP": 0.0544,
+        "META": 0.5785,
+        "POCKET": 0.3671
+      },
+      "2026-02": {
+        "COMP": 0.0532,
+        "META": 0.486,
+        "POCKET": 0.4607
+      },
+      "2026-03": {
+        "COMP": 0.0585,
+        "META": 0.5066,
+        "POCKET": 0.4349
+      },
+      "2026-04": {
+        "COMP": 0.0528,
+        "META": 0.5637,
+        "POCKET": 0.3834
+      },
+      "2026-05": {
+        "COMP": 0.0521,
+        "META": 0.5498,
+        "POCKET": 0.3981
+      },
+      "2026-06": {
+        "COMP": 0.0538,
+        "META": 0.5558,
+        "POCKET": 0.3904
+      },
+      "2026-07": {
+        "COMP": 0.0536,
+        "META": 0.5339,
+        "POCKET": 0.4125
+      }
+    },
+    "mixture_by_league": {
+      "EWC": {
+        "COMP": 0.0601,
+        "META": 0.5537,
+        "POCKET": 0.3862
+      },
+      "FST": {
+        "COMP": 0.065,
+        "META": 0.5225,
+        "POCKET": 0.4125
+      },
+      "LCK": {
+        "COMP": 0.0468,
+        "META": 0.4918,
+        "POCKET": 0.4614
+      },
+      "LCS": {
+        "COMP": 0.0516,
+        "META": 0.5042,
+        "POCKET": 0.4442
+      },
+      "LEC": {
+        "COMP": 0.0609,
+        "META": 0.4559,
+        "POCKET": 0.4832
+      },
+      "LPL": {
+        "COMP": 0.0546,
+        "META": 0.4831,
+        "POCKET": 0.4624
+      },
+      "MSI": {
+        "COMP": 0.0577,
+        "META": 0.4657,
+        "POCKET": 0.4766
+      }
+    },
+    "sensitivity": {
+      "pocket_split_4vector_by_ordinal": {
+        "1": {
+          "COMP": 0.001,
+          "META": 0.6305,
+          "PLAYER": 0.217,
+          "TEAM": 0.1516
+        },
+        "2": {
+          "COMP": 0.001,
+          "META": 0.5885,
+          "PLAYER": 0.2274,
+          "TEAM": 0.1831
+        },
+        "3": {
+          "COMP": 0.001,
+          "META": 0.5898,
+          "PLAYER": 0.2198,
+          "TEAM": 0.1894
+        },
+        "4": {
+          "COMP": 0.1335,
+          "META": 0.3063,
+          "PLAYER": 0.4681,
+          "TEAM": 0.0921
+        },
+        "5": {
+          "COMP": 0.1329,
+          "META": 0.3121,
+          "PLAYER": 0.4634,
+          "TEAM": 0.0916
+        }
+      },
+      "comp_fused_with_syn_by_ordinal": {
+        "1": {
+          "COMP": 0.001,
+          "META": 0.6305,
+          "POCKET": 0.3686
+        },
+        "2": {
+          "COMP": 0.001,
+          "META": 0.5885,
+          "POCKET": 0.4105
+        },
+        "3": {
+          "COMP": 0.001,
+          "META": 0.5898,
+          "POCKET": 0.4093
+        },
+        "4": {
+          "COMP": 0.2431,
+          "META": 0.2579,
+          "POCKET": 0.4991
+        },
+        "5": {
+          "COMP": 0.2365,
+          "META": 0.2649,
+          "POCKET": 0.4986
+        }
+      }
+    },
+    "proxy_defs": {
+      "META": "pct(presence)",
+      "POCKET": "max(pct(opp_usage), pct(player_pool*max(player_wr-0.5,0)))",
+      "COMP": "pct(pair_ctr); undefined before any picks lock",
+      "multi_motive": "top two defined vectors within eps=10.0"
+    }
+  },
+  "stage_C": {
+    "note": "Stage C: counterfactual opponent demand for each val pick at the opponent's immediately-next pick slot, meta transformer 5-seed ensemble. Teacher-forced elsewhere; MISSED-token edit is mildly out-of-distribution; seed of valuation, not valuation.",
+    "n_scored_picks": 486,
+    "overall": {
+      "n": 486,
+      "mean_demand_pct": 78.93,
+      "median_demand_pct": 86.86,
+      "share_opp_top5": 0.2469,
+      "share_above_p90": 0.4486,
+      "mean_demand_prob": 0.0365
+    },
+    "by_slot": {
+      "B-P1 (slot 7)": {
+        "n": 54,
+        "mean_demand_pct": 91.7,
+        "median_demand_pct": 95.58,
+        "share_opp_top5": 0.3704,
+        "share_above_p90": 0.6667,
+        "mean_demand_prob": 0.0485
+      },
+      "R-P1 (slot 8)": {
+        "n": 54,
+        "mean_demand_pct": 88.68,
+        "median_demand_pct": 95.33,
+        "share_opp_top5": 0.463,
+        "share_above_p90": 0.6667,
+        "mean_demand_prob": 0.0555
+      },
+      "R-P2 (slot 9)": {
+        "n": 54,
+        "mean_demand_pct": 78.24,
+        "median_demand_pct": 81.39,
+        "share_opp_top5": 0.1852,
+        "share_above_p90": 0.3704,
+        "mean_demand_prob": 0.0292
+      },
+      "B-P2 (slot 10)": {
+        "n": 54,
+        "mean_demand_pct": 77.83,
+        "median_demand_pct": 83.87,
+        "share_opp_top5": 0.2222,
+        "share_above_p90": 0.4815,
+        "mean_demand_prob": 0.0322
+      },
+      "B-P3 (slot 11)": {
+        "n": 54,
+        "mean_demand_pct": 83.65,
+        "median_demand_pct": 89.86,
+        "share_opp_top5": 0.2407,
+        "share_above_p90": 0.4815,
+        "mean_demand_prob": 0.0301
+      },
+      "R-P3 (slot 12)": {
+        "n": 54,
+        "mean_demand_pct": 73.54,
+        "median_demand_pct": 82.04,
+        "share_opp_top5": 0.1481,
+        "share_above_p90": 0.3148,
+        "mean_demand_prob": 0.027
+      },
+      "R-P4 (slot 17)": {
+        "n": 54,
+        "mean_demand_pct": 71.83,
+        "median_demand_pct": 78.16,
+        "share_opp_top5": 0.1481,
+        "share_above_p90": 0.3889,
+        "mean_demand_prob": 0.0331
+      },
+      "B-P4 (slot 18)": {
+        "n": 54,
+        "mean_demand_pct": 69.94,
+        "median_demand_pct": 73.48,
+        "share_opp_top5": 0.2037,
+        "share_above_p90": 0.2963,
+        "mean_demand_prob": 0.0359
+      },
+      "B-P5 (slot 19)": {
+        "n": 54,
+        "mean_demand_pct": 74.94,
+        "median_demand_pct": 83.93,
+        "share_opp_top5": 0.2407,
+        "share_above_p90": 0.3704,
+        "mean_demand_prob": 0.0373
+      }
+    },
+    "top_denial_picks": [
+      {
+        "gameid": "LOLTMNT01_415103",
+        "label": "B-P2",
+        "champion": "Renekton",
+        "demand_pct": 100.0,
+        "opp_demand_prob": 0.12352125346660614
+      },
+      {
+        "gameid": "LOLTMNT01_415781",
+        "label": "R-P4",
+        "champion": "Rell",
+        "demand_pct": 100.0,
+        "opp_demand_prob": 0.18885071575641632
+      },
+      {
+        "gameid": "LOLTMNT01_415791",
+        "label": "R-P1",
+        "champion": "Caitlyn",
+        "demand_pct": 100.0,
+        "opp_demand_prob": 0.2578042447566986
+      },
+      {
+        "gameid": "LOLTMNT01_415791",
+        "label": "R-P3",
+        "champion": "Renekton",
+        "demand_pct": 100.0,
+        "opp_demand_prob": 0.15159422159194946
+      },
+      {
+        "gameid": "LOLTMNT01_415852",
+        "label": "B-P1",
+        "champion": "Ryze",
+        "demand_pct": 100.0,
+        "opp_demand_prob": 0.12665283679962158
+      },
+      {
+        "gameid": "LOLTMNT01_415852",
+        "label": "B-P2",
+        "champion": "Wukong",
+        "demand_pct": 100.0,
+        "opp_demand_prob": 0.14098623394966125
+      },
+      {
+        "gameid": "LOLTMNT01_415864",
+        "label": "B-P4",
+        "champion": "Gnar",
+        "demand_pct": 100.0,
+        "opp_demand_prob": 0.3121505379676819
+      },
+      {
+        "gameid": "LOLTMNT01_417195",
+        "label": "R-P2",
+        "champion": "Ezreal",
+        "demand_pct": 100.0,
+        "opp_demand_prob": 0.17927230894565582
+      },
+      {
+        "gameid": "LOLTMNT01_417195",
+        "label": "R-P4",
+        "champion": "Jarvan IV",
+        "demand_pct": 100.0,
+        "opp_demand_prob": 0.14596888422966003
+      },
+      {
+        "gameid": "LOLTMNT01_417195",
+        "label": "B-P5",
+        "champion": "Ryze",
+        "demand_pct": 100.0,
+        "opp_demand_prob": 0.1415233016014099
+      }
+    ]
+  },
+  "stage_B": {
+    "note": "Stage B: per-ban top-1/top-5 on the 540 val bans for baseline transformer / meta transformer / codespace-refit GBM, conditioned on Stage A dominant vector. Directional (small n); GBM comparable only within this table.",
+    "n_val_bans": 540,
+    "n_unmatched_dropped": 0,
+    "overall": {
+      "n": 540,
+      "baseline": {
+        "top1": 0.0833,
+        "top5": 0.3685
+      },
+      "meta": {
+        "top1": 0.0889,
+        "top5": 0.4093
+      },
+      "gbm_score": {
+        "top1": 0.1333,
+        "top5": 0.4648
+      }
+    },
+    "by_dominant_vector": {
+      "COMP": {
+        "n": 28,
+        "baseline": {
+          "top1": 0.0714,
+          "top5": 0.5
+        },
+        "meta": {
+          "top1": 0.1071,
+          "top5": 0.4643
+        },
+        "gbm_score": {
+          "top1": 0.0,
+          "top5": 0.1786
+        }
+      },
+      "META": {
+        "n": 291,
+        "baseline": {
+          "top1": 0.0997,
+          "top5": 0.3746
+        },
+        "meta": {
+          "top1": 0.1134,
+          "top5": 0.4536
+        },
+        "gbm_score": {
+          "top1": 0.1546,
+          "top5": 0.5017
+        }
+      },
+      "POCKET": {
+        "n": 221,
+        "baseline": {
+          "top1": 0.0633,
+          "top5": 0.3439
+        },
+        "meta": {
+          "top1": 0.0543,
+          "top5": 0.3439
+        },
+        "gbm_score": {
+          "top1": 0.1222,
+          "top5": 0.4525
+        }
+      }
+    },
+    "by_dominant_vector_pocket_split": {
+      "COMP": {
+        "n": 28,
+        "baseline": {
+          "top1": 0.0714,
+          "top5": 0.5
+        },
+        "meta": {
+          "top1": 0.1071,
+          "top5": 0.4643
+        },
+        "gbm_score": {
+          "top1": 0.0,
+          "top5": 0.1786
+        }
+      },
+      "META": {
+        "n": 291,
+        "baseline": {
+          "top1": 0.0997,
+          "top5": 0.3746
+        },
+        "meta": {
+          "top1": 0.1134,
+          "top5": 0.4536
+        },
+        "gbm_score": {
+          "top1": 0.1546,
+          "top5": 0.5017
+        }
+      },
+      "PLAYER": {
+        "n": 168,
+        "baseline": {
+          "top1": 0.0714,
+          "top5": 0.3393
+        },
+        "meta": {
+          "top1": 0.0595,
+          "top5": 0.3393
+        },
+        "gbm_score": {
+          "top1": 0.1369,
+          "top5": 0.4881
+        }
+      },
+      "TEAM": {
+        "n": 53,
+        "baseline": {
+          "top1": 0.0377,
+          "top5": 0.3585
+        },
+        "meta": {
+          "top1": 0.0377,
+          "top5": 0.3585
+        },
+        "gbm_score": {
+          "top1": 0.0755,
+          "top5": 0.3396
+        }
+      }
+    },
+    "by_phase_and_vector": {
+      "B1-3": {
+        "META": {
+          "n": 209,
+          "baseline": {
+            "top1": 0.0526,
+            "top5": 0.3206
+          },
+          "meta": {
+            "top1": 0.0622,
+            "top5": 0.4211
+          },
+          "gbm_score": {
+            "top1": 0.177,
+            "top5": 0.5215
+          }
+        },
+        "POCKET": {
+          "n": 115,
+          "baseline": {
+            "top1": 0.0174,
+            "top5": 0.2435
+          },
+          "meta": {
+            "top1": 0.0261,
+            "top5": 0.2435
+          },
+          "gbm_score": {
+            "top1": 0.1391,
+            "top5": 0.4609
+          }
+        }
+      },
+      "B4-5": {
+        "COMP": {
+          "n": 28,
+          "baseline": {
+            "top1": 0.0714,
+            "top5": 0.5
+          },
+          "meta": {
+            "top1": 0.1071,
+            "top5": 0.4643
+          },
+          "gbm_score": {
+            "top1": 0.0,
+            "top5": 0.1786
+          }
+        },
+        "META": {
+          "n": 82,
+          "baseline": {
+            "top1": 0.2195,
+            "top5": 0.5122
+          },
+          "meta": {
+            "top1": 0.2439,
+            "top5": 0.5366
+          },
+          "gbm_score": {
+            "top1": 0.0976,
+            "top5": 0.4512
+          }
+        },
+        "POCKET": {
+          "n": 106,
+          "baseline": {
+            "top1": 0.1132,
+            "top5": 0.4528
+          },
+          "meta": {
+            "top1": 0.0849,
+            "top5": 0.4528
+          },
+          "gbm_score": {
+            "top1": 0.1038,
+            "top5": 0.4434
+          }
+        }
+      }
+    },
+    "by_multi_motive": {
+      "False": {
+        "n": 173,
+        "baseline": {
+          "top1": 0.052,
+          "top5": 0.289
+        },
+        "meta": {
+          "top1": 0.0462,
+          "top5": 0.3179
+        },
+        "gbm_score": {
+          "top1": 0.0462,
+          "top5": 0.2717
+        }
+      },
+      "True": {
+        "n": 367,
+        "baseline": {
+          "top1": 0.0981,
+          "top5": 0.406
+        },
+        "meta": {
+          "top1": 0.109,
+          "top5": 0.4523
+        },
+        "gbm_score": {
+          "top1": 0.1744,
+          "top5": 0.5559
+        }
+      }
+    },
+    "val_picks_reference": {
+      "picks": {
+        "n": 540,
+        "baseline": {
+          "top1": 0.1796,
+          "top5": 0.4519
+        },
+        "meta": {
+          "top1": 0.1852,
+          "top5": 0.4926
+        },
+        "gbm_score": {
+          "top1": 0.1315,
+          "top5": 0.4185
+        }
+      }
+    }
+  }
+}
