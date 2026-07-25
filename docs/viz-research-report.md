@@ -81,3 +81,97 @@ Your instinct is right, but pointed at the wrong matrix. The closest established
 ## Bottom line recommendation
 
 Build **design #1** (role-block similarity-matrix heatmap, PNG-baked keyframes, scrubber + synced purity/loss chart) as the primary replacement for the animated t-SNE scatter. It directly fixes the specific complaint (amorphous drift, unclear "clusters forming" story) by plotting real, stable numbers instead of a re-optimized nonlinear projection, fits comfortably in the payload budget via PNG compression, and is a substantially smaller build than doing dynamic t-SNE/Aligned-UMAP properly. Add **design #2** as a "go deeper" toggle once #1 is working, and keep **design #3** in your back pocket as a zero-risk fallback since it's nearly free once #1's precompute exists.
+
+---
+
+# v6 addendum (2026-07-25) — fixing the ON-RAMP, not the animation
+
+The v1 research above asked "which idiom shows embeddings evolving." That was the
+wrong question. Attempt #4 shipped a working animation and still failed, because
+readers get lost in beats 1–2 — before the animation. This addendum is about the
+on-ramp, and it is grounded in what the best explainers actually do.
+
+Reader feedback that triggered this (2026-07-25): *"beat 1 and 2 are the biggest
+problems to me, I think that's where most folks get lost. 3 makes sense in an
+abstract way, but it's a bit of a reach."*
+
+## The single most transferable finding
+
+**Jay Alammar, "The Illustrated Word2vec"** — https://jalammar.github.io/illustrated-word2vec/
+
+He *pre-empts* the meaninglessness of individual dimensions instead of refunding
+the reader's attention afterward. He shows a vector as a colored heatmap strip
+and writes, verbatim:
+
+> "I've hidden which traits we're plotting just so you get used to not knowing."
+
+Our beat 1 does the exact inverse: it labels four curves `slot 44 / 116 / 161 /
+167` — implying the slot index is informative — lets the reader study them, then
+says "no single number means anything on its own." Identical honesty, opposite
+reader experience. One sets up the next idea; ours cancels the previous one.
+
+### His full on-ramp sequence, in order
+
+1. **A familiar scoring analogy before any ML.** Big Five personality traits.
+   Score 38/100 on introversion. Plot it. Add a second trait, call the pair "a
+   vector from the origin to that point." The reader already trusts personality
+   tests, so "a person as a list of numbers" costs nothing.
+2. **Motivate similarity with a need, not a definition.** He asks: if you were
+   hit by a bus, which of two candidates could replace you? The reader *wants* a
+   similarity comparison before the word "cosine" appears.
+3. **Encode the vector as a colored heatmap strip, and stack the strips.** ~50
+   values per word, red/white/blue diverging. Readers spot that `king`, `queen`,
+   and `girl` share column patterns *without knowing what any column means*. A
+   line chart of four dimensions structurally cannot do this — it shows four
+   numbers where the point is the pattern across all of them.
+4. **Demonstrate co-occurrence with a sliding window over real text.** A real
+   Dune sentence, the window sliding three times, each step showing the actual
+   (features, label) pair it generates. He shows the training data itself, not a
+   description of it.
+
+## Caveat conventions
+
+**Distill, "How to Use t-SNE Effectively"** — https://distill.pub/2016/misread-tsne/
+
+- Caveats live in the **running prose at the point of use**, 1–2 sentences,
+  declarative. Verbatim: *"The bottom line, however, is that you cannot see
+  relative sizes of clusters in a t-SNE plot."* / *"...distances between
+  well-separated clusters in a t-SNE plot may mean nothing."*
+- **Every section heading IS its takeaway claim**: "Cluster sizes in a t-SNE plot
+  mean nothing", "Distances between clusters might not mean anything", "Random
+  noise doesn't always look random."
+- Interactive sliders let the reader *discover* a pitfall rather than be told.
+- Notably they use **no** visual "this element is unreliable" marking. The
+  standard practice is short declarative prose at the point of use — not a
+  hedging paragraph, and not a novel visual convention. Our beat-3 caption is a
+  9-line wall; it should be 2 sentences where the reader needs them.
+
+## Translation to concrete changes (proposed 2026-07-25)
+
+1. **Beat 1: heatmap strip, not four labelled curves.** Show all 192 of Rakan's
+   numbers as one strip, start vs final. Drop the slot indices — they imply
+   meaning that isn't there. Add the pre-emptive Alammar line so "you don't need
+   to know what the slots mean" arrives as a setup, not a retraction.
+2. **Beat 2: stack the strips before defining anything.** Rakan / Alistar /
+   Orianna as three strips. The reader sees Rakan and Alistar sharing column
+   patterns and Orianna not, before "similarity" is defined or a curve appears.
+3. **Beat 2: demonstrate the mechanism with real drafts.** Show actual draft
+   sequences from `draft_sequences_multi.parquet` where Rakan and Alistar occupy
+   the same slot. This is the sliding-window move: show what the model read. It
+   replaces the one asserted sentence that currently carries the whole thesis.
+4. **Beat 3: fix the claim.** "Five clusters form anyway" is false (see
+   `scripts/viz_claim_checks.py`, and `docs/viz-selfgrade-2026-07-25.md`). Use the
+   local claim the picture supports, and cut the caption wall to 2 sentences.
+5. **Beat 4 (new): the exceptions are the payoff.** Purity by exposure quartile
+   (0.481 / 0.714 / 0.952 / 0.810) plus flex picks (0.442 vs 0.777, p=7.9e-06).
+   Two measured reasons a dot sits in the "wrong" place. Corki becomes a real
+   second traced example against Rakan.
+
+## Idiom decision
+
+Keep **button-stepping**. Distill's own inline figures and Alammar's article are
+both read-at-your-own-pace with local controls; scrollytelling would fight the
+host article, which we do not control, and adds mobile/reduced-motion/scroll-
+jacking risk for no comprehension gain here. Adopt Distill's structural move
+instead: **make each beat's heading its own claim**, so a reader who only reads
+the four headings still gets the argument.
