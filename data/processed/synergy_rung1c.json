@@ -1,0 +1,399 @@
+{
+  "experiment": "synergy_rung1c",
+  "question": "does a single U.GG-style duo-synergy scalar improve held-out prediction beyond champ@role main effects?",
+  "verdict": "GO",
+  "control_gate_passed": true,
+  "gates": {
+    "A_vs_A+SYN": {
+      "mean_delta": 6.1e-05,
+      "ci95": [
+        1.6e-05,
+        0.000105
+      ],
+      "go": true
+    },
+    "A_vs_A+CTR": {
+      "mean_delta": 0.000624,
+      "ci95": [
+        0.000366,
+        0.000894
+      ],
+      "go": true
+    },
+    "A+CTR_vs_A+SYN+CTR": {
+      "mean_delta": 6e-05,
+      "ci95": [
+        1.8e-05,
+        0.000103
+      ],
+      "go": true
+    }
+  },
+  "models": {
+    "A": {
+      "C": 0.03,
+      "n_cols": 778,
+      "val": {
+        "log_loss": 0.6866285800933838
+      },
+      "holdout": {
+        "log_loss": 0.6887308955192566,
+        "auc": 0.5478472671253426,
+        "acc": 0.5393828203912515
+      }
+    },
+    "A+SYN": {
+      "C": 0.03,
+      "n_cols": 779,
+      "val": {
+        "log_loss": 0.6865752339363098
+      },
+      "holdout": {
+        "log_loss": 0.6886699795722961,
+        "auc": 0.5482329638972879,
+        "acc": 0.5406814949186782
+      }
+    },
+    "A+CTR": {
+      "C": 0.03,
+      "n_cols": 779,
+      "val": {
+        "log_loss": 0.6862074732780457
+      },
+      "holdout": {
+        "log_loss": 0.6881064772605896,
+        "auc": 0.5515815840995377,
+        "acc": 0.5416091195811259
+      }
+    },
+    "A+SYN+CTR": {
+      "C": 0.03,
+      "n_cols": 780,
+      "val": {
+        "log_loss": 0.6861557364463806
+      },
+      "holdout": {
+        "log_loss": 0.6880465149879456,
+        "auc": 0.5519125706108137,
+        "acc": 0.5416503473439014
+      }
+    }
+  },
+  "scalar_coefficients": {
+    "per_model": {
+      "A+SYN": [
+        0.01113
+      ],
+      "A+CTR": [
+        0.063543
+      ],
+      "A+SYN+CTR": [
+        0.010899,
+        0.063515
+      ]
+    },
+    "implied_effects": {
+      "SYN": {
+        "coef_standardized": 0.01113,
+        "implied_wr_per_point_of_lift": 0.000557
+      },
+      "CTR": {
+        "coef_standardized": 0.063543,
+        "implied_wr_per_point_of_lift": 0.003848
+      }
+    }
+  },
+  "scalar_stats": {
+    "SYN": {
+      "train_mean": -0.000123,
+      "train_sd": 0.049912,
+      "train_nonzero_frac": 1.0,
+      "holdout_nonzero_frac": 1.0
+    },
+    "CTR": {
+      "train_mean": -0.002418,
+      "train_sd": 0.041288,
+      "train_nonzero_frac": 1.0,
+      "holdout_nonzero_frac": 1.0
+    }
+  },
+  "holdout_decile_tables": {
+    "SYN": [
+      {
+        "decile": 1,
+        "n": 4852,
+        "score_mean": -0.08625,
+        "score_range": [
+          -0.23148,
+          -0.06238
+        ],
+        "actual_blue_wr": 0.4343,
+        "model_A_predicted_wr": 0.44
+      },
+      {
+        "decile": 2,
+        "n": 4851,
+        "score_mean": -0.05077,
+        "score_range": [
+          -0.06238,
+          -0.04097
+        ],
+        "actual_blue_wr": 0.4529,
+        "model_A_predicted_wr": 0.4546
+      },
+      {
+        "decile": 3,
+        "n": 4851,
+        "score_mean": -0.0331,
+        "score_range": [
+          -0.04096,
+          -0.02582
+        ],
+        "actual_blue_wr": 0.4597,
+        "model_A_predicted_wr": 0.461
+      },
+      {
+        "decile": 4,
+        "n": 4851,
+        "score_mean": -0.01896,
+        "score_range": [
+          -0.02582,
+          -0.0125
+        ],
+        "actual_blue_wr": 0.4638,
+        "model_A_predicted_wr": 0.4673
+      },
+      {
+        "decile": 5,
+        "n": 4851,
+        "score_mean": -0.00636,
+        "score_range": [
+          -0.0125,
+          -0.00021
+        ],
+        "actual_blue_wr": 0.4745,
+        "model_A_predicted_wr": 0.473
+      },
+      {
+        "decile": 6,
+        "n": 4851,
+        "score_mean": 0.00598,
+        "score_range": [
+          -0.00021,
+          0.01209
+        ],
+        "actual_blue_wr": 0.4766,
+        "model_A_predicted_wr": 0.477
+      },
+      {
+        "decile": 7,
+        "n": 4851,
+        "score_mean": 0.01853,
+        "score_range": [
+          0.01209,
+          0.02523
+        ],
+        "actual_blue_wr": 0.4945,
+        "model_A_predicted_wr": 0.4822
+      },
+      {
+        "decile": 8,
+        "n": 4851,
+        "score_mean": 0.03256,
+        "score_range": [
+          0.02523,
+          0.0407
+        ],
+        "actual_blue_wr": 0.4947,
+        "model_A_predicted_wr": 0.4893
+      },
+      {
+        "decile": 9,
+        "n": 4851,
+        "score_mean": 0.05065,
+        "score_range": [
+          0.04071,
+          0.06237
+        ],
+        "actual_blue_wr": 0.4842,
+        "model_A_predicted_wr": 0.4956
+      },
+      {
+        "decile": 10,
+        "n": 4851,
+        "score_mean": 0.08573,
+        "score_range": [
+          0.06237,
+          0.23787
+        ],
+        "actual_blue_wr": 0.5098,
+        "model_A_predicted_wr": 0.5106
+      }
+    ],
+    "CTR": [
+      {
+        "decile": 1,
+        "n": 4852,
+        "score_mean": -0.07439,
+        "score_range": [
+          -0.18576,
+          -0.0548
+        ],
+        "actual_blue_wr": 0.4299,
+        "model_A_predicted_wr": 0.4496
+      },
+      {
+        "decile": 2,
+        "n": 4851,
+        "score_mean": -0.04492,
+        "score_range": [
+          -0.05479,
+          -0.03641
+        ],
+        "actual_blue_wr": 0.4436,
+        "model_A_predicted_wr": 0.46
+      },
+      {
+        "decile": 3,
+        "n": 4851,
+        "score_mean": -0.02965,
+        "score_range": [
+          -0.03641,
+          -0.02334
+        ],
+        "actual_blue_wr": 0.451,
+        "model_A_predicted_wr": 0.4659
+      },
+      {
+        "decile": 4,
+        "n": 4851,
+        "score_mean": -0.01782,
+        "score_range": [
+          -0.02334,
+          -0.01252
+        ],
+        "actual_blue_wr": 0.4564,
+        "model_A_predicted_wr": 0.4705
+      },
+      {
+        "decile": 5,
+        "n": 4851,
+        "score_mean": -0.00738,
+        "score_range": [
+          -0.01252,
+          -0.00224
+        ],
+        "actual_blue_wr": 0.4871,
+        "model_A_predicted_wr": 0.472
+      },
+      {
+        "decile": 6,
+        "n": 4851,
+        "score_mean": 0.00276,
+        "score_range": [
+          -0.00224,
+          0.00791
+        ],
+        "actual_blue_wr": 0.4768,
+        "model_A_predicted_wr": 0.4767
+      },
+      {
+        "decile": 7,
+        "n": 4851,
+        "score_mean": 0.01325,
+        "score_range": [
+          0.00791,
+          0.01881
+        ],
+        "actual_blue_wr": 0.4855,
+        "model_A_predicted_wr": 0.4803
+      },
+      {
+        "decile": 8,
+        "n": 4851,
+        "score_mean": 0.02491,
+        "score_range": [
+          0.01881,
+          0.03168
+        ],
+        "actual_blue_wr": 0.4888,
+        "model_A_predicted_wr": 0.4857
+      },
+      {
+        "decile": 9,
+        "n": 4851,
+        "score_mean": 0.04001,
+        "score_range": [
+          0.03168,
+          0.04928
+        ],
+        "actual_blue_wr": 0.5096,
+        "model_A_predicted_wr": 0.4899
+      },
+      {
+        "decile": 10,
+        "n": 4851,
+        "score_mean": 0.06897,
+        "score_range": [
+          0.04929,
+          0.1697
+        ],
+        "actual_blue_wr": 0.5164,
+        "model_A_predicted_wr": 0.5002
+      }
+    ]
+  },
+  "provenance": {
+    "clean_games": 323401,
+    "dropped": {
+      "bad_roles": 23
+    },
+    "champions": 173,
+    "blue_win_rate": 0.4755,
+    "patch_mix": {
+      "16.11": 3120,
+      "16.12": 74814,
+      "16.13": 159330,
+      "16.14": 86137
+    },
+    "split_boundaries": {
+      "train_end": "2026-07-13 21:17 UTC",
+      "val_end": "2026-07-19 14:40 UTC",
+      "holdout_end": "2026-07-25 16:18 UTC"
+    },
+    "split_sizes": {
+      "train": 226380,
+      "val": 48510,
+      "holdout": 48511
+    },
+    "c_grid": [
+      3e-05,
+      0.0001,
+      0.0003,
+      0.001,
+      0.003,
+      0.01,
+      0.03,
+      0.1,
+      0.3,
+      1.0
+    ],
+    "n_bootstrap": 10000,
+    "shrink_games": 200.0,
+    "champ_role_combos_retained": 605,
+    "syn_pairs_in_tables": {
+      "BOTTOM+UTILITY": 8771,
+      "MIDDLE+JUNGLE": 10681,
+      "TOP+JUNGLE": 11207,
+      "JUNGLE+UTILITY": 8822
+    },
+    "ctr_pairs_in_tables": {
+      "TOP": 8154,
+      "JUNGLE": 3879,
+      "MIDDLE": 7197,
+      "BOTTOM": 4115,
+      "UTILITY": 4870
+    },
+    "runtime_seconds": 36
+  }
+}
