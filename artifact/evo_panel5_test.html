@@ -946,6 +946,7 @@
 
   /* ---------- beat 4: the exceptions ---------- */
   var c3 = document.getElementById("evo4-c3");
+  var bars4 = [];
 
   function drawBeat4() {
     var H = 250;
@@ -968,18 +969,32 @@
     ctx.setLineDash([]);
     var narrow = w < 560;
 
+    // ONE hue for all four bars: this is a single series (role purity), so a
+    // second hue for the last bar was wrong twice over -- it encoded emphasis as
+    // identity, and gold-vs-orange failed the palette validator outright
+    // (deutan ΔE 1.9, normal-vision ΔE 6.5, both below floor). The dip is called
+    // out with a label instead. Dark mode uses a darker gold step because the
+    // page's --gold sits at L 0.768 in dark, outside the 0.48-0.67 band for a
+    // large fill; both values are validated full-opacity (alpha-compositing
+    // washed the chroma out to gray, so these are drawn opaque).
+    var barFill = isDark() ? "#AE8C34" : gold;
     var slot = iw / n, bw = Math.min(slot * 0.52, 86);
+    bars4 = [];
     q.forEach(function (d, i) {
       var cx = padL + slot * (i + 0.5);
       var x = cx - bw / 2, y = Y(d.purity), h = Y(0) - y;
-      // the last bar is the dip beat 4 is about — mark it, don't hide it
-      var isDip = (i === n - 1);
-      ctx.fillStyle = isDip ? meta : gold;
-      ctx.globalAlpha = isDip ? 0.85 : 0.55;
-      ctx.fillRect(x, y, bw, h);
-      ctx.globalAlpha = 1;
-      ctx.strokeStyle = isDip ? meta : gold; ctx.lineWidth = 1.5;
-      ctx.beginPath(); ctx.moveTo(x, y + 0.75); ctx.lineTo(x + bw, y + 0.75); ctx.stroke();
+      var r = Math.min(4, bw / 2, h);
+      ctx.fillStyle = barFill;
+      ctx.beginPath();
+      ctx.moveTo(x, y + h);
+      ctx.lineTo(x, y + r);
+      ctx.quadraticCurveTo(x, y, x + r, y);
+      ctx.lineTo(x + bw - r, y);
+      ctx.quadraticCurveTo(x + bw, y, x + bw, y + r);
+      ctx.lineTo(x + bw, y + h);
+      ctx.closePath();
+      ctx.fill();
+      bars4.push({ x: x, y: y, w: bw, h: h, d: d, i: i });
 
       ctx.textAlign = "center";
       ctx.font = "700 14px ui-monospace, Menlo, monospace";
@@ -1000,12 +1015,45 @@
       }
     });
 
+    // mark the dip with a label, not a hue
+    var last = bars4[bars4.length - 1], prev = bars4[bars4.length - 2];
+    if (last && prev) {
+      ctx.strokeStyle = faint; ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(prev.x + prev.w + 3, prev.y - 2);
+      ctx.lineTo(last.x - 3, last.y - 2);
+      ctx.stroke();
+      ctx.font = "600 10.5px ui-monospace, Menlo, monospace";
+      ctx.fillStyle = mut; ctx.textAlign = "center"; ctx.textBaseline = "alphabetic";
+      ctx.fillText("dips", (prev.x + prev.w + last.x) / 2, prev.y - 8);
+    }
+
     ctx.textAlign = "left"; ctx.fillStyle = mut;
     ctx.font = "600 11px ui-monospace, Menlo, monospace";
     var cap = "share of 5 nearest neighbours sharing the same role  ↑";
     if (ctx.measureText(cap).width > iw) cap = "same role as its 5 neighbours  ↑";
     ctx.fillText(cap, padL, padT - 12);
   }
+
+  /* hover: restores the range and champion count that 390px cannot show */
+  c3.addEventListener("mousemove", function (e) {
+    var r = c3.getBoundingClientRect();
+    var mx = e.clientX - r.left, my = e.clientY - r.top;
+    var hit = null;
+    bars4.forEach(function (b) {
+      if (mx >= b.x - 6 && mx <= b.x + b.w + 6 && my >= b.y - 10) hit = b;
+    });
+    if (!hit) { tip.style.display = "none"; return; }
+    tip.innerHTML = "<b>" + ["least seen", "2nd quarter", "3rd quarter",
+                             "most seen"][hit.i] + "</b><br>" +
+      hit.d.lo.toLocaleString() + "–" + hit.d.hi.toLocaleString() +
+      " draft appearances<br>" + hit.d.n + " champions · purity " +
+      hit.d.purity.toFixed(2);
+    tip.style.display = "block";
+    tip.style.left = Math.min(mx + 14, r.width - 190) + "px";
+    tip.style.top = (c3.offsetTop + my - 40) + "px";
+  });
+  c3.addEventListener("mouseleave", function () { tip.style.display = "none"; });
 
   (function buildBeat4Static() {
     var f = D.flexStat;
