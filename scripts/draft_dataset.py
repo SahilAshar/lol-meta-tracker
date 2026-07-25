@@ -44,6 +44,21 @@ Fearless detection runs per (league, year) because leagues switched formats
 between seasons. A compact per-decision sequence table is also written for
 sequence models (draft_sequences*.parquet).
 
+Rung 2 (docs/2026-07-25-rung2-transfer-spec.md) adds two soloq-informed
+candidate features from the static lift tables (soloq_lift_tables.py, games
+before 2026-07-01): soloq_role_wr is the candidate's role-aware soloq strength
+prior (expected champ@role WR under P(candidate plays r), where P(r) is the
+candidate's trailing role-share distribution masked by the reference team's
+open-role probabilities and normalized); soloq_ctr_score sums, over the other
+side's locked picks, the expected same-role soloq counter lift, weighting by
+P(candidate plays r) x P(locked pick plays r) with the locked side's role
+assignment marginalized by the same permutation enumeration as
+role_open_probs. After rung 1c's GO, soloq_syn_score does the same over the
+REFERENCE team's locked picks with the four priority-vector duo lifts (a
+candidate can occupy either slot of a vector). Decisions before soloq
+coverage (2026-06-08) get neutral values (0.5 / 0.0 / 0.0) — the tables
+cannot causally inform them.
+
 Output: data/processed/draft_decisions.parquet (single year)
         data/processed/draft_decisions_multi.parquet (multi-year)
         plus draft_sequences[_multi].parquet
@@ -58,8 +73,13 @@ import numpy as np
 import pandas as pd
 
 from common import CURRENT_YEAR, DATA_PROCESSED, raw_csv_path
+from soloq_lift_tables import SYN_VECTORS, load_tables, pro_arrays
 
 LEAGUES = ["LCK", "LPL", "LEC", "LCS", "MSI", "EWC", "FST"]
+
+SOLOQ_START = pd.Timestamp("2026-06-08")  # first day of soloq coverage
+SOLOQ_TO_PRO_ROLE = {"TOP": "top", "JUNGLE": "jng", "MIDDLE": "mid",
+                     "BOTTOM": "bot", "UTILITY": "sup"}
 
 RATE_WINDOW_DAYS = 28  # global champion pick/ban rates
 USAGE_WINDOW_DAYS = 56  # team-specific champion usage
@@ -463,6 +483,29 @@ def role_open_probs(
     return (open_p - filled / total).astype(np.float32)
 
 
+def role_assign_probs(
+    picks: list[str], shares: np.ndarray, cidx: dict[str, int]
+) -> list[tuple[int, np.ndarray]]:
+    """Marginal P(each locked pick plays role r), by the same permutation
+    enumeration as role_open_probs (assignments to distinct roles weighted by
+    the product of role-shares, then marginalized per pick)."""
+    idx = [cidx[c] for c in picks if c in cidx]
+    if not idx:
+        return []
+    s = shares[idx] + 1e-3
+    marg = np.zeros((len(idx), len(ROLES)))
+    total = 0.0
+    for perm in itertools.permutations(range(len(ROLES)), len(idx)):
+        w = 1.0
+        for i, r in enumerate(perm):
+            w *= s[i, r]
+        total += w
+        for i, r in enumerate(perm):
+            marg[i, r] += w
+    marg /= total
+    return list(zip(idx, marg))
+
+
 def build(years: list[int]) -> pd.DataFrame:
     players, teams = load_games(years)
     champs = sorted(players.champion.dropna().unique())
@@ -473,6 +516,17 @@ def build(years: list[int]) -> pd.DataFrame:
     rates = RollingRates(players, teams, champs)
     pools = PlayerPools(players, champs, cidx, rates.didx)
     pairs = PairStats(players, cidx, rates.didx)
+
+    # Static soloq lift tables (rung 2). W_sq[i, r] = soloq_wr(champ_i@r),
+    # C_sq[r, i, j] = soloq_ctr(champ_i, champ_j | r) antisymmetric,
+    # S_sq[v, i, j] = duo lift for priority vector v with i in the first slot.
+    W_sq, C_sq, S_sq, sq_coverage = pro_arrays(champs, load_tables())
+    print(f"soloq bridge: {sq_coverage['matched']}/{sq_coverage['pro_champs']} "
+          f"champs matched (misses: {sq_coverage['misses']})")
+    # Priority vectors as pro-role indices (slot order preserved).
+    syn_vec_idx = [(ROLES.index(SOLOQ_TO_PRO_ROLE[ra]),
+                    ROLES.index(SOLOQ_TO_PRO_ROLE[rb]))
+                   for ra, rb in SYN_VECTORS]
 
     # One record per game with both teams' ordered picks/bans.
     game_rows = {}
@@ -596,6 +650,32 @@ def build(years: list[int]) -> pd.DataFrame:
             other_picked = [cidx[c] for c in picks_so_far[other] if c in cidx]
             pair_syn = pairs.synergy(day, ref_picked)
             pair_ctr = pairs.counter(day, other_picked)
+
+            # Soloq-informed candidate features (neutral before coverage:
+            # the static table cannot causally inform earlier decisions).
+            if day >= SOLOQ_START:
+                P_cand = cand_shares * p_open[None, :]
+                rs = P_cand.sum(axis=1, keepdims=True)
+                P_cand = np.where(rs > 1e-9,
+                                  P_cand / np.clip(rs, 1e-12, None),
+                                  cand_shares)
+                soloq_role_wr = (P_cand * W_sq[ci]).sum(axis=1)
+                soloq_ctr_score = np.zeros(n, dtype=np.float64)
+                for oi, q in role_assign_probs(picks_so_far[other], shares, cidx):
+                    soloq_ctr_score += (P_cand * (C_sq[:, ci, oi].T * q)).sum(axis=1)
+                # Duo lift vs the REFERENCE team's locked picks: for each
+                # priority vector (ra, rb) the candidate can sit in either
+                # slot, weighted P(cand@slot) x P(teammate@other slot).
+                soloq_syn_score = np.zeros(n, dtype=np.float64)
+                for oi, q in role_assign_probs(picks_so_far[ref], shares, cidx):
+                    for v, (ra_i, rb_i) in enumerate(syn_vec_idx):
+                        soloq_syn_score += (
+                            P_cand[:, ra_i] * q[rb_i] * S_sq[v, ci, oi]
+                            + P_cand[:, rb_i] * q[ra_i] * S_sq[v, oi, ci])
+            else:
+                soloq_role_wr = np.full(n, 0.5, dtype=np.float64)
+                soloq_ctr_score = np.zeros(n, dtype=np.float64)
+                soloq_syn_score = np.zeros(n, dtype=np.float64)
             out.append(pd.DataFrame({
                 "gameid": gameid,
                 "date": rec["date"],
@@ -620,6 +700,9 @@ def build(years: list[int]) -> pd.DataFrame:
                 "player_wr": wr_vec[ci],
                 "pair_syn": pair_syn[ci],
                 "pair_ctr": pair_ctr[ci],
+                "soloq_role_wr": soloq_role_wr.astype(np.float32),
+                "soloq_ctr_score": soloq_ctr_score.astype(np.float32),
+                "soloq_syn_score": soloq_syn_score.astype(np.float32),
                 "label": [int(c == actual) for c in avail],
             }))
             taken.add(actual)

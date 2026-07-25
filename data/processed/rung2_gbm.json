@@ -1,0 +1,328 @@
+{
+  "experiment": "rung2_arm1_gbm",
+  "spec": "docs/2026-07-25-rung2-transfer-spec.md",
+  "question": "do soloq-informed candidate features (role-aware strength, lane counters) improve the v0.7 draft GBM's val top-3?",
+  "gate": {
+    "criterion": "ensemble val top-3 vs refit baseline, paired bootstrap 95% CI excluding 0, either variant",
+    "pass": false,
+    "per_variant": {
+      "V1": {
+        "top1": {
+          "mean_delta": -0.00463,
+          "ci95": [
+            -0.019444,
+            0.010185
+          ],
+          "p_variant_better": 0.2442
+        },
+        "top3": {
+          "mean_delta": -0.006481,
+          "ci95": [
+            -0.025,
+            0.012037
+          ],
+          "p_variant_better": 0.2401
+        },
+        "top5": {
+          "mean_delta": 0.014815,
+          "ci95": [
+            -0.00463,
+            0.034259
+          ],
+          "p_variant_better": 0.9313
+        },
+        "pass": false
+      },
+      "V2": {
+        "top1": {
+          "mean_delta": 0.0,
+          "ci95": [
+            -0.014838,
+            0.015741
+          ],
+          "p_variant_better": 0.4766
+        },
+        "top3": {
+          "mean_delta": -0.003704,
+          "ci95": [
+            -0.023148,
+            0.015741
+          ],
+          "p_variant_better": 0.3336
+        },
+        "top5": {
+          "mean_delta": 0.015741,
+          "ci95": [
+            -0.003704,
+            0.035185
+          ],
+          "p_variant_better": 0.9362
+        },
+        "pass": false
+      },
+      "V3": {
+        "top1": {
+          "mean_delta": 0.006481,
+          "ci95": [
+            -0.009259,
+            0.022222
+          ],
+          "p_variant_better": 0.7768
+        },
+        "top3": {
+          "mean_delta": 0.001852,
+          "ci95": [
+            -0.016667,
+            0.02037
+          ],
+          "p_variant_better": 0.5471
+        },
+        "top5": {
+          "mean_delta": 0.016667,
+          "ci95": [
+            -0.001852,
+            0.035185
+          ],
+          "p_variant_better": 0.9533
+        },
+        "pass": false
+      },
+      "syn_increment_V3_vs_V1": {
+        "top1": {
+          "mean_delta": 0.011111,
+          "ci95": [
+            0.002778,
+            0.02037
+          ],
+          "p_variant_better": 0.9946
+        },
+        "top3": {
+          "mean_delta": 0.008333,
+          "ci95": [
+            -0.003704,
+            0.02037
+          ],
+          "p_variant_better": 0.8933
+        },
+        "top5": {
+          "mean_delta": 0.001852,
+          "ci95": [
+            -0.009259,
+            0.012963
+          ],
+          "p_variant_better": 0.5933
+        }
+      }
+    }
+  },
+  "models": {
+    "baseline": {
+      "features": [
+        "pick_rate",
+        "ban_rate",
+        "presence",
+        "team_usage",
+        "opp_usage",
+        "is_ban",
+        "phase2",
+        "is_blue",
+        "ordinal",
+        "fearless",
+        "game_in_series",
+        "role_need",
+        "role_overlap_max",
+        "player_pool",
+        "player_wr",
+        "pair_syn",
+        "pair_ctr"
+      ],
+      "ensemble": {
+        "n": 1080,
+        "top1": 0.1324,
+        "top3": 0.3278,
+        "top5": 0.4389
+      },
+      "clf_family": {
+        "n": 1080,
+        "top1": 0.1259,
+        "top3": 0.3278,
+        "top5": 0.4472
+      },
+      "ranker_family": {
+        "n": 1080,
+        "top1": 0.1389,
+        "top3": 0.3278,
+        "top5": 0.4333
+      }
+    },
+    "V1": {
+      "features": [
+        "pick_rate",
+        "ban_rate",
+        "presence",
+        "team_usage",
+        "opp_usage",
+        "is_ban",
+        "phase2",
+        "is_blue",
+        "ordinal",
+        "fearless",
+        "game_in_series",
+        "role_need",
+        "role_overlap_max",
+        "player_pool",
+        "player_wr",
+        "pair_syn",
+        "pair_ctr",
+        "soloq_ctr_score",
+        "soloq_role_wr"
+      ],
+      "ensemble": {
+        "n": 1080,
+        "top1": 0.1278,
+        "top3": 0.3213,
+        "top5": 0.4537
+      },
+      "clf_family": {
+        "n": 1080,
+        "top1": 0.125,
+        "top3": 0.3148,
+        "top5": 0.4546
+      },
+      "ranker_family": {
+        "n": 1080,
+        "top1": 0.1287,
+        "top3": 0.3148,
+        "top5": 0.4491
+      }
+    },
+    "V2": {
+      "features": [
+        "pick_rate",
+        "ban_rate",
+        "presence",
+        "team_usage",
+        "opp_usage",
+        "is_ban",
+        "phase2",
+        "is_blue",
+        "ordinal",
+        "fearless",
+        "game_in_series",
+        "role_need",
+        "role_overlap_max",
+        "player_pool",
+        "player_wr",
+        "pair_syn",
+        "soloq_ctr_score",
+        "soloq_role_wr"
+      ],
+      "ensemble": {
+        "n": 1080,
+        "top1": 0.1324,
+        "top3": 0.3241,
+        "top5": 0.4546
+      },
+      "clf_family": {
+        "n": 1080,
+        "top1": 0.1204,
+        "top3": 0.312,
+        "top5": 0.4565
+      },
+      "ranker_family": {
+        "n": 1080,
+        "top1": 0.1278,
+        "top3": 0.3185,
+        "top5": 0.45
+      }
+    },
+    "V3": {
+      "features": [
+        "pick_rate",
+        "ban_rate",
+        "presence",
+        "team_usage",
+        "opp_usage",
+        "is_ban",
+        "phase2",
+        "is_blue",
+        "ordinal",
+        "fearless",
+        "game_in_series",
+        "role_need",
+        "role_overlap_max",
+        "player_pool",
+        "player_wr",
+        "pair_syn",
+        "pair_ctr",
+        "soloq_ctr_score",
+        "soloq_role_wr",
+        "soloq_syn_score"
+      ],
+      "ensemble": {
+        "n": 1080,
+        "top1": 0.1389,
+        "top3": 0.3296,
+        "top5": 0.4556
+      },
+      "clf_family": {
+        "n": 1080,
+        "top1": 0.1296,
+        "top3": 0.3167,
+        "top5": 0.4565
+      },
+      "ranker_family": {
+        "n": 1080,
+        "top1": 0.138,
+        "top3": 0.3222,
+        "top5": 0.4444
+      }
+    }
+  },
+  "baseline_reproduction": {
+    "stored_v07_val": {
+      "n": 1080,
+      "top1": 0.1324,
+      "top3": 0.3278,
+      "top5": 0.4407
+    },
+    "stored_platform": "Linux-6.8.0-1052-azure-x86_64-with-glibc2.41",
+    "note": "stored v0.7 trained on Linux; baseline refit here on this platform so the gate comparison is paired"
+  },
+  "timing_caveat": "MANDATORY READING (pre-registered): soloq coverage starts 2026-06-08; pro train decisions before that hold zero/neutral values for the new features, so the GBM can only learn them from the late-window train tail. Val is entirely post-07-01, so the gate itself is clean, but train-time sparsity may mute what the GBM learns. If the result is an ambiguous null, the follow-up is 're-run when soloq spans a full split', not a rerun of the same window.",
+  "provenance": {
+    "cutoff": "2026-07-15 09:41:28",
+    "val_days": 14,
+    "n_val_decisions": 1080,
+    "seeds": [
+      16,
+      17,
+      42,
+      7,
+      23
+    ],
+    "n_bootstrap": 10000,
+    "frozen_ewc_test": "never loaded into any scorer",
+    "backup_check": {
+      "pre_cutoff_rows": 3941356,
+      "columns_checked": 26,
+      "byte_identical": true
+    },
+    "soloq_table": {
+      "cutoff_iso": "2026-07-01T00:00:00Z",
+      "clean_games": 124731,
+      "blue_win_rate": 0.4754,
+      "n_champs": 173,
+      "n_counter_pairs": 23717,
+      "n_syn_pairs": 33546
+    },
+    "bridge_coverage": {
+      "pro_champs": 150,
+      "matched": 150,
+      "misses": []
+    },
+    "rung1c": "PASS \u2014 soloq_syn_score added as V3 per the spec's PASS branch (docs/2026-07-25-synergy-rung1c-results.md); no LOO needed, pro games are disjoint from the soloq table sample",
+    "soloq_feature_construction": "soloq_role_wr = E_r[soloq_wr(cand@r)] under P(r) \u221d cand role-shares x ref-team open-role probs (normalized); soloq_ctr_score = sum over other side's locked picks of E[ctr lift] under P(cand@r) x P(pick@r), pick roles marginalized by permutation enumeration; soloq_syn_score = sum over the REFERENCE team's locked picks of E[duo lift] over the four priority vectors, candidate in either slot, same probability weighting; decisions before 2026-06-08 neutral (0.5 / 0.0 / 0.0)",
+    "runtime_seconds": 128
+  }
+}

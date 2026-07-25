@@ -1,0 +1,201 @@
+{
+  "experiment": "rung2_arm2_outcome",
+  "spec": "docs/2026-07-25-rung2-transfer-spec.md",
+  "question": "do soloq lane-counter and role-strength scalars improve completed-draft win prediction over M2a (Elo + champ indicators)?",
+  "gate": {
+    "per_comparison": {
+      "M2a_vs_soloq": {
+        "n_games": 374,
+        "mean_delta": 4.2e-05,
+        "ci95": [
+          -0.002431,
+          0.002525
+        ],
+        "p_challenger_better": 0.5183,
+        "pass": false
+      },
+      "M2a_vs_soloq_syn": {
+        "n_games": 374,
+        "mean_delta": -0.000405,
+        "ci95": [
+          -0.003098,
+          0.002295
+        ],
+        "p_challenger_better": 0.3857,
+        "pass": false
+      },
+      "syn_increment": {
+        "n_games": 374,
+        "mean_delta": -0.000447,
+        "ci95": [
+          -0.001287,
+          0.0004
+        ],
+        "p_challenger_better": 0.1439,
+        "pass": false
+      }
+    },
+    "criterion": "either soloq variant beats M2a on holdout LL, 95% CI excluding 0",
+    "pass": false
+  },
+  "rung1c": "PASS (docs/2026-07-25-synergy-rung1c-results.md) \u2014 SYN scalar included as the optional third model per the rung 2 spec's PASS branch; soloq-side effect is ~1/10 of the counter effect, expectations set accordingly",
+  "models": {
+    "M2a": {
+      "C": 0.01,
+      "val": {
+        "log_loss": 0.60657,
+        "auc": 0.721,
+        "acc": 0.68
+      },
+      "holdout": {
+        "log_loss": 0.60235,
+        "auc": 0.7289,
+        "acc": 0.6952
+      }
+    },
+    "M2a_soloq": {
+      "C": 0.01,
+      "val": {
+        "log_loss": 0.60601,
+        "auc": 0.7215,
+        "acc": 0.6816
+      },
+      "holdout": {
+        "log_loss": 0.6023,
+        "auc": 0.7282,
+        "acc": 0.7005
+      },
+      "soloq_coefs": {
+        "CTR": 0.02834,
+        "ROLE_WR": 0.0658
+      }
+    },
+    "M2a_soloq_syn": {
+      "C": 0.01,
+      "val": {
+        "log_loss": 0.606,
+        "auc": 0.7214,
+        "acc": 0.6752
+      },
+      "holdout": {
+        "log_loss": 0.60275,
+        "auc": 0.7276,
+        "acc": 0.6952
+      },
+      "soloq_coefs": {
+        "CTR": 0.02812,
+        "ROLE_WR": 0.06039,
+        "SYN": 0.02066
+      }
+    }
+  },
+  "secondary_slice_post_soloq_start": {
+    "note": "holdout restricted to games on/after 2026-06-08; reported, not gated",
+    "bootstrap": {
+      "M2a_vs_soloq": {
+        "n_games": 122,
+        "mean_delta": -0.000228,
+        "ci95": [
+          -0.004451,
+          0.003872
+        ],
+        "p_challenger_better": 0.4618
+      },
+      "M2a_vs_soloq_syn": {
+        "n_games": 122,
+        "mean_delta": -0.000649,
+        "ci95": [
+          -0.005105,
+          0.003993
+        ],
+        "p_challenger_better": 0.3963
+      },
+      "syn_increment": {
+        "n_games": 122,
+        "mean_delta": -0.00042,
+        "ci95": [
+          -0.001768,
+          0.000927
+        ],
+        "p_challenger_better": 0.2647
+      }
+    },
+    "metrics": {
+      "M2a": {
+        "log_loss": 0.59452,
+        "auc": 0.7267,
+        "acc": 0.7295
+      },
+      "M2a_soloq": {
+        "log_loss": 0.59475,
+        "auc": 0.7279,
+        "acc": 0.7213
+      },
+      "M2a_soloq_syn": {
+        "log_loss": 0.59517,
+        "auc": 0.7261,
+        "acc": 0.7213
+      }
+    }
+  },
+  "m2a_reproduction": {
+    "stored_holdout_ll": 0.60235,
+    "reproduced_holdout_ll": 0.60235,
+    "note": "raw CSVs may have grown since v0.9 ran; gate is internally paired on identical data either way"
+  },
+  "timing_caveat": "MANDATORY READING (pre-registered): soloq lifts are measured on patches 16.11-16.14 (2026-06-08 onward, table cut 2026-07-01); the v0.9 holdout runs from 2026-05-15. Features are patch-blind (the table pools patches), so early-holdout games carry real patch misalignment. A null on the primary gate with a positive post-06-08 slice reads 'transfer works where the data overlaps' and the follow-up is a re-split, not a NO-GO. A null on both is a misaligned-window null for the pre-06-08 portion but a real falsification for the aligned slice.",
+  "provenance": {
+    "splits": {
+      "train_end": "2026-03-15",
+      "val_end": "2026-05-15",
+      "n_train": 4099,
+      "n_val": 625,
+      "n_holdout": 374,
+      "n_holdout_post_soloq_start": 122,
+      "frozen_ewc_excluded": 50
+    },
+    "elo_k": 10.0,
+    "c_grid": [
+      0.003,
+      0.01,
+      0.03,
+      0.1,
+      0.3
+    ],
+    "n_bootstrap": 10000,
+    "soloq_table": {
+      "cutoff_iso": "2026-07-01T00:00:00Z",
+      "clean_games": 124731,
+      "blue_win_rate": 0.4754,
+      "patch_mix": {
+        "16.13": 46797,
+        "16.12": 74814,
+        "16.11": 3120
+      },
+      "n_champs": 173,
+      "n_counter_pairs": 23717,
+      "n_syn_pairs": 33546
+    },
+    "loo_note": "no leave-one-out correction anywhere: every pro game scored is disjoint from the soloq games the tables were built from (1c's LOO repair applies only inside the table sample)",
+    "bridge_coverage": {
+      "pro_champs_in_games": 168,
+      "matched": 168,
+      "misses": []
+    },
+    "scalar_standardization": {
+      "CTR": {
+        "train_mean": -0.00138,
+        "train_sd": 0.037761
+      },
+      "ROLE_WR": {
+        "train_mean": -0.000862,
+        "train_sd": 0.05565
+      },
+      "SYN": {
+        "train_mean": -0.000177,
+        "train_sd": 0.045379
+      }
+    },
+    "runtime_seconds": 12
+  }
+}
