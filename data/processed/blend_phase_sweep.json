@@ -1,0 +1,236 @@
+{
+  "note": "Per-type-x-phase blend sweep on VAL ONLY, run locally from cached GBM val scores (codespace refit) and blind-test transformer ensemble caches. all/picks/bans rows asserted identical to blend_resweep_timesignal.json. CAVEAT: the B1-3/B4-5 split was chosen after seeing Stage B's cells on these same 540 bans \u2014 a-priori motivated and only 1 extra df, but weaker evidence than a pre-registered split. No test look; promotion needs explicit approval.",
+  "sweep": {
+    "0.0": {
+      "all": {
+        "n": 1080,
+        "top1": 0.1324,
+        "top3": 0.3204,
+        "top5": 0.4417
+      },
+      "picks": {
+        "n": 540,
+        "top1": 0.1315,
+        "top3": 0.2889,
+        "top5": 0.4185
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.1333,
+        "top3": 0.3519,
+        "top5": 0.4648
+      },
+      "bans_b13": {
+        "n": 324,
+        "top1": 0.1636,
+        "top3": 0.3889,
+        "top5": 0.5
+      },
+      "bans_b45": {
+        "n": 216,
+        "top1": 0.088,
+        "top3": 0.2963,
+        "top5": 0.412
+      }
+    },
+    "0.25": {
+      "all": {
+        "n": 1080,
+        "top1": 0.1454,
+        "top3": 0.3611,
+        "top5": 0.487
+      },
+      "picks": {
+        "n": 540,
+        "top1": 0.1648,
+        "top3": 0.3741,
+        "top5": 0.4833
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.1259,
+        "top3": 0.3481,
+        "top5": 0.4907
+      },
+      "bans_b13": {
+        "n": 324,
+        "top1": 0.1296,
+        "top3": 0.3549,
+        "top5": 0.4907
+      },
+      "bans_b45": {
+        "n": 216,
+        "top1": 0.1204,
+        "top3": 0.338,
+        "top5": 0.4907
+      }
+    },
+    "0.5": {
+      "all": {
+        "n": 1080,
+        "top1": 0.15,
+        "top3": 0.3657,
+        "top5": 0.5056
+      },
+      "picks": {
+        "n": 540,
+        "top1": 0.187,
+        "top3": 0.3796,
+        "top5": 0.5111
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.113,
+        "top3": 0.3519,
+        "top5": 0.5
+      },
+      "bans_b13": {
+        "n": 324,
+        "top1": 0.0957,
+        "top3": 0.321,
+        "top5": 0.5
+      },
+      "bans_b45": {
+        "n": 216,
+        "top1": 0.1389,
+        "top3": 0.3981,
+        "top5": 0.5
+      }
+    },
+    "0.75": {
+      "all": {
+        "n": 1080,
+        "top1": 0.1491,
+        "top3": 0.3565,
+        "top5": 0.5019
+      },
+      "picks": {
+        "n": 540,
+        "top1": 0.1833,
+        "top3": 0.4,
+        "top5": 0.5148
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.1148,
+        "top3": 0.313,
+        "top5": 0.4889
+      },
+      "bans_b13": {
+        "n": 324,
+        "top1": 0.071,
+        "top3": 0.2593,
+        "top5": 0.4722
+      },
+      "bans_b45": {
+        "n": 216,
+        "top1": 0.1806,
+        "top3": 0.3935,
+        "top5": 0.5139
+      }
+    },
+    "1.0": {
+      "all": {
+        "n": 1080,
+        "top1": 0.137,
+        "top3": 0.3157,
+        "top5": 0.4509
+      },
+      "picks": {
+        "n": 540,
+        "top1": 0.1852,
+        "top3": 0.3833,
+        "top5": 0.4926
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.0889,
+        "top3": 0.2481,
+        "top5": 0.4093
+      },
+      "bans_b13": {
+        "n": 324,
+        "top1": 0.0494,
+        "top3": 0.179,
+        "top5": 0.358
+      },
+      "bans_b45": {
+        "n": 216,
+        "top1": 0.1481,
+        "top3": 0.3519,
+        "top5": 0.4861
+      }
+    }
+  },
+  "selected_per_cell": {
+    "picks": {
+      "w_transformer": 0.5,
+      "n": 540,
+      "top1": 0.187,
+      "top3": 0.3796,
+      "top5": 0.5111
+    },
+    "bans_b13": {
+      "w_transformer": 0.0,
+      "n": 324,
+      "top1": 0.1636,
+      "top3": 0.3889,
+      "top5": 0.5
+    },
+    "bans_b45": {
+      "w_transformer": 0.75,
+      "n": 216,
+      "top1": 0.1806,
+      "top3": 0.3935,
+      "top5": 0.5139
+    }
+  },
+  "composite_bans_phase_aware": {
+    "top1": 0.1704,
+    "top3": 0.3907,
+    "top5": 0.5056,
+    "n": 540
+  },
+  "reference": {
+    "production_weights": {
+      "picks": 0.75,
+      "bans": 0.0
+    },
+    "single_weight_bans_w0": {
+      "n": 540,
+      "top1": 0.1333,
+      "top3": 0.3519,
+      "top5": 0.4648
+    },
+    "naive_stageB_expectation_top1_gain": "~+2.4pts (post-hoc)"
+  },
+  "provenance": {
+    "transformer": "meta-aware, expcache_timesignal_blind mean of seeds [16, 17, 42, 7, 23] (bit-identical to timesignal_blindtest.json)",
+    "gbm": "gbm_val_scores.parquet (codespace refit, cached; cross-platform caveat applies vs stored local blocks)",
+    "grid": [
+      0.0,
+      0.25,
+      0.5,
+      0.75,
+      1.0
+    ],
+    "phase_split": {
+      "bans_b13_seqs": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "bans_b45_seqs": [
+        13,
+        14,
+        15,
+        16
+      ]
+    },
+    "split_cutoff": "2026-07-15",
+    "platform": "macOS-26.3-arm64-arm-64bit"
+  }
+}
