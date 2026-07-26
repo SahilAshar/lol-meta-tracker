@@ -17,7 +17,7 @@ https://claude.ai/code/artifact/36f462bc-ef98-42dd-af89-6c1a309c8877
 | #2 | `build_evo_panel2.py` | `artifact-v4.html` *(file not retained)* | — | Per-frame t-SNE, warm-started + Procrustes-aligned, plus a raw-numbers exhibit | Failed — per-frame t-SNE animates layout noise, not learning ("amorphous drift") |
 | #3 | `build_evo_panel3.py` | `artifact-v5.html` | — | Role-block-sorted 168×168 cosine-similarity heatmap scrubbed over ~18 PNG keyframes, plus a champs×dims raw-value heatmap toggle | Rejected — not visually beautiful, wrong ending, change hard to perceive, and **no step-by-step path for a non-League reader** |
 | #4 | `build_evo_panel4.py` | `artifact-v6.html` | `viz-attempt4` | Three-beat guided story: (1) one champion as 192 numbers, (2) two similarity curves, (3) animated fly-in map ending on a true t-SNE | **Partial.** Beat 3's animation reads decently; final frame needs polish. **Beats 1–2 lose non-player readers** — the on-ramp is the weak link |
-| #5 | `build_evo_panel5.py` | `artifact-v7.html` | `viz-attempt5` | Four beats: (1) whole vector as a colour strip at 3 moments, (2) the mechanism *demonstrated* from the draft record — substitutes are never teammates — plus sorted strips and the similarity curves, (3) the map with the false global claim replaced, (4) new: the exceptions, exposure quartiles + flex picks | in review |
+| #5 | `build_evo_panel5.py` | `artifact-v7.html` | `viz-attempt5` | Four beats: (1) the model's one job + whole vector as signed bars at 3 moments, (2) the mechanism *demonstrated* from the draft record — substitutes are never teammates — plus sorted bars with trend lines and the similarity curves, (3) the map with the claim scoped to the measured number, (4) new: the exceptions, exposure quartiles + flex picks | **Built, verified, committed, NOT yet published.** Reviewed by three subagents; their disqualifying findings are fixed. Sahil has not seen it rendered |
 
 ## Feedback log (what the reader actually said)
 
@@ -31,6 +31,19 @@ https://claude.ai/code/artifact/36f462bc-ef98-42dd-af89-6c1a309c8877
   looks decent and can be improved. Final frame: close, needs polish. On the
   paced-not-mapped honesty compromise: wants **a mix of keeping the motion and
   the annotated comic-strip idiom** — real keyframes, more annotation.
+- **On #5, from a naive-reader subagent (no League, no ML), 2026-07-25:** the
+  panel *does* land the intended takeaway — their unprompted restatement was
+  correct. But the beat-2 strips were unverifiable: *"Alistar's row is, to my eye,
+  indistinguishable from Orianna's… You asked me to verify a claim visually and my
+  eyes contradicted you. That is worse than showing no visual at all — it made me
+  distrust the rest of the panel, including the numbers."* Fixed by encoding sign
+  as direction plus a running-average trend line. They also falsified the
+  replacement beat-3 headline ("Every champion…") against the map's mixed right
+  side, and pointed out beat 1 never said what the model does. Both fixed.
+- **Design subagent, 2026-07-25:** MUST-FIX colour collision — blue/orange meant
+  "above/below zero" in beats 1–2 and "Top lane / Bot lane" on the beat-3 map.
+  Fixed by the same change. Their remaining ranked items are the cleanup queue in
+  `HANDOFF-viz-v7.md`.
 
 ## What changed in #5, and why (so a future session does not re-litigate it)
 
