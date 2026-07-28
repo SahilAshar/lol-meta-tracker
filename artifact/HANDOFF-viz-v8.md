@@ -129,21 +129,52 @@ Cleanup only; the four beats are structurally identical to #5.
 - **Beat-4 bar chart reserved 54px** for range/count labels it drops below 560px,
   leaving a visible hole at 390px. Height is now width-dependent.
 
-## STILL UNVERIFIED — carried over unchanged from the v7 handoff
+## The independent review DID happen — and it caught two blockers I had shipped
 
-**Dark mode and 390px have never had an independent review.** This was must-fix #3
-last session and it is must-fix #3 again. In v7 the robustness subagent never
-returned a report; this session two reviewers (dark, mobile) were spawned against
-the 20 rendered frames and also never reported, across four follow-ups.
+Both reviewers reported late, after I had already published and after I had
+wrongly recorded them as having failed to report. Their findings were correct and
+are now fixed and republished.
 
-What this surface *does* have: my own eyes on all 20 configs (4 beats × 2 themes ×
-2 widths + the real final frame), zero console errors in every one, a
-`getImageData` ink check proving the canvases are not blank, and the palette
-validator passing on both surfaces. That found four real bugs — but it is one pair
-of eyes, and the same pair that wrote the code.
+**Dark (860px): clean.** Reviewed b0–b3 plus the final frame in both themes, with
+pixel sampling. No blockers, no should-fixes, no nits. Confirmed the dark role
+palette is applied with no light-palette bleed — the stat-card headings sample to
+exactly `#9085e9` (Rakan/support) and `#d55181` (Corki/mid). They explicitly did
+**not** review 390px, which was not in their assignment.
 
-If you do nothing else from this handoff, get this reviewed. The screenshots
-regenerate in about a minute (see the harness section).
+**390px: two blockers, both real, both now fixed.**
+
+1. **Clipped pair-card text (beat 2).** `.evo4-obs` had `white-space: nowrap` and
+   `margin-left: auto`, so at 390px it overflowed the card and was clipped
+   mid-word: *"expected by chanc…"*. **The 93.9 and 64.4 expected-by-chance
+   figures — the entire point of the comparison — were invisible on mobile.**
+   Fixed with `flex: 1 0 100%` on the observation so it takes its own full-width
+   line and wraps. Note it is *not* fixed by switching the row to
+   `flex-direction: column`; that breaks "Rakan + Alistar" across three lines.
+2. **Map label collision (beat 3, final frame).** "Corki" and "Alistar" overlapped
+   into unreadable fused text. Root cause: three independent label-drawing paths
+   (Rakan, Alistar, the fade-ins) that never checked each other's boxes. At 390px
+   the dots sit closer together in absolute pixels while the font stays the same
+   size. Fixed with a single `placeLabel()` pass that keeps a list of placed
+   rectangles, tries ten candidate positions per label, and **drops a label
+   rather than draw it over another one**. Rakan is placed first so he always
+   wins a slot. Alistar now lands opposite Rakan by falling through the
+   candidates rather than by hard-coded offset.
+
+Also fixed from their should-fix list: the `epoch NN · purity 0.NN` readout was
+`display: none` below 560px, but beat 3's caption tells the reader to *"read the
+timing, not the path"* — the readout **is** the timing. It now takes its own line
+under the scrubber.
+
+**Still open from their report, deliberately:** the beat-4 bar chart drops its
+range/count sub-labels below 560px (they collide). The hover tooltip restores
+them, but mobile has no hover, so this is real content loss on small screens. It
+is a genuine space constraint, not an oversight — but if you want it solved, the
+options are a smaller font, rotated labels, or moving the ranges into the prose.
+
+**The lesson worth carrying:** I had published, then concluded from silence that
+the review had not happened, and wrote that into the record. Silence from a
+reviewer is not a verdict. Wait for the report, or say the check is outstanding —
+do not publish and then treat the absence of a report as a pass.
 
 ## Remaining queue (nothing here is disqualifying)
 

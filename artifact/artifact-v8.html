@@ -940,7 +940,15 @@ top5 = (ranks &lt; 5).mean()</pre>
     border-top:1px solid var(--hairline);
     font-variant-numeric: tabular-nums; white-space:nowrap;
   }
-  @media (max-width:560px) { #evo4-label { display:none; } }
+  /* The readout is the measured timing, and beat 3's caption tells the reader to
+     "read the timing, not the path" — so hiding it on mobile removed exactly what
+     the prose points at. Give it its own line under the scrubber instead. */
+  @media (max-width: 560px) {
+    .evo4-controls { flex-wrap: wrap; }
+    #evo4-label {
+      min-width: 0; width: 100%; text-align: left; order: 3;
+    }
+  }
 
   /* ---- v5: vector strips, team-comp pairs, beat-4 exhibits ---- */
   .evo4-sw {
@@ -975,6 +983,18 @@ top5 = (ranks &lt; 5).mean()</pre>
   .evo4-pairrow .evo4-pairnote { color: var(--faint); }
   .evo4-pairrow .evo4-obs { margin-left:auto; color: var(--muted); white-space:nowrap; }
   .evo4-pairrow .evo4-zero { color: var(--meta); font-weight:700; }
+  /* Below ~560px the observation cannot share a line with the pair name. With
+     white-space:nowrap and margin-left:auto it overflowed the card and was
+     clipped mid-word, hiding the expected-by-chance figures — which are the
+     entire point of the comparison. Force it onto its own full-width line —
+     switching the row to column instead would break "Rakan + Alistar" across
+     three lines. */
+  @media (max-width: 560px) {
+    .evo4-pairrow { row-gap: 4px; }
+    .evo4-pairrow .evo4-obs {
+      margin-left: 0; white-space: normal; flex: 1 0 100%;
+    }
+  }
   /* ---- beat 4: ONE stat-card template for all four boxes ----
      Same grid, same padding, same 1px hairline border, same three-line
      internal structure (heading / number / caption). Identity is carried by
@@ -1384,42 +1404,72 @@ top5 = (ranks &lt; 5).mean()</pre>
       ctx.lineWidth = 1; ctx.strokeStyle = card; ctx.stroke();
     }
 
-    // Rakan: gold ring + always-on label (the story's thread)
+    // ---- labels: ONE placement pass, shared collision state ----
+    // v6 shipped three independent label paths (Rakan, Alistar, the fade-ins)
+    // that never checked each other. At 390px the dots sit closer together in
+    // absolute pixels while the font stays the same size, so "Corki" and
+    // "Alistar" fused into unreadable text on the final frame. Every label now
+    // goes through placeLabel(), which tries candidate positions in priority
+    // order and refuses to draw one that overlaps a label already placed.
+    var placedBoxes = [];
+    function hits(b) {
+      for (var i = 0; i < placedBoxes.length; i++) {
+        var o = placedBoxes[i];
+        if (!(b.x2 <= o.x1 || o.x2 <= b.x1 || b.y2 <= o.y1 || o.y2 <= b.y1)) return true;
+      }
+      return false;
+    }
+    function placeLabel(text, dx, dy, fill) {
+      var tw = ctx.measureText(text).width, half = 7;
+      // right, left, then diagonals, then further out — first clear slot wins
+      var cands = [
+        [dx + 11, dy, 1], [dx - 11, dy, -1],
+        [dx + 9, dy - 14, 1], [dx - 9, dy - 14, -1],
+        [dx + 9, dy + 14, 1], [dx - 9, dy + 14, -1],
+        [dx + 9, dy - 26, 1], [dx - 9, dy - 26, -1],
+        [dx + 9, dy + 26, 1], [dx - 9, dy + 26, -1]
+      ];
+      for (var i = 0; i < cands.length; i++) {
+        var x = cands[i][0], y = cands[i][1], dir = cands[i][2];
+        var x1 = dir > 0 ? x : x - tw;
+        var box = { x1: x1 - 2, y1: y - half, x2: x1 + tw + 2, y2: y + half };
+        if (box.x1 < 1 || box.x2 > w - 1 || box.y1 < 1 || box.y2 > H - 1) continue;
+        if (hits(box)) continue;
+        placedBoxes.push(box);
+        ctx.textAlign = dir > 0 ? "left" : "right";
+        ctx.lineWidth = 3; ctx.strokeStyle = card; ctx.lineJoin = "round";
+        ctx.strokeText(text, x, y);
+        ctx.fillStyle = fill;
+        ctx.fillText(text, x, y);
+        ctx.textAlign = "left";
+        return true;
+      }
+      return false;   // no clear slot: drop it rather than ship fused text
+    }
+
+    // Rakan: gold ring + label. Placed first, so he always wins a slot — he is
+    // the thread the whole story follows.
     var rx = cx(D.rakan.i), ry = cy(D.rakan.i);
     ctx.beginPath(); ctx.arc(rx, ry, 7, 0, 7);
     ctx.lineWidth = 2; ctx.strokeStyle = gold; ctx.stroke();
+    ctx.textBaseline = "middle";
     ctx.font = '600 11.5px system-ui, -apple-system, "Segoe UI", sans-serif';
-    ctx.textAlign = "left"; ctx.textBaseline = "middle";
-    ctx.lineWidth = 3; ctx.strokeStyle = card; ctx.lineJoin = "round";
-    ctx.strokeText("Rakan", rx + 11, ry);
-    ctx.fillStyle = ink;
-    ctx.fillText("Rakan", rx + 11, ry);
+    placeLabel("Rakan", rx, ry, ink);
 
-    // Alistar sits 0.04 from Rakan in this layout — they are practically stacked,
-    // which IS the payoff of beat 2. The auto-labeller drops him for collision,
-    // so label him deliberately, on the opposite side from Rakan's label.
-    var ax = cx(D.aliI), ay = cy(D.aliI);
-    ctx.textAlign = "right";
-    ctx.lineWidth = 3; ctx.strokeStyle = card;
-    ctx.strokeText("Alistar", ax - 10, ay);
-    ctx.fillStyle = ink;
-    ctx.fillText("Alistar", ax - 10, ay);
-    ctx.textAlign = "left";
+    // Alistar sits 0.0398 from Rakan in this layout — practically stacked, which
+    // IS the payoff of beat 2, so he is labelled deliberately rather than by the
+    // auto-labeller. Placed second: the right-hand slot is already Rakan's, so
+    // he lands on the opposite side by falling through, not by hard-coding.
+    placeLabel("Alistar", cx(D.aliI), cy(D.aliI), ink);
 
-    // final frame: named champions fade in
+    // final frame: named champions fade in, same placement rules
     var settle = Math.max(0, (ft - (nF - 3)) / 2);   // 0 -> 1 over last 2 frames
     if (settle > 0) {
       ctx.globalAlpha = Math.min(settle, 1);
       ctx.font = '500 11px system-ui, -apple-system, "Segoe UI", sans-serif';
-      ctx.lineWidth = 3; ctx.strokeStyle = card; ctx.lineJoin = "round";
       D.labelIdx.forEach(function (i) {
-        if (i === D.rakan.i) return;
-        var lx = cx(i) + 8, ly = cy(i) - 6;
-        var tw = ctx.measureText(D.names[i]).width;
-        if (lx + tw > w - 2) { lx = cx(i) - 8 - tw; }
-        ctx.strokeText(D.names[i], lx, ly);
-        ctx.fillStyle = mut;
-        ctx.fillText(D.names[i], lx, ly);
+        if (i === D.rakan.i || i === D.aliI) return;
+        placeLabel(D.names[i], cx(i), cy(i), mut);
       });
       ctx.globalAlpha = 1;
     }
