@@ -17,7 +17,8 @@ https://claude.ai/code/artifact/36f462bc-ef98-42dd-af89-6c1a309c8877
 | #2 | `build_evo_panel2.py` | `artifact-v4.html` *(file not retained)* | — | Per-frame t-SNE, warm-started + Procrustes-aligned, plus a raw-numbers exhibit | Failed — per-frame t-SNE animates layout noise, not learning ("amorphous drift") |
 | #3 | `build_evo_panel3.py` | `artifact-v5.html` | — | Role-block-sorted 168×168 cosine-similarity heatmap scrubbed over ~18 PNG keyframes, plus a champs×dims raw-value heatmap toggle | Rejected — not visually beautiful, wrong ending, change hard to perceive, and **no step-by-step path for a non-League reader** |
 | #4 | `build_evo_panel4.py` | `artifact-v6.html` | `viz-attempt4` | Three-beat guided story: (1) one champion as 192 numbers, (2) two similarity curves, (3) animated fly-in map ending on a true t-SNE | **Partial.** Beat 3's animation reads decently; final frame needs polish. **Beats 1–2 lose non-player readers** — the on-ramp is the weak link |
-| #5 | `build_evo_panel5.py` | `artifact-v7.html` | `viz-attempt5` | Four beats: (1) the model's one job + whole vector as signed bars at 3 moments, (2) the mechanism *demonstrated* from the draft record — substitutes are never teammates — plus sorted bars with trend lines and the similarity curves, (3) the map with the claim scoped to the measured number, (4) new: the exceptions, exposure quartiles + flex picks | **Built, verified, committed, NOT yet published.** Reviewed by three subagents; their disqualifying findings are fixed. Sahil has not seen it rendered |
+| #5 | `build_evo_panel5.py` | `artifact-v7.html` | `viz-attempt5` | Four beats: (1) the model's one job + whole vector as signed bars at 3 moments, (2) the mechanism *demonstrated* from the draft record — substitutes are never teammates — plus sorted bars with trend lines and the similarity curves, (3) the map with the claim scoped to the measured number, (4) new: the exceptions, exposure quartiles + flex picks | **Published 2026-07-27** and seen. Verdict: beat 2's team-comp spine lands, beat 1's on-ramp is the right entry point, beat 4 is the right content with a weak landing |
+| #6 | `build_evo_panel6.py` | `artifact-v8.html` | `viz-attempt6` | Same four beats as #5 — **no structural change**. A cleanup pass: prose cleaned, beat 3's sparkline rebuilt, beat 4 re-landed, one stat-card template, one spacing scale, 4-up tab grid, monospace reserved for numerals | **Published 2026-07-28.** Dark and 390px independently reviewed for the first time |
 
 ## Feedback log (what the reader actually said)
 
@@ -44,6 +45,15 @@ https://claude.ai/code/artifact/36f462bc-ef98-42dd-af89-6c1a309c8877
   "above/below zero" in beats 1–2 and "Top lane / Bot lane" on the beat-3 map.
   Fixed by the same change. Their remaining ranked items are the cleanup queue in
   `HANDOFF-viz-v7.md`.
+- **On #5, from Sahil, 2026-07-28 (first time he saw it rendered):** beat 2's
+  team-comp framing "lands a lot better — let's keep it as the spine". Beat 1 is
+  the right entry point. Beat 4 is the right content but a **weak landing** →
+  fixed in #6 with a closing paragraph that ties the exceptions back to beat 3's
+  jumble, and the purity definition demoted out of the last line. On the idiom
+  question he chose **prototype first, then decide** — see
+  `artifact/proto_comic_beat3.py`. New request, parked as out of scope for this
+  panel: *"I really want to show a visualizer of how the model predicts champ to
+  champ, i.e. can we step through a draft together?"*
 
 ## What changed in #5, and why (so a future session does not re-litigate it)
 
@@ -98,11 +108,39 @@ git diff viz-attempt4 -- artifact/build_evo_panel4.py
 one-call operation — no rebuild required, because every attempt's full output
 HTML is committed.
 
+## What changed in #6, and why
+
+Cleanup only — the four-beat structure is untouched, because Sahil had just seen
+it and endorsed the spine. Named defects from the #5 cleanup queue:
+
+| Item | Was (#5) | Is (#6) |
+|---|---|---|
+| Beat-3 sparkline | 56px tall, its title printed *inside* the plot box over the line's own baseline, a bare playhead tick hanging past the axis that read as a clipping artifact, tick text in `--faint` (**2.9:1** on the light card — genuinely illegible) | 96px, title above the box (wrapping to two lines under ~500px so the honesty note survives at 390px), two labelled y-ticks at 0.20 and 0.70, `chance` named at the line's right end and held clear of the playhead, text in `--muted` |
+| Beat-4 landing | Ended on a definition of purity | Ends on the payoff: the jumble names the champions the pros themselves will not file under one role. Definition demoted to a provenance line |
+| Beat-4 cards | Four boxes, three different internal structures | One `statCard` template — heading / number / caption — same padding, same 1px hairline. Identity carried by heading colour, not border weight |
+| Spacing | Figure→prose gaps 17/46/33/27px, intro→figure 22–40px | One scale: 16px between prose blocks, 32px around figures. Selectors prefixed `#evo4-panel` on purpose — the page's own `.panel .sub` is (0,2,0) and silently beat a bare `.evo4-beat > *` |
+| Tab row | Flex wrap 3+1, `Next →` stranded in the gutter, and a non-tab child inside `role="tablist"` | 4-up grid (2×2 under 640px), `Next →` on its own right-aligned row outside the tablist |
+| Monospace | On tab labels, legend, prose captions, champion names | Numerals and axis values only |
+
+Two bugs found while verifying, neither previously known:
+
+- **Dark-mode card colours were baked at load.** `buildBeat4Static` ran once as an
+  IIFE, so the champion headings kept the *light* role palette after a theme
+  toggle. Now rebuilt on every beat-4 render.
+- **`#b2end` in the test harness never reached the final frame.** Selecting beat 3
+  starts autoplay; setting the scrub to max while the loop is running makes the
+  next `tick()` overrun the end, finish, and reset to frame 0. The harness then
+  screenshotted **frame 0** while claiming to be the last frame — so "verified on
+  the final animation frame" in `HANDOFF-viz-v7.md` was not true. Fixed by pausing
+  before scrubbing. The animation itself was never broken.
+
 ## Rules for the next attempt
 
-1. **New attempt = new builder** (`build_evo_panel5.py`) + **new output**
-   (`artifact-v7.html`) + **new tag** (`viz-attempt5`). Never mutate a shipped
-   builder — that is what makes rollback trivial.
+1. **New attempt = new builder** (`build_evo_panel6.py`) + **new output**
+   (`artifact-v8.html`) + **new tag** (`viz-attempt6`). Never mutate a shipped
+   builder — that is what makes rollback trivial. This holds for a pure cleanup
+   pass too: #6 changed no structure and still got its own builder, because #5
+   was already published and must stay reproducible.
 2. Add a row to the table above and a line to the feedback log **before**
    publishing, not after.
 3. Tag immediately after the commit that produces a publishable version.
