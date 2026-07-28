@@ -129,6 +129,22 @@ Cleanup only; the four beats are structurally identical to #5.
 - **Beat-4 bar chart reserved 54px** for range/count labels it drops below 560px,
   leaving a visible hole at 390px. Height is now width-dependent.
 
+## STILL UNVERIFIED — carried over unchanged from the v7 handoff
+
+**Dark mode and 390px have never had an independent review.** This was must-fix #3
+last session and it is must-fix #3 again. In v7 the robustness subagent never
+returned a report; this session two reviewers (dark, mobile) were spawned against
+the 20 rendered frames and also never reported, across four follow-ups.
+
+What this surface *does* have: my own eyes on all 20 configs (4 beats × 2 themes ×
+2 widths + the real final frame), zero console errors in every one, a
+`getImageData` ink check proving the canvases are not blank, and the palette
+validator passing on both surfaces. That found four real bugs — but it is one pair
+of eyes, and the same pair that wrote the code.
+
+If you do nothing else from this handoff, get this reviewed. The screenshots
+regenerate in about a minute (see the harness section).
+
 ## Remaining queue (nothing here is disqualifying)
 
 **Should-fix**
