@@ -1,0 +1,504 @@
+{
+  "note": "Team/player conditioning rung: opp_usage/player_pool/player_wr injected input-side (feature-weighted champion-embedding context, zero-init 3d x d projection) plus a slot-type-gated linear output bias (6 scalars), baseline vs feat, 5 paired seeds, pro validation only. Primary metric: ban val top-1; right-reason check: gain should concentrate in POCKET and B1-3 cells.",
+  "runs": [
+    {
+      "condition": "baseline",
+      "seed": 16,
+      "best_val_loss": 3.5855,
+      "top1": 0.1389,
+      "top3": 0.3009,
+      "top5": 0.4074,
+      "picks": {
+        "n": 540,
+        "top1": 0.1833,
+        "top3": 0.3574,
+        "top5": 0.463
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.0944,
+        "top3": 0.2444,
+        "top5": 0.3519
+      },
+      "epochs": 47,
+      "wall_s": 191.1
+    },
+    {
+      "condition": "feat",
+      "seed": 16,
+      "best_val_loss": 3.4101,
+      "top1": 0.1167,
+      "top3": 0.3139,
+      "top5": 0.4583,
+      "picks": {
+        "n": 540,
+        "top1": 0.113,
+        "top3": 0.313,
+        "top5": 0.4389
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.1204,
+        "top3": 0.3148,
+        "top5": 0.4778
+      },
+      "epochs": 31,
+      "wall_s": 135.1,
+      "feat_out": [
+        [
+          0.0592,
+          0.106,
+          0.2045
+        ],
+        [
+          0.092,
+          0.0868,
+          0.1928
+        ]
+      ],
+      "feat_proj_norm_per_channel": [
+        1.1768,
+        1.5134,
+        0.8388
+      ]
+    },
+    {
+      "condition": "baseline",
+      "seed": 17,
+      "best_val_loss": 3.5623,
+      "top1": 0.1222,
+      "top3": 0.2833,
+      "top5": 0.3972,
+      "picks": {
+        "n": 540,
+        "top1": 0.1704,
+        "top3": 0.3444,
+        "top5": 0.4574
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.0741,
+        "top3": 0.2222,
+        "top5": 0.337
+      },
+      "epochs": 36,
+      "wall_s": 146.6
+    },
+    {
+      "condition": "feat",
+      "seed": 17,
+      "best_val_loss": 3.3927,
+      "top1": 0.1333,
+      "top3": 0.3444,
+      "top5": 0.4667,
+      "picks": {
+        "n": 540,
+        "top1": 0.1315,
+        "top3": 0.3426,
+        "top5": 0.4593
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.1352,
+        "top3": 0.3463,
+        "top5": 0.4741
+      },
+      "epochs": 36,
+      "wall_s": 153.4,
+      "feat_out": [
+        [
+          0.0597,
+          0.1158,
+          0.2461
+        ],
+        [
+          0.1016,
+          0.0938,
+          0.2329
+        ]
+      ],
+      "feat_proj_norm_per_channel": [
+        1.3381,
+        1.6955,
+        1.0626
+      ]
+    },
+    {
+      "condition": "baseline",
+      "seed": 42,
+      "best_val_loss": 3.5244,
+      "top1": 0.1167,
+      "top3": 0.2704,
+      "top5": 0.3861,
+      "picks": {
+        "n": 540,
+        "top1": 0.1574,
+        "top3": 0.3111,
+        "top5": 0.4241
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.0759,
+        "top3": 0.2296,
+        "top5": 0.3481
+      },
+      "epochs": 34,
+      "wall_s": 134.6
+    },
+    {
+      "condition": "feat",
+      "seed": 42,
+      "best_val_loss": 3.381,
+      "top1": 0.125,
+      "top3": 0.3278,
+      "top5": 0.4565,
+      "picks": {
+        "n": 540,
+        "top1": 0.1167,
+        "top3": 0.3093,
+        "top5": 0.4407
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.1333,
+        "top3": 0.3463,
+        "top5": 0.4722
+      },
+      "epochs": 42,
+      "wall_s": 191.9,
+      "feat_out": [
+        [
+          0.0601,
+          0.125,
+          0.2972
+        ],
+        [
+          0.1101,
+          0.1005,
+          0.2762
+        ]
+      ],
+      "feat_proj_norm_per_channel": [
+        1.5308,
+        1.8776,
+        1.2634
+      ]
+    },
+    {
+      "condition": "baseline",
+      "seed": 7,
+      "best_val_loss": 3.5654,
+      "top1": 0.1213,
+      "top3": 0.2694,
+      "top5": 0.3898,
+      "picks": {
+        "n": 540,
+        "top1": 0.1741,
+        "top3": 0.3278,
+        "top5": 0.4333
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.0685,
+        "top3": 0.2111,
+        "top5": 0.3463
+      },
+      "epochs": 32,
+      "wall_s": 135.3
+    },
+    {
+      "condition": "feat",
+      "seed": 7,
+      "best_val_loss": 3.394,
+      "top1": 0.1352,
+      "top3": 0.3481,
+      "top5": 0.4648,
+      "picks": {
+        "n": 540,
+        "top1": 0.1444,
+        "top3": 0.3389,
+        "top5": 0.4741
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.1259,
+        "top3": 0.3574,
+        "top5": 0.4556
+      },
+      "epochs": 37,
+      "wall_s": 164.7,
+      "feat_out": [
+        [
+          0.0595,
+          0.1174,
+          0.2568
+        ],
+        [
+          0.1029,
+          0.0946,
+          0.2395
+        ]
+      ],
+      "feat_proj_norm_per_channel": [
+        1.3404,
+        1.7127,
+        1.081
+      ]
+    },
+    {
+      "condition": "baseline",
+      "seed": 23,
+      "best_val_loss": 3.5766,
+      "top1": 0.1185,
+      "top3": 0.2722,
+      "top5": 0.387,
+      "picks": {
+        "n": 540,
+        "top1": 0.1648,
+        "top3": 0.3278,
+        "top5": 0.4333
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.0722,
+        "top3": 0.2167,
+        "top5": 0.3407
+      },
+      "epochs": 40,
+      "wall_s": 158.9
+    },
+    {
+      "condition": "feat",
+      "seed": 23,
+      "best_val_loss": 3.4265,
+      "top1": 0.1361,
+      "top3": 0.3343,
+      "top5": 0.4657,
+      "picks": {
+        "n": 540,
+        "top1": 0.137,
+        "top3": 0.313,
+        "top5": 0.45
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.1352,
+        "top3": 0.3556,
+        "top5": 0.4815
+      },
+      "epochs": 23,
+      "wall_s": 95.9,
+      "feat_out": [
+        [
+          0.0585,
+          0.0861,
+          0.1359
+        ],
+        [
+          0.0757,
+          0.0731,
+          0.1295
+        ]
+      ],
+      "feat_proj_norm_per_channel": [
+        1.0494,
+        1.4581,
+        0.6567
+      ]
+    }
+  ],
+  "baseline_ban_top1_mean": 0.077,
+  "feat_ban_top1_mean": 0.13,
+  "paired_deltas": {
+    "seeds": [
+      16,
+      17,
+      42,
+      7,
+      23
+    ],
+    "d_ban_top1 (feat - baseline, >0 favors feat)": [
+      0.026,
+      0.0611,
+      0.0574,
+      0.0574,
+      0.063
+    ],
+    "d_pick_top1 (feat - baseline)": [
+      -0.0703,
+      -0.0389,
+      -0.0407,
+      -0.0297,
+      -0.0278
+    ],
+    "d_loss (baseline - feat, >0 favors feat)": [
+      0.1754,
+      0.1696,
+      0.1434,
+      0.1714,
+      0.1501
+    ],
+    "mean_d_ban_top1": 0.053,
+    "mean_d_pick_top1": -0.0415,
+    "mean_d_loss": 0.162,
+    "d_loss_positive_seeds": "5/5",
+    "bootstrap_95ci_mean_d_loss": [
+      0.1503,
+      0.1726
+    ]
+  },
+  "verdict": "NO-GO",
+  "verdict_detail": {
+    "mean_d_ban_top1_ge_1.5pts": true,
+    "loss_ci_excludes_0_favorably": true,
+    "pick_top1_within_noise_band": false
+  },
+  "conditional_table_ensemble": {
+    "n_val_bans": 540,
+    "n_unmatched_dropped": 0,
+    "overall": {
+      "all_bans": {
+        "n": 540,
+        "baseline_ens": {
+          "top1": 0.0833,
+          "top5": 0.3685
+        },
+        "feat_ens": {
+          "top1": 0.1407,
+          "top5": 0.487
+        }
+      }
+    },
+    "by_dominant_vector": {
+      "COMP": {
+        "n": 28,
+        "baseline_ens": {
+          "top1": 0.0714,
+          "top5": 0.5
+        },
+        "feat_ens": {
+          "top1": 0.1071,
+          "top5": 0.3929
+        }
+      },
+      "META": {
+        "n": 291,
+        "baseline_ens": {
+          "top1": 0.0997,
+          "top5": 0.3746
+        },
+        "feat_ens": {
+          "top1": 0.1856,
+          "top5": 0.5567
+        }
+      },
+      "POCKET": {
+        "n": 221,
+        "baseline_ens": {
+          "top1": 0.0633,
+          "top5": 0.3439
+        },
+        "feat_ens": {
+          "top1": 0.086,
+          "top5": 0.4072
+        }
+      }
+    },
+    "by_phase_and_vector": {
+      "B1-3": {
+        "META": {
+          "n": 209,
+          "baseline_ens": {
+            "top1": 0.0526,
+            "top5": 0.3206
+          },
+          "feat_ens": {
+            "top1": 0.1483,
+            "top5": 0.5502
+          }
+        },
+        "POCKET": {
+          "n": 115,
+          "baseline_ens": {
+            "top1": 0.0174,
+            "top5": 0.2435
+          },
+          "feat_ens": {
+            "top1": 0.0609,
+            "top5": 0.3478
+          }
+        }
+      },
+      "B4-5": {
+        "COMP": {
+          "n": 28,
+          "baseline_ens": {
+            "top1": 0.0714,
+            "top5": 0.5
+          },
+          "feat_ens": {
+            "top1": 0.1071,
+            "top5": 0.3929
+          }
+        },
+        "META": {
+          "n": 82,
+          "baseline_ens": {
+            "top1": 0.2195,
+            "top5": 0.5122
+          },
+          "feat_ens": {
+            "top1": 0.2805,
+            "top5": 0.5732
+          }
+        },
+        "POCKET": {
+          "n": 106,
+          "baseline_ens": {
+            "top1": 0.1132,
+            "top5": 0.4528
+          },
+          "feat_ens": {
+            "top1": 0.1132,
+            "top5": 0.4717
+          }
+        }
+      }
+    }
+  },
+  "provenance": {
+    "features": [
+      "opp_usage",
+      "player_pool",
+      "player_wr"
+    ],
+    "feature_semantics": "per (gameid, seq, candidate); ban rows reference the opponent's roster, pick rows the own team's (draft_dataset v0.6)",
+    "standardization": {
+      "population": "train candidate rows only",
+      "train_mean": [
+        0.021696,
+        0.017232,
+        1.727921
+      ],
+      "train_std": [
+        0.05923,
+        0.047506,
+        0.748718
+      ]
+    },
+    "injection": "input-side champ-emb-weighted context @ zero-init (3d x d) + output bias feat_out[slot_type, F], zero-init, no RNG consumed",
+    "split_cutoff": "2026-07-15",
+    "val_days": 14,
+    "config": "d192x4L6H,lr=0.0003,do=0.1",
+    "device": "cpu",
+    "seeds": [
+      16,
+      17,
+      42,
+      7,
+      23
+    ],
+    "bootstrap_resamples": 10000,
+    "baseline_canary_seed16": 3.5855
+  }
+}

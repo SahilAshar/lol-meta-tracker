@@ -1,0 +1,278 @@
+{
+  "note": "Diagnostics for docs/2026-07-28-pocket-conditioning-results.md. Cached val probs only \u2014 no training, no test look.",
+  "loss_decomposition": {
+    "per_seed": [
+      {
+        "seed": 16,
+        "baseline": {
+          "all": 3.5855,
+          "bans": 3.7225,
+          "picks": 3.4486,
+          "reported_best_val_loss": 3.5855
+        },
+        "feat": {
+          "all": 3.4101,
+          "bans": 3.3482,
+          "picks": 3.472,
+          "reported_best_val_loss": 3.4101
+        },
+        "d_nll_bans": 0.3743,
+        "d_nll_picks": -0.0234
+      },
+      {
+        "seed": 17,
+        "baseline": {
+          "all": 3.5623,
+          "bans": 3.6964,
+          "picks": 3.4282,
+          "reported_best_val_loss": 3.5623
+        },
+        "feat": {
+          "all": 3.3927,
+          "bans": 3.3783,
+          "picks": 3.4071,
+          "reported_best_val_loss": 3.3927
+        },
+        "d_nll_bans": 0.3181,
+        "d_nll_picks": 0.0211
+      },
+      {
+        "seed": 42,
+        "baseline": {
+          "all": 3.5244,
+          "bans": 3.628,
+          "picks": 3.4209,
+          "reported_best_val_loss": 3.5244
+        },
+        "feat": {
+          "all": 3.381,
+          "bans": 3.3381,
+          "picks": 3.424,
+          "reported_best_val_loss": 3.381
+        },
+        "d_nll_bans": 0.2899,
+        "d_nll_picks": -0.0031
+      },
+      {
+        "seed": 7,
+        "baseline": {
+          "all": 3.5654,
+          "bans": 3.6845,
+          "picks": 3.4462,
+          "reported_best_val_loss": 3.5654
+        },
+        "feat": {
+          "all": 3.394,
+          "bans": 3.3498,
+          "picks": 3.4382,
+          "reported_best_val_loss": 3.394
+        },
+        "d_nll_bans": 0.3347,
+        "d_nll_picks": 0.008
+      },
+      {
+        "seed": 23,
+        "baseline": {
+          "all": 3.5766,
+          "bans": 3.6928,
+          "picks": 3.4603,
+          "reported_best_val_loss": 3.5766
+        },
+        "feat": {
+          "all": 3.4265,
+          "bans": 3.3802,
+          "picks": 3.4729,
+          "reported_best_val_loss": 3.4265
+        },
+        "d_nll_bans": 0.3126,
+        "d_nll_picks": -0.0126
+      }
+    ],
+    "note": "NLL recomputed from cached probs; 'all' reproduces the rung's best_val_loss, confirming the cache matches the reported run.",
+    "mean_d_nll_bans": 0.3259,
+    "mean_d_nll_picks": -0.002
+  },
+  "by_ordinal": {
+    "picks": {
+      "ordinal_1": {
+        "baseline": {
+          "seed_mean_top1": 0.2074,
+          "seed_mean_top5": 0.5222,
+          "ens_top1": 0.1944
+        },
+        "feat": {
+          "seed_mean_top1": 0.163,
+          "seed_mean_top5": 0.563,
+          "ens_top1": 0.1944
+        },
+        "n": 108,
+        "d_seed_mean_top1": -0.0444
+      },
+      "ordinal_2": {
+        "baseline": {
+          "seed_mean_top1": 0.1722,
+          "seed_mean_top5": 0.4148,
+          "ens_top1": 0.1852
+        },
+        "feat": {
+          "seed_mean_top1": 0.1111,
+          "seed_mean_top5": 0.4204,
+          "ens_top1": 0.1481
+        },
+        "n": 108,
+        "d_seed_mean_top1": -0.0611
+      },
+      "ordinal_3": {
+        "baseline": {
+          "seed_mean_top1": 0.1685,
+          "seed_mean_top5": 0.4352,
+          "ens_top1": 0.1759
+        },
+        "feat": {
+          "seed_mean_top1": 0.1315,
+          "seed_mean_top5": 0.3796,
+          "ens_top1": 0.1296
+        },
+        "n": 108,
+        "d_seed_mean_top1": -0.037
+      },
+      "ordinal_4": {
+        "baseline": {
+          "seed_mean_top1": 0.1315,
+          "seed_mean_top5": 0.3944,
+          "ens_top1": 0.1667
+        },
+        "feat": {
+          "seed_mean_top1": 0.1093,
+          "seed_mean_top5": 0.4389,
+          "ens_top1": 0.1204
+        },
+        "n": 108,
+        "d_seed_mean_top1": -0.0222
+      },
+      "ordinal_5": {
+        "baseline": {
+          "seed_mean_top1": 0.1704,
+          "seed_mean_top5": 0.4444,
+          "ens_top1": 0.1759
+        },
+        "feat": {
+          "seed_mean_top1": 0.1278,
+          "seed_mean_top5": 0.4611,
+          "ens_top1": 0.1389
+        },
+        "n": 108,
+        "d_seed_mean_top1": -0.0426
+      }
+    },
+    "bans": {
+      "ordinal_1": {
+        "baseline": {
+          "seed_mean_top1": 0.0426,
+          "seed_mean_top5": 0.2333,
+          "ens_top1": 0.037
+        },
+        "feat": {
+          "seed_mean_top1": 0.1778,
+          "seed_mean_top5": 0.5148,
+          "ens_top1": 0.1574
+        },
+        "n": 108,
+        "d_seed_mean_top1": 0.1352
+      },
+      "ordinal_2": {
+        "baseline": {
+          "seed_mean_top1": 0.0222,
+          "seed_mean_top5": 0.2259,
+          "ens_top1": 0.037
+        },
+        "feat": {
+          "seed_mean_top1": 0.0759,
+          "seed_mean_top5": 0.3426,
+          "ens_top1": 0.0648
+        },
+        "n": 108,
+        "d_seed_mean_top1": 0.0537
+      },
+      "ordinal_3": {
+        "baseline": {
+          "seed_mean_top1": 0.0574,
+          "seed_mean_top5": 0.387,
+          "ens_top1": 0.0463
+        },
+        "feat": {
+          "seed_mean_top1": 0.1241,
+          "seed_mean_top5": 0.5426,
+          "ens_top1": 0.1296
+        },
+        "n": 108,
+        "d_seed_mean_top1": 0.0667
+      },
+      "ordinal_4": {
+        "baseline": {
+          "seed_mean_top1": 0.1555,
+          "seed_mean_top5": 0.4704,
+          "ens_top1": 0.1852
+        },
+        "feat": {
+          "seed_mean_top1": 0.1685,
+          "seed_mean_top5": 0.5259,
+          "ens_top1": 0.2222
+        },
+        "n": 108,
+        "d_seed_mean_top1": 0.013
+      },
+      "ordinal_5": {
+        "baseline": {
+          "seed_mean_top1": 0.1074,
+          "seed_mean_top5": 0.4074,
+          "ens_top1": 0.1111
+        },
+        "feat": {
+          "seed_mean_top1": 0.1037,
+          "seed_mean_top5": 0.4352,
+          "ens_top1": 0.1296
+        },
+        "n": 108,
+        "d_seed_mean_top1": -0.0037
+      }
+    }
+  },
+  "argmax_composition": {
+    "note": "Share of decisions whose top-ranked candidate is also the decision's maximum on each feature; 'truth' is the same rate for the champion actually chosen. Seed-averaged.",
+    "picks": {
+      "truth": {
+        "opp_usage": 0.0833,
+        "player_pool": 0.0963,
+        "player_wr": 0.1093
+      },
+      "baseline": {
+        "opp_usage": 0.1219,
+        "player_pool": 0.1311,
+        "player_wr": 0.1089
+      },
+      "feat": {
+        "opp_usage": 0.16,
+        "player_pool": 0.183,
+        "player_wr": 0.1089
+      }
+    },
+    "bans": {
+      "truth": {
+        "opp_usage": 0.1222,
+        "player_pool": 0.1204,
+        "player_wr": 0.1111
+      },
+      "baseline": {
+        "opp_usage": 0.0978,
+        "player_pool": 0.0763,
+        "player_wr": 0.0848
+      },
+      "feat": {
+        "opp_usage": 0.1507,
+        "player_pool": 0.1167,
+        "player_wr": 0.1004
+      }
+    }
+  }
+}
