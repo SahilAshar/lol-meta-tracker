@@ -1,0 +1,817 @@
+{
+  "note": "Slot-gated pocket injection, follow-up to the v13 guard breach. ban_only (primary, gated) vs gated_proj (secondary, per-slot-type projections) vs the cached v13 baselines, 5 paired seeds, pro validation only. Pre-registered gate on ban_only: mean d_ban_top1 >= +1.5pts AND mean d_pick_top1 within +/-1.5pts; both required. gated_proj is descriptive and cannot promote.",
+  "spec": "docs/2026-07-28-pocket-injection-slot-gating-spec.md",
+  "runs": [
+    {
+      "condition": "baseline",
+      "seed": 16,
+      "best_val_loss": 3.5855,
+      "top1": 0.1389,
+      "top3": 0.3009,
+      "top5": 0.4074,
+      "picks": {
+        "n": 540,
+        "top1": 0.1833,
+        "top3": 0.3574,
+        "top5": 0.463
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.0944,
+        "top3": 0.2444,
+        "top5": 0.3519
+      },
+      "epochs": 47,
+      "wall_s": 191.1
+    },
+    {
+      "condition": "ban_only",
+      "seed": 16,
+      "best_val_loss": 3.3911,
+      "top1": 0.1611,
+      "top3": 0.3407,
+      "top5": 0.4778,
+      "picks": {
+        "n": 540,
+        "top1": 0.1852,
+        "top3": 0.3481,
+        "top5": 0.4907
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.137,
+        "top3": 0.3333,
+        "top5": 0.4648
+      },
+      "epochs": 45,
+      "wall_s": 203.4,
+      "feat_out": [
+        0.10520000010728836,
+        0.09749999642372131,
+        0.2976999878883362
+      ],
+      "feat_proj_norm_per_channel": [
+        1.8382,
+        2.0152,
+        1.2272
+      ]
+    },
+    {
+      "condition": "gated_proj",
+      "seed": 16,
+      "best_val_loss": 3.3927,
+      "top1": 0.1361,
+      "top3": 0.3157,
+      "top5": 0.4472,
+      "picks": {
+        "n": 540,
+        "top1": 0.1389,
+        "top3": 0.3167,
+        "top5": 0.4463
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.1333,
+        "top3": 0.3148,
+        "top5": 0.4481
+      },
+      "epochs": 37,
+      "wall_s": 167.3,
+      "feat_out": [
+        [
+          0.06120000034570694,
+          0.11999999731779099,
+          0.27140000462532043
+        ],
+        [
+          0.11050000041723251,
+          0.1054999977350235,
+          0.2558000087738037
+        ]
+      ],
+      "feat_proj_norm_per_channel": {
+        "picks": [
+          1.7075,
+          2.1532,
+          1.2973
+        ],
+        "bans": [
+          1.6445,
+          1.7788,
+          1.2006
+        ]
+      }
+    },
+    {
+      "condition": "baseline",
+      "seed": 17,
+      "best_val_loss": 3.5623,
+      "top1": 0.1222,
+      "top3": 0.2833,
+      "top5": 0.3972,
+      "picks": {
+        "n": 540,
+        "top1": 0.1704,
+        "top3": 0.3444,
+        "top5": 0.4574
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.0741,
+        "top3": 0.2222,
+        "top5": 0.337
+      },
+      "epochs": 36,
+      "wall_s": 146.6
+    },
+    {
+      "condition": "ban_only",
+      "seed": 17,
+      "best_val_loss": 3.3791,
+      "top1": 0.1343,
+      "top3": 0.3259,
+      "top5": 0.4639,
+      "picks": {
+        "n": 540,
+        "top1": 0.1537,
+        "top3": 0.3389,
+        "top5": 0.4833
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.1148,
+        "top3": 0.313,
+        "top5": 0.4444
+      },
+      "epochs": 36,
+      "wall_s": 157.8,
+      "feat_out": [
+        0.09510000050067902,
+        0.09440000355243683,
+        0.23749999701976776
+      ],
+      "feat_proj_norm_per_channel": [
+        1.6908,
+        1.9026,
+        1.1501
+      ]
+    },
+    {
+      "condition": "gated_proj",
+      "seed": 17,
+      "best_val_loss": 3.4165,
+      "top1": 0.1204,
+      "top3": 0.3213,
+      "top5": 0.4648,
+      "picks": {
+        "n": 540,
+        "top1": 0.1315,
+        "top3": 0.3185,
+        "top5": 0.4463
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.1093,
+        "top3": 0.3241,
+        "top5": 0.4833
+      },
+      "epochs": 34,
+      "wall_s": 156.3,
+      "feat_out": [
+        [
+          0.06069999933242798,
+          0.11479999870061874,
+          0.24289999902248383
+        ],
+        [
+          0.10559999942779541,
+          0.10199999809265137,
+          0.23119999468326569
+        ]
+      ],
+      "feat_proj_norm_per_channel": {
+        "picks": [
+          1.6672,
+          2.2491,
+          1.375
+        ],
+        "bans": [
+          1.5759,
+          1.7422,
+          1.2202
+        ]
+      }
+    },
+    {
+      "condition": "baseline",
+      "seed": 42,
+      "best_val_loss": 3.5244,
+      "top1": 0.1167,
+      "top3": 0.2704,
+      "top5": 0.3861,
+      "picks": {
+        "n": 540,
+        "top1": 0.1574,
+        "top3": 0.3111,
+        "top5": 0.4241
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.0759,
+        "top3": 0.2296,
+        "top5": 0.3481
+      },
+      "epochs": 34,
+      "wall_s": 134.6
+    },
+    {
+      "condition": "ban_only",
+      "seed": 42,
+      "best_val_loss": 3.4066,
+      "top1": 0.1444,
+      "top3": 0.3204,
+      "top5": 0.4565,
+      "picks": {
+        "n": 540,
+        "top1": 0.1574,
+        "top3": 0.337,
+        "top5": 0.4537
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.1315,
+        "top3": 0.3037,
+        "top5": 0.4593
+      },
+      "epochs": 38,
+      "wall_s": 165.0,
+      "feat_out": [
+        0.09759999811649323,
+        0.09570000320672989,
+        0.25
+      ],
+      "feat_proj_norm_per_channel": [
+        1.7613,
+        1.9917,
+        1.1863
+      ]
+    },
+    {
+      "condition": "gated_proj",
+      "seed": 42,
+      "best_val_loss": 3.4074,
+      "top1": 0.1361,
+      "top3": 0.3398,
+      "top5": 0.4667,
+      "picks": {
+        "n": 540,
+        "top1": 0.1333,
+        "top3": 0.3389,
+        "top5": 0.4722
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.1389,
+        "top3": 0.3407,
+        "top5": 0.4611
+      },
+      "epochs": 42,
+      "wall_s": 190.7,
+      "feat_out": [
+        [
+          0.06279999762773514,
+          0.12630000710487366,
+          0.3095000088214874
+        ],
+        [
+          0.11590000241994858,
+          0.10890000313520432,
+          0.28929999470710754
+        ]
+      ],
+      "feat_proj_norm_per_channel": {
+        "picks": [
+          1.9395,
+          2.3208,
+          1.6019
+        ],
+        "bans": [
+          1.8564,
+          1.9957,
+          1.5295
+        ]
+      }
+    },
+    {
+      "condition": "baseline",
+      "seed": 7,
+      "best_val_loss": 3.5654,
+      "top1": 0.1213,
+      "top3": 0.2694,
+      "top5": 0.3898,
+      "picks": {
+        "n": 540,
+        "top1": 0.1741,
+        "top3": 0.3278,
+        "top5": 0.4333
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.0685,
+        "top3": 0.2111,
+        "top5": 0.3463
+      },
+      "epochs": 32,
+      "wall_s": 135.3
+    },
+    {
+      "condition": "ban_only",
+      "seed": 7,
+      "best_val_loss": 3.3972,
+      "top1": 0.1602,
+      "top3": 0.3602,
+      "top5": 0.4778,
+      "picks": {
+        "n": 540,
+        "top1": 0.1704,
+        "top3": 0.3778,
+        "top5": 0.487
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.15,
+        "top3": 0.3426,
+        "top5": 0.4685
+      },
+      "epochs": 37,
+      "wall_s": 159.9,
+      "feat_out": [
+        0.09549999982118607,
+        0.09589999914169312,
+        0.24629999697208405
+      ],
+      "feat_proj_norm_per_channel": [
+        1.7056,
+        1.9435,
+        1.0411
+      ]
+    },
+    {
+      "condition": "gated_proj",
+      "seed": 7,
+      "best_val_loss": 3.4287,
+      "top1": 0.1324,
+      "top3": 0.3407,
+      "top5": 0.4667,
+      "picks": {
+        "n": 540,
+        "top1": 0.1185,
+        "top3": 0.3111,
+        "top5": 0.4463
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.1463,
+        "top3": 0.3704,
+        "top5": 0.487
+      },
+      "epochs": 25,
+      "wall_s": 112.7,
+      "feat_out": [
+        [
+          0.05730000138282776,
+          0.09690000116825104,
+          0.16760000586509705
+        ],
+        [
+          0.0885000005364418,
+          0.08910000324249268,
+          0.16089999675750732
+        ]
+      ],
+      "feat_proj_norm_per_channel": {
+        "picks": [
+          1.2318,
+          1.9479,
+          0.9624
+        ],
+        "bans": [
+          1.3171,
+          1.5084,
+          0.8172
+        ]
+      }
+    },
+    {
+      "condition": "baseline",
+      "seed": 23,
+      "best_val_loss": 3.5766,
+      "top1": 0.1185,
+      "top3": 0.2722,
+      "top5": 0.387,
+      "picks": {
+        "n": 540,
+        "top1": 0.1648,
+        "top3": 0.3278,
+        "top5": 0.4333
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.0722,
+        "top3": 0.2167,
+        "top5": 0.3407
+      },
+      "epochs": 40,
+      "wall_s": 158.9
+    },
+    {
+      "condition": "ban_only",
+      "seed": 23,
+      "best_val_loss": 3.4333,
+      "top1": 0.1583,
+      "top3": 0.3528,
+      "top5": 0.4648,
+      "picks": {
+        "n": 540,
+        "top1": 0.1704,
+        "top3": 0.3519,
+        "top5": 0.4685
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.1463,
+        "top3": 0.3537,
+        "top5": 0.4611
+      },
+      "epochs": 40,
+      "wall_s": 172.6,
+      "feat_out": [
+        0.09939999878406525,
+        0.09690000116825104,
+        0.2660999894142151
+      ],
+      "feat_proj_norm_per_channel": [
+        1.861,
+        2.0633,
+        1.1976
+      ]
+    },
+    {
+      "condition": "gated_proj",
+      "seed": 23,
+      "best_val_loss": 3.4524,
+      "top1": 0.1157,
+      "top3": 0.325,
+      "top5": 0.4389,
+      "picks": {
+        "n": 540,
+        "top1": 0.1056,
+        "top3": 0.3111,
+        "top5": 0.4241
+      },
+      "bans": {
+        "n": 540,
+        "top1": 0.1259,
+        "top3": 0.3389,
+        "top5": 0.4537
+      },
+      "epochs": 34,
+      "wall_s": 152.7,
+      "feat_out": [
+        [
+          0.05990000069141388,
+          0.11550000309944153,
+          0.24779999256134033
+        ],
+        [
+          0.10580000281333923,
+          0.10100000351667404,
+          0.23420000076293945
+        ]
+      ],
+      "feat_proj_norm_per_channel": {
+        "picks": [
+          1.6091,
+          2.1588,
+          1.3087
+        ],
+        "bans": [
+          1.658,
+          1.8109,
+          1.1323
+        ]
+      }
+    }
+  ],
+  "mean_top1": {
+    "baseline": {
+      "bans": 0.077,
+      "picks": 0.17
+    },
+    "ban_only": {
+      "bans": 0.1359,
+      "picks": 0.1674
+    },
+    "gated_proj": {
+      "bans": 0.1307,
+      "picks": 0.1256
+    }
+  },
+  "mean_nll": {
+    "baseline": {
+      "all": 3.5628,
+      "bans": 3.6848,
+      "picks": 3.4408
+    },
+    "ban_only": {
+      "all": 3.4015,
+      "bans": 3.4506,
+      "picks": 3.3524
+    },
+    "gated_proj": {
+      "all": 3.4195,
+      "bans": 3.3913,
+      "picks": 3.4478
+    }
+  },
+  "arms": {
+    "ban_only": {
+      "seeds": [
+        16,
+        17,
+        42,
+        7,
+        23
+      ],
+      "d_ban_top1 (arm - baseline, >0 favors arm)": [
+        0.0426,
+        0.0407,
+        0.0556,
+        0.0815,
+        0.0741
+      ],
+      "d_pick_top1 (arm - baseline)": [
+        0.0019,
+        -0.0167,
+        0.0,
+        -0.0037,
+        0.0056
+      ],
+      "d_loss (baseline - arm, >0 favors arm)": [
+        0.1944,
+        0.1832,
+        0.1178,
+        0.1682,
+        0.1433
+      ],
+      "mean_d_ban_top1": 0.0589,
+      "mean_d_pick_top1": -0.0026,
+      "mean_d_loss": 0.1614,
+      "d_loss_positive_seeds": "5/5",
+      "bootstrap_95ci_mean_d_loss": [
+        0.138,
+        0.1847
+      ],
+      "mean_d_nll_bans": 0.2343,
+      "mean_d_nll_picks": 0.0884,
+      "gate": {
+        "primary_mean_d_ban_top1_ge_1.5pts": true,
+        "guard_mean_d_pick_top1_within_1.5pts": true,
+        "verdict": "GO"
+      }
+    },
+    "gated_proj": {
+      "seeds": [
+        16,
+        17,
+        42,
+        7,
+        23
+      ],
+      "d_ban_top1 (arm - baseline, >0 favors arm)": [
+        0.0389,
+        0.0352,
+        0.063,
+        0.0778,
+        0.0537
+      ],
+      "d_pick_top1 (arm - baseline)": [
+        -0.0444,
+        -0.0389,
+        -0.0241,
+        -0.0556,
+        -0.0592
+      ],
+      "d_loss (baseline - arm, >0 favors arm)": [
+        0.1928,
+        0.1458,
+        0.117,
+        0.1367,
+        0.1242
+      ],
+      "mean_d_ban_top1": 0.0537,
+      "mean_d_pick_top1": -0.0444,
+      "mean_d_loss": 0.1433,
+      "d_loss_positive_seeds": "5/5",
+      "bootstrap_95ci_mean_d_loss": [
+        0.1238,
+        0.1682
+      ],
+      "mean_d_nll_bans": 0.2935,
+      "mean_d_nll_picks": -0.007,
+      "gate": {
+        "primary_mean_d_ban_top1_ge_1.5pts": true,
+        "guard_mean_d_pick_top1_within_1.5pts": false,
+        "verdict": "NO-GO"
+      }
+    }
+  },
+  "verdict": "GO",
+  "conditional_table_ensemble": {
+    "n_val_bans": 540,
+    "n_unmatched_dropped": 0,
+    "overall": {
+      "all_bans": {
+        "n": 540,
+        "baseline_ens": {
+          "top1": 0.0833,
+          "top5": 0.3685
+        },
+        "ban_only_ens": {
+          "top1": 0.1315,
+          "top5": 0.4741
+        },
+        "gated_proj_ens": {
+          "top1": 0.1333,
+          "top5": 0.4815
+        }
+      }
+    },
+    "by_dominant_vector": {
+      "COMP": {
+        "n": 28,
+        "baseline_ens": {
+          "top1": 0.0714,
+          "top5": 0.5
+        },
+        "ban_only_ens": {
+          "top1": 0.1786,
+          "top5": 0.4643
+        },
+        "gated_proj_ens": {
+          "top1": 0.0714,
+          "top5": 0.3571
+        }
+      },
+      "META": {
+        "n": 291,
+        "baseline_ens": {
+          "top1": 0.0997,
+          "top5": 0.3746
+        },
+        "ban_only_ens": {
+          "top1": 0.1581,
+          "top5": 0.5395
+        },
+        "gated_proj_ens": {
+          "top1": 0.1718,
+          "top5": 0.543
+        }
+      },
+      "POCKET": {
+        "n": 221,
+        "baseline_ens": {
+          "top1": 0.0633,
+          "top5": 0.3439
+        },
+        "ban_only_ens": {
+          "top1": 0.0905,
+          "top5": 0.3891
+        },
+        "gated_proj_ens": {
+          "top1": 0.0905,
+          "top5": 0.4163
+        }
+      }
+    },
+    "by_phase_and_vector": {
+      "B1-3": {
+        "META": {
+          "n": 209,
+          "baseline_ens": {
+            "top1": 0.0526,
+            "top5": 0.3206
+          },
+          "ban_only_ens": {
+            "top1": 0.1531,
+            "top5": 0.5502
+          },
+          "gated_proj_ens": {
+            "top1": 0.1579,
+            "top5": 0.5455
+          }
+        },
+        "POCKET": {
+          "n": 115,
+          "baseline_ens": {
+            "top1": 0.0174,
+            "top5": 0.2435
+          },
+          "ban_only_ens": {
+            "top1": 0.0696,
+            "top5": 0.3478
+          },
+          "gated_proj_ens": {
+            "top1": 0.0957,
+            "top5": 0.3478
+          }
+        }
+      },
+      "B4-5": {
+        "COMP": {
+          "n": 28,
+          "baseline_ens": {
+            "top1": 0.0714,
+            "top5": 0.5
+          },
+          "ban_only_ens": {
+            "top1": 0.1786,
+            "top5": 0.4643
+          },
+          "gated_proj_ens": {
+            "top1": 0.0714,
+            "top5": 0.3571
+          }
+        },
+        "META": {
+          "n": 82,
+          "baseline_ens": {
+            "top1": 0.2195,
+            "top5": 0.5122
+          },
+          "ban_only_ens": {
+            "top1": 0.1707,
+            "top5": 0.5122
+          },
+          "gated_proj_ens": {
+            "top1": 0.2073,
+            "top5": 0.5366
+          }
+        },
+        "POCKET": {
+          "n": 106,
+          "baseline_ens": {
+            "top1": 0.1132,
+            "top5": 0.4528
+          },
+          "ban_only_ens": {
+            "top1": 0.1132,
+            "top5": 0.434
+          },
+          "gated_proj_ens": {
+            "top1": 0.0849,
+            "top5": 0.4906
+          }
+        }
+      }
+    }
+  },
+  "provenance": {
+    "features": [
+      "opp_usage",
+      "player_pool",
+      "player_wr"
+    ],
+    "injection": {
+      "ban_only": "features zeroed at pick slots; shared 3d x d zero-init input projection + 3-scalar ban-only output bias",
+      "gated_proj": "two zero-init 3d x d input projections indexed by slot type + v13's 2x3 output bias"
+    },
+    "standardization": {
+      "population": "train candidate rows only",
+      "train_mean": [
+        0.021696,
+        0.017232,
+        1.727921
+      ],
+      "train_std": [
+        0.05923,
+        0.047506,
+        0.748718
+      ]
+    },
+    "baselines": "reused from data/processed/expcache_pocket (v13)",
+    "split_cutoff": "2026-07-15",
+    "val_days": 14,
+    "config": "d192x4L6H,lr=0.0003,do=0.1",
+    "device": "cpu",
+    "seeds": [
+      16,
+      17,
+      42,
+      7,
+      23
+    ],
+    "bootstrap_resamples": 10000,
+    "baseline_canary_seed16": 3.5855
+  }
+}
