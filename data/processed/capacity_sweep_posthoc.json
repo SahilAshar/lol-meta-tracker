@@ -1,0 +1,166 @@
+{
+  "note": "Val-only capacity sweep. Stage 1 selects on mean best val loss over 3 seeds (ties within 0.005 -> smaller model); stage 2 confirms the winner vs the d192x4L6H incumbent on 5 paired seeds, gated on mean d_top1 >= +1.0pt with neither bans nor picks down more than 1.5pts. No test look.",
+  "arm": "ban_only",
+  "grid": [
+    {
+      "d_model": 128,
+      "n_layers": 3,
+      "dropout": 0.1
+    },
+    {
+      "d_model": 128,
+      "n_layers": 3,
+      "dropout": 0.2
+    },
+    {
+      "d_model": 128,
+      "n_layers": 4,
+      "dropout": 0.1
+    },
+    {
+      "d_model": 128,
+      "n_layers": 4,
+      "dropout": 0.2
+    },
+    {
+      "d_model": 128,
+      "n_layers": 6,
+      "dropout": 0.1
+    },
+    {
+      "d_model": 128,
+      "n_layers": 6,
+      "dropout": 0.2
+    },
+    {
+      "d_model": 192,
+      "n_layers": 3,
+      "dropout": 0.1
+    },
+    {
+      "d_model": 192,
+      "n_layers": 3,
+      "dropout": 0.2
+    },
+    {
+      "d_model": 192,
+      "n_layers": 4,
+      "dropout": 0.1
+    },
+    {
+      "d_model": 192,
+      "n_layers": 4,
+      "dropout": 0.2
+    },
+    {
+      "d_model": 192,
+      "n_layers": 6,
+      "dropout": 0.1
+    },
+    {
+      "d_model": 192,
+      "n_layers": 6,
+      "dropout": 0.2
+    },
+    {
+      "d_model": 256,
+      "n_layers": 3,
+      "dropout": 0.1
+    },
+    {
+      "d_model": 256,
+      "n_layers": 3,
+      "dropout": 0.2
+    },
+    {
+      "d_model": 256,
+      "n_layers": 4,
+      "dropout": 0.1
+    },
+    {
+      "d_model": 256,
+      "n_layers": 4,
+      "dropout": 0.2
+    },
+    {
+      "d_model": 256,
+      "n_layers": 6,
+      "dropout": 0.1
+    },
+    {
+      "d_model": 256,
+      "n_layers": 6,
+      "dropout": 0.2
+    }
+  ],
+  "sweep_seeds": [
+    16,
+    17,
+    42
+  ],
+  "confirm_seeds": [
+    16,
+    17,
+    42,
+    7,
+    23
+  ],
+  "incumbent": {
+    "d_model": 192,
+    "n_layers": 4,
+    "dropout": 0.1
+  },
+  "posthoc": "Config named with --confirm-tag, i.e. chosen AFTER seeing the sweep. Not the pre-registered selection; descriptive only and not promotable on this run.",
+  "confirm": {
+    "winner_tag": "d128x4L_do0.2",
+    "seeds": [
+      16,
+      17,
+      42,
+      7,
+      23
+    ],
+    "d_top1": [
+      0.0046,
+      0.0342,
+      0.0241,
+      0.0046,
+      0.0056
+    ],
+    "d_ban_top1": [
+      0.0093,
+      0.0408,
+      0.0278,
+      -0.013,
+      -0.0056
+    ],
+    "d_pick_top1": [
+      0.0,
+      0.0278,
+      0.0204,
+      0.0222,
+      0.0166
+    ],
+    "d_loss (incumbent - winner, >0 favors winner)": [
+      0.029,
+      0.019,
+      0.0925,
+      0.0664,
+      0.131
+    ],
+    "mean_d_top1": 0.0146,
+    "mean_d_ban_top1": 0.0119,
+    "mean_d_pick_top1": 0.0174,
+    "mean_d_loss": 0.0676,
+    "bootstrap_95ci_mean_d_loss": [
+      0.0325,
+      0.1029
+    ],
+    "gate": {
+      "primary_mean_d_top1_ge_1.0pt": true,
+      "bans_not_down_gt_1.5pts": true,
+      "picks_not_down_gt_1.5pts": true
+    },
+    "verdict": "GO"
+  }
+}

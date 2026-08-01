@@ -1,0 +1,1813 @@
+{
+  "note": "Val-only capacity sweep. Stage 1 selects on mean best val loss over 3 seeds (ties within 0.005 -> smaller model); stage 2 confirms the winner vs the d192x4L6H incumbent on 5 paired seeds, gated on mean d_top1 >= +1.0pt with neither bans nor picks down more than 1.5pts. No test look.",
+  "arm": "ban_only",
+  "grid": [
+    {
+      "d_model": 128,
+      "n_layers": 3,
+      "dropout": 0.1
+    },
+    {
+      "d_model": 128,
+      "n_layers": 3,
+      "dropout": 0.2
+    },
+    {
+      "d_model": 128,
+      "n_layers": 4,
+      "dropout": 0.1
+    },
+    {
+      "d_model": 128,
+      "n_layers": 4,
+      "dropout": 0.2
+    },
+    {
+      "d_model": 128,
+      "n_layers": 6,
+      "dropout": 0.1
+    },
+    {
+      "d_model": 128,
+      "n_layers": 6,
+      "dropout": 0.2
+    },
+    {
+      "d_model": 192,
+      "n_layers": 3,
+      "dropout": 0.1
+    },
+    {
+      "d_model": 192,
+      "n_layers": 3,
+      "dropout": 0.2
+    },
+    {
+      "d_model": 192,
+      "n_layers": 4,
+      "dropout": 0.1
+    },
+    {
+      "d_model": 192,
+      "n_layers": 4,
+      "dropout": 0.2
+    },
+    {
+      "d_model": 192,
+      "n_layers": 6,
+      "dropout": 0.1
+    },
+    {
+      "d_model": 192,
+      "n_layers": 6,
+      "dropout": 0.2
+    },
+    {
+      "d_model": 256,
+      "n_layers": 3,
+      "dropout": 0.1
+    },
+    {
+      "d_model": 256,
+      "n_layers": 3,
+      "dropout": 0.2
+    },
+    {
+      "d_model": 256,
+      "n_layers": 4,
+      "dropout": 0.1
+    },
+    {
+      "d_model": 256,
+      "n_layers": 4,
+      "dropout": 0.2
+    },
+    {
+      "d_model": 256,
+      "n_layers": 6,
+      "dropout": 0.1
+    },
+    {
+      "d_model": 256,
+      "n_layers": 6,
+      "dropout": 0.2
+    }
+  ],
+  "sweep_seeds": [
+    16,
+    17,
+    42
+  ],
+  "confirm_seeds": [
+    16,
+    17,
+    42,
+    7,
+    23
+  ],
+  "incumbent": {
+    "d_model": 192,
+    "n_layers": 4,
+    "dropout": 0.1
+  },
+  "sweep": {
+    "runs": [
+      {
+        "arm": "ban_only",
+        "tag": "d128x3L_do0.1",
+        "seed": 16,
+        "d_model": 128,
+        "n_layers": 3,
+        "dropout": 0.1,
+        "n_heads": 4,
+        "n_params": 474030,
+        "best_val_loss": 3.4419,
+        "top1": 0.1435,
+        "top5": 0.4546,
+        "bans": {
+          "n": 540,
+          "top1": 0.1352,
+          "top3": 0.3278,
+          "top5": 0.463
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.1519,
+          "top3": 0.3148,
+          "top5": 0.4463
+        },
+        "epochs": 37,
+        "wall_s": 81.0
+      },
+      {
+        "arm": "ban_only",
+        "tag": "d128x3L_do0.1",
+        "seed": 17,
+        "d_model": 128,
+        "n_layers": 3,
+        "dropout": 0.1,
+        "n_heads": 4,
+        "n_params": 474030,
+        "best_val_loss": 3.3615,
+        "top1": 0.1694,
+        "top5": 0.4722,
+        "bans": {
+          "n": 540,
+          "top1": 0.1537,
+          "top3": 0.35,
+          "top5": 0.4833
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.1852,
+          "top3": 0.35,
+          "top5": 0.4611
+        },
+        "epochs": 49,
+        "wall_s": 104.4
+      },
+      {
+        "arm": "ban_only",
+        "tag": "d128x3L_do0.1",
+        "seed": 42,
+        "d_model": 128,
+        "n_layers": 3,
+        "dropout": 0.1,
+        "n_heads": 4,
+        "n_params": 474030,
+        "best_val_loss": 3.4104,
+        "top1": 0.1593,
+        "top5": 0.463,
+        "bans": {
+          "n": 540,
+          "top1": 0.1537,
+          "top3": 0.3315,
+          "top5": 0.4593
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.1648,
+          "top3": 0.3278,
+          "top5": 0.4667
+        },
+        "epochs": 38,
+        "wall_s": 81.9
+      },
+      {
+        "arm": "ban_only",
+        "tag": "d128x3L_do0.2",
+        "seed": 16,
+        "d_model": 128,
+        "n_layers": 3,
+        "dropout": 0.2,
+        "n_heads": 4,
+        "n_params": 474030,
+        "best_val_loss": 3.4282,
+        "top1": 0.1537,
+        "top5": 0.462,
+        "bans": {
+          "n": 540,
+          "top1": 0.15,
+          "top3": 0.3407,
+          "top5": 0.4593
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.1574,
+          "top3": 0.3315,
+          "top5": 0.4648
+        },
+        "epochs": 46,
+        "wall_s": 99.3
+      },
+      {
+        "arm": "ban_only",
+        "tag": "d128x3L_do0.2",
+        "seed": 17,
+        "d_model": 128,
+        "n_layers": 3,
+        "dropout": 0.2,
+        "n_heads": 4,
+        "n_params": 474030,
+        "best_val_loss": 3.3504,
+        "top1": 0.162,
+        "top5": 0.4648,
+        "bans": {
+          "n": 540,
+          "top1": 0.1556,
+          "top3": 0.3389,
+          "top5": 0.4537
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.1685,
+          "top3": 0.3574,
+          "top5": 0.4759
+        },
+        "epochs": 60,
+        "wall_s": 129.0
+      },
+      {
+        "arm": "ban_only",
+        "tag": "d128x3L_do0.2",
+        "seed": 42,
+        "d_model": 128,
+        "n_layers": 3,
+        "dropout": 0.2,
+        "n_heads": 4,
+        "n_params": 474030,
+        "best_val_loss": 3.3336,
+        "top1": 0.162,
+        "top5": 0.5009,
+        "bans": {
+          "n": 540,
+          "top1": 0.15,
+          "top3": 0.3556,
+          "top5": 0.4963
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.1741,
+          "top3": 0.3741,
+          "top5": 0.5056
+        },
+        "epochs": 90,
+        "wall_s": 193.6
+      },
+      {
+        "arm": "ban_only",
+        "tag": "d128x4L_do0.1",
+        "seed": 16,
+        "d_model": 128,
+        "n_layers": 4,
+        "dropout": 0.1,
+        "n_heads": 4,
+        "n_params": 606510,
+        "best_val_loss": 3.3749,
+        "top1": 0.1639,
+        "top5": 0.4648,
+        "bans": {
+          "n": 540,
+          "top1": 0.1481,
+          "top3": 0.3167,
+          "top5": 0.4556
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.1796,
+          "top3": 0.3481,
+          "top5": 0.4741
+        },
+        "epochs": 59,
+        "wall_s": 163.5
+      },
+      {
+        "arm": "ban_only",
+        "tag": "d128x4L_do0.1",
+        "seed": 17,
+        "d_model": 128,
+        "n_layers": 4,
+        "dropout": 0.1,
+        "n_heads": 4,
+        "n_params": 606510,
+        "best_val_loss": 3.3522,
+        "top1": 0.1519,
+        "top5": 0.4824,
+        "bans": {
+          "n": 540,
+          "top1": 0.1444,
+          "top3": 0.3481,
+          "top5": 0.4741
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.1593,
+          "top3": 0.3352,
+          "top5": 0.4907
+        },
+        "epochs": 49,
+        "wall_s": 135.2
+      },
+      {
+        "arm": "ban_only",
+        "tag": "d128x4L_do0.1",
+        "seed": 42,
+        "d_model": 128,
+        "n_layers": 4,
+        "dropout": 0.1,
+        "n_heads": 4,
+        "n_params": 606510,
+        "best_val_loss": 3.31,
+        "top1": 0.1463,
+        "top5": 0.4583,
+        "bans": {
+          "n": 540,
+          "top1": 0.1204,
+          "top3": 0.3185,
+          "top5": 0.4481
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.1722,
+          "top3": 0.337,
+          "top5": 0.4685
+        },
+        "epochs": 71,
+        "wall_s": 196.4
+      },
+      {
+        "arm": "ban_only",
+        "tag": "d128x4L_do0.2",
+        "seed": 16,
+        "d_model": 128,
+        "n_layers": 4,
+        "dropout": 0.2,
+        "n_heads": 4,
+        "n_params": 606510,
+        "best_val_loss": 3.3621,
+        "top1": 0.1657,
+        "top5": 0.4593,
+        "bans": {
+          "n": 540,
+          "top1": 0.1463,
+          "top3": 0.337,
+          "top5": 0.4426
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.1852,
+          "top3": 0.3722,
+          "top5": 0.4759
+        },
+        "epochs": 62,
+        "wall_s": 171.9
+      },
+      {
+        "arm": "ban_only",
+        "tag": "d128x4L_do0.2",
+        "seed": 17,
+        "d_model": 128,
+        "n_layers": 4,
+        "dropout": 0.2,
+        "n_heads": 4,
+        "n_params": 606510,
+        "best_val_loss": 3.3601,
+        "top1": 0.1685,
+        "top5": 0.475,
+        "bans": {
+          "n": 540,
+          "top1": 0.1556,
+          "top3": 0.3352,
+          "top5": 0.463
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.1815,
+          "top3": 0.3574,
+          "top5": 0.487
+        },
+        "epochs": 49,
+        "wall_s": 135.3
+      },
+      {
+        "arm": "ban_only",
+        "tag": "d128x4L_do0.2",
+        "seed": 42,
+        "d_model": 128,
+        "n_layers": 4,
+        "dropout": 0.2,
+        "n_heads": 4,
+        "n_params": 606510,
+        "best_val_loss": 3.3141,
+        "top1": 0.1685,
+        "top5": 0.4963,
+        "bans": {
+          "n": 540,
+          "top1": 0.1593,
+          "top3": 0.3537,
+          "top5": 0.4852
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.1778,
+          "top3": 0.3685,
+          "top5": 0.5074
+        },
+        "epochs": 86,
+        "wall_s": 237.9
+      },
+      {
+        "arm": "ban_only",
+        "tag": "d128x6L_do0.1",
+        "seed": 16,
+        "d_model": 128,
+        "n_layers": 6,
+        "dropout": 0.1,
+        "n_heads": 4,
+        "n_params": 871470,
+        "best_val_loss": 3.3907,
+        "top1": 0.1491,
+        "top5": 0.4657,
+        "bans": {
+          "n": 540,
+          "top1": 0.1222,
+          "top3": 0.3463,
+          "top5": 0.4574
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.1759,
+          "top3": 0.3593,
+          "top5": 0.4741
+        },
+        "epochs": 53,
+        "wall_s": 212.5
+      },
+      {
+        "arm": "ban_only",
+        "tag": "d128x6L_do0.1",
+        "seed": 17,
+        "d_model": 128,
+        "n_layers": 6,
+        "dropout": 0.1,
+        "n_heads": 4,
+        "n_params": 871470,
+        "best_val_loss": 3.3619,
+        "top1": 0.1583,
+        "top5": 0.4565,
+        "bans": {
+          "n": 540,
+          "top1": 0.1426,
+          "top3": 0.3389,
+          "top5": 0.45
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.1741,
+          "top3": 0.3704,
+          "top5": 0.463
+        },
+        "epochs": 59,
+        "wall_s": 240.5
+      },
+      {
+        "arm": "ban_only",
+        "tag": "d128x6L_do0.1",
+        "seed": 42,
+        "d_model": 128,
+        "n_layers": 6,
+        "dropout": 0.1,
+        "n_heads": 4,
+        "n_params": 871470,
+        "best_val_loss": 3.4063,
+        "top1": 0.15,
+        "top5": 0.4556,
+        "bans": {
+          "n": 540,
+          "top1": 0.1296,
+          "top3": 0.3296,
+          "top5": 0.4537
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.1704,
+          "top3": 0.3296,
+          "top5": 0.4574
+        },
+        "epochs": 43,
+        "wall_s": 174.4
+      },
+      {
+        "arm": "ban_only",
+        "tag": "d128x6L_do0.2",
+        "seed": 16,
+        "d_model": 128,
+        "n_layers": 6,
+        "dropout": 0.2,
+        "n_heads": 4,
+        "n_params": 871470,
+        "best_val_loss": 3.3623,
+        "top1": 0.1463,
+        "top5": 0.4722,
+        "bans": {
+          "n": 540,
+          "top1": 0.1333,
+          "top3": 0.3463,
+          "top5": 0.4704
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.1593,
+          "top3": 0.3667,
+          "top5": 0.4741
+        },
+        "epochs": 62,
+        "wall_s": 250.5
+      },
+      {
+        "arm": "ban_only",
+        "tag": "d128x6L_do0.2",
+        "seed": 17,
+        "d_model": 128,
+        "n_layers": 6,
+        "dropout": 0.2,
+        "n_heads": 4,
+        "n_params": 871470,
+        "best_val_loss": 3.3315,
+        "top1": 0.162,
+        "top5": 0.4815,
+        "bans": {
+          "n": 540,
+          "top1": 0.1278,
+          "top3": 0.3315,
+          "top5": 0.4667
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.1963,
+          "top3": 0.3944,
+          "top5": 0.4963
+        },
+        "epochs": 85,
+        "wall_s": 343.7
+      },
+      {
+        "arm": "ban_only",
+        "tag": "d128x6L_do0.2",
+        "seed": 42,
+        "d_model": 128,
+        "n_layers": 6,
+        "dropout": 0.2,
+        "n_heads": 4,
+        "n_params": 871470,
+        "best_val_loss": 3.324,
+        "top1": 0.1593,
+        "top5": 0.4815,
+        "bans": {
+          "n": 540,
+          "top1": 0.15,
+          "top3": 0.35,
+          "top5": 0.4889
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.1685,
+          "top3": 0.3519,
+          "top5": 0.4741
+        },
+        "epochs": 71,
+        "wall_s": 286.2
+      },
+      {
+        "arm": "ban_only",
+        "tag": "d192x3L_do0.1",
+        "seed": 16,
+        "d_model": 192,
+        "n_layers": 3,
+        "dropout": 0.1,
+        "n_heads": 6,
+        "n_params": 1042734,
+        "best_val_loss": 3.3904,
+        "top1": 0.1463,
+        "top5": 0.4667,
+        "bans": {
+          "n": 540,
+          "top1": 0.1278,
+          "top3": 0.3222,
+          "top5": 0.4444
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.1648,
+          "top3": 0.3481,
+          "top5": 0.4889
+        },
+        "epochs": 48,
+        "wall_s": 157.5
+      },
+      {
+        "arm": "ban_only",
+        "tag": "d192x3L_do0.1",
+        "seed": 17,
+        "d_model": 192,
+        "n_layers": 3,
+        "dropout": 0.1,
+        "n_heads": 6,
+        "n_params": 1042734,
+        "best_val_loss": 3.3919,
+        "top1": 0.1389,
+        "top5": 0.4528,
+        "bans": {
+          "n": 540,
+          "top1": 0.1259,
+          "top3": 0.3185,
+          "top5": 0.4481
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.1519,
+          "top3": 0.3148,
+          "top5": 0.4574
+        },
+        "epochs": 39,
+        "wall_s": 128.8
+      },
+      {
+        "arm": "ban_only",
+        "tag": "d192x3L_do0.1",
+        "seed": 42,
+        "d_model": 192,
+        "n_layers": 3,
+        "dropout": 0.1,
+        "n_heads": 6,
+        "n_params": 1042734,
+        "best_val_loss": 3.3454,
+        "top1": 0.1546,
+        "top5": 0.4694,
+        "bans": {
+          "n": 540,
+          "top1": 0.1426,
+          "top3": 0.3074,
+          "top5": 0.4704
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.1667,
+          "top3": 0.3759,
+          "top5": 0.4685
+        },
+        "epochs": 38,
+        "wall_s": 124.9
+      },
+      {
+        "arm": "ban_only",
+        "tag": "d192x3L_do0.2",
+        "seed": 16,
+        "d_model": 192,
+        "n_layers": 3,
+        "dropout": 0.2,
+        "n_heads": 6,
+        "n_params": 1042734,
+        "best_val_loss": 3.3366,
+        "top1": 0.1639,
+        "top5": 0.4843,
+        "bans": {
+          "n": 540,
+          "top1": 0.1407,
+          "top3": 0.3111,
+          "top5": 0.4741
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.187,
+          "top3": 0.3704,
+          "top5": 0.4944
+        },
+        "epochs": 67,
+        "wall_s": 219.1
+      },
+      {
+        "arm": "ban_only",
+        "tag": "d192x3L_do0.2",
+        "seed": 17,
+        "d_model": 192,
+        "n_layers": 3,
+        "dropout": 0.2,
+        "n_heads": 6,
+        "n_params": 1042734,
+        "best_val_loss": 3.417,
+        "top1": 0.1444,
+        "top5": 0.4583,
+        "bans": {
+          "n": 540,
+          "top1": 0.1333,
+          "top3": 0.3519,
+          "top5": 0.4537
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.1556,
+          "top3": 0.3463,
+          "top5": 0.463
+        },
+        "epochs": 36,
+        "wall_s": 118.4
+      },
+      {
+        "arm": "ban_only",
+        "tag": "d192x3L_do0.2",
+        "seed": 42,
+        "d_model": 192,
+        "n_layers": 3,
+        "dropout": 0.2,
+        "n_heads": 6,
+        "n_params": 1042734,
+        "best_val_loss": 3.3535,
+        "top1": 0.1509,
+        "top5": 0.4806,
+        "bans": {
+          "n": 540,
+          "top1": 0.1296,
+          "top3": 0.3519,
+          "top5": 0.4667
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.1722,
+          "top3": 0.3944,
+          "top5": 0.4944
+        },
+        "epochs": 57,
+        "wall_s": 186.7
+      },
+      {
+        "arm": "ban_only",
+        "tag": "d192x4L_do0.1",
+        "seed": 16,
+        "d_model": 192,
+        "n_layers": 4,
+        "dropout": 0.1,
+        "n_heads": 6,
+        "n_params": 1339758,
+        "best_val_loss": 3.3911,
+        "top1": 0.1611,
+        "top5": 0.4778,
+        "bans": {
+          "n": 540,
+          "top1": 0.137,
+          "top3": 0.3333,
+          "top5": 0.4648
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.1852,
+          "top3": 0.3481,
+          "top5": 0.4907
+        },
+        "epochs": 45,
+        "wall_s": 190.3
+      },
+      {
+        "arm": "ban_only",
+        "tag": "d192x4L_do0.1",
+        "seed": 17,
+        "d_model": 192,
+        "n_layers": 4,
+        "dropout": 0.1,
+        "n_heads": 6,
+        "n_params": 1339758,
+        "best_val_loss": 3.3791,
+        "top1": 0.1343,
+        "top5": 0.4639,
+        "bans": {
+          "n": 540,
+          "top1": 0.1148,
+          "top3": 0.313,
+          "top5": 0.4444
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.1537,
+          "top3": 0.3389,
+          "top5": 0.4833
+        },
+        "epochs": 36,
+        "wall_s": 152.2
+      },
+      {
+        "arm": "ban_only",
+        "tag": "d192x4L_do0.1",
+        "seed": 42,
+        "d_model": 192,
+        "n_layers": 4,
+        "dropout": 0.1,
+        "n_heads": 6,
+        "n_params": 1339758,
+        "best_val_loss": 3.4066,
+        "top1": 0.1444,
+        "top5": 0.4565,
+        "bans": {
+          "n": 540,
+          "top1": 0.1315,
+          "top3": 0.3037,
+          "top5": 0.4593
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.1574,
+          "top3": 0.337,
+          "top5": 0.4537
+        },
+        "epochs": 38,
+        "wall_s": 159.9
+      },
+      {
+        "arm": "ban_only",
+        "tag": "d192x4L_do0.2",
+        "seed": 16,
+        "d_model": 192,
+        "n_layers": 4,
+        "dropout": 0.2,
+        "n_heads": 6,
+        "n_params": 1339758,
+        "best_val_loss": 3.3404,
+        "top1": 0.1639,
+        "top5": 0.475,
+        "bans": {
+          "n": 540,
+          "top1": 0.1407,
+          "top3": 0.3204,
+          "top5": 0.4463
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.187,
+          "top3": 0.3963,
+          "top5": 0.5037
+        },
+        "epochs": 59,
+        "wall_s": 250.3
+      },
+      {
+        "arm": "ban_only",
+        "tag": "d192x4L_do0.2",
+        "seed": 17,
+        "d_model": 192,
+        "n_layers": 4,
+        "dropout": 0.2,
+        "n_heads": 6,
+        "n_params": 1339758,
+        "best_val_loss": 3.3403,
+        "top1": 0.1657,
+        "top5": 0.4667,
+        "bans": {
+          "n": 540,
+          "top1": 0.1407,
+          "top3": 0.3296,
+          "top5": 0.4778
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.1907,
+          "top3": 0.3259,
+          "top5": 0.4556
+        },
+        "epochs": 49,
+        "wall_s": 205.9
+      },
+      {
+        "arm": "ban_only",
+        "tag": "d192x4L_do0.2",
+        "seed": 42,
+        "d_model": 192,
+        "n_layers": 4,
+        "dropout": 0.2,
+        "n_heads": 6,
+        "n_params": 1339758,
+        "best_val_loss": 3.3527,
+        "top1": 0.1611,
+        "top5": 0.4741,
+        "bans": {
+          "n": 540,
+          "top1": 0.137,
+          "top3": 0.3333,
+          "top5": 0.4648
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.1852,
+          "top3": 0.3593,
+          "top5": 0.4833
+        },
+        "epochs": 52,
+        "wall_s": 217.1
+      },
+      {
+        "arm": "ban_only",
+        "tag": "d192x6L_do0.1",
+        "seed": 16,
+        "d_model": 192,
+        "n_layers": 6,
+        "dropout": 0.1,
+        "n_heads": 6,
+        "n_params": 1933806,
+        "best_val_loss": 3.4207,
+        "top1": 0.1565,
+        "top5": 0.4574,
+        "bans": {
+          "n": 540,
+          "top1": 0.15,
+          "top3": 0.313,
+          "top5": 0.4315
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.163,
+          "top3": 0.35,
+          "top5": 0.4833
+        },
+        "epochs": 37,
+        "wall_s": 226.0
+      },
+      {
+        "arm": "ban_only",
+        "tag": "d192x6L_do0.1",
+        "seed": 17,
+        "d_model": 192,
+        "n_layers": 6,
+        "dropout": 0.1,
+        "n_heads": 6,
+        "n_params": 1933806,
+        "best_val_loss": 3.3567,
+        "top1": 0.15,
+        "top5": 0.4694,
+        "bans": {
+          "n": 540,
+          "top1": 0.1389,
+          "top3": 0.3185,
+          "top5": 0.4722
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.1611,
+          "top3": 0.3333,
+          "top5": 0.4667
+        },
+        "epochs": 38,
+        "wall_s": 231.1
+      },
+      {
+        "arm": "ban_only",
+        "tag": "d192x6L_do0.1",
+        "seed": 42,
+        "d_model": 192,
+        "n_layers": 6,
+        "dropout": 0.1,
+        "n_heads": 6,
+        "n_params": 1933806,
+        "best_val_loss": 3.4381,
+        "top1": 0.137,
+        "top5": 0.4426,
+        "bans": {
+          "n": 540,
+          "top1": 0.1167,
+          "top3": 0.2981,
+          "top5": 0.4407
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.1574,
+          "top3": 0.3222,
+          "top5": 0.4444
+        },
+        "epochs": 39,
+        "wall_s": 236.7
+      },
+      {
+        "arm": "ban_only",
+        "tag": "d192x6L_do0.2",
+        "seed": 16,
+        "d_model": 192,
+        "n_layers": 6,
+        "dropout": 0.2,
+        "n_heads": 6,
+        "n_params": 1933806,
+        "best_val_loss": 3.3587,
+        "top1": 0.1602,
+        "top5": 0.4769,
+        "bans": {
+          "n": 540,
+          "top1": 0.1519,
+          "top3": 0.3389,
+          "top5": 0.463
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.1685,
+          "top3": 0.363,
+          "top5": 0.4907
+        },
+        "epochs": 48,
+        "wall_s": 291.6
+      },
+      {
+        "arm": "ban_only",
+        "tag": "d192x6L_do0.2",
+        "seed": 17,
+        "d_model": 192,
+        "n_layers": 6,
+        "dropout": 0.2,
+        "n_heads": 6,
+        "n_params": 1933806,
+        "best_val_loss": 3.3241,
+        "top1": 0.1574,
+        "top5": 0.4648,
+        "bans": {
+          "n": 540,
+          "top1": 0.1296,
+          "top3": 0.3333,
+          "top5": 0.4648
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.1852,
+          "top3": 0.3389,
+          "top5": 0.4648
+        },
+        "epochs": 56,
+        "wall_s": 342.3
+      },
+      {
+        "arm": "ban_only",
+        "tag": "d192x6L_do0.2",
+        "seed": 42,
+        "d_model": 192,
+        "n_layers": 6,
+        "dropout": 0.2,
+        "n_heads": 6,
+        "n_params": 1933806,
+        "best_val_loss": 3.353,
+        "top1": 0.1426,
+        "top5": 0.4593,
+        "bans": {
+          "n": 540,
+          "top1": 0.1315,
+          "top3": 0.3241,
+          "top5": 0.4444
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.1537,
+          "top3": 0.337,
+          "top5": 0.4741
+        },
+        "epochs": 43,
+        "wall_s": 261.0
+      },
+      {
+        "arm": "ban_only",
+        "tag": "d256x3L_do0.1",
+        "seed": 16,
+        "d_model": 256,
+        "n_layers": 3,
+        "dropout": 0.1,
+        "n_heads": 8,
+        "n_params": 1832622,
+        "best_val_loss": 3.438,
+        "top1": 0.1509,
+        "top5": 0.4704,
+        "bans": {
+          "n": 540,
+          "top1": 0.1426,
+          "top3": 0.3389,
+          "top5": 0.4648
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.1593,
+          "top3": 0.3315,
+          "top5": 0.4759
+        },
+        "epochs": 32,
+        "wall_s": 152.1
+      },
+      {
+        "arm": "ban_only",
+        "tag": "d256x3L_do0.1",
+        "seed": 17,
+        "d_model": 256,
+        "n_layers": 3,
+        "dropout": 0.1,
+        "n_heads": 8,
+        "n_params": 1832622,
+        "best_val_loss": 3.4113,
+        "top1": 0.1481,
+        "top5": 0.4759,
+        "bans": {
+          "n": 540,
+          "top1": 0.1407,
+          "top3": 0.3574,
+          "top5": 0.4648
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.1556,
+          "top3": 0.3426,
+          "top5": 0.487
+        },
+        "epochs": 28,
+        "wall_s": 133.9
+      },
+      {
+        "arm": "ban_only",
+        "tag": "d256x3L_do0.1",
+        "seed": 42,
+        "d_model": 256,
+        "n_layers": 3,
+        "dropout": 0.1,
+        "n_heads": 8,
+        "n_params": 1832622,
+        "best_val_loss": 3.4282,
+        "top1": 0.1519,
+        "top5": 0.4574,
+        "bans": {
+          "n": 540,
+          "top1": 0.1389,
+          "top3": 0.3426,
+          "top5": 0.4574
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.1648,
+          "top3": 0.3259,
+          "top5": 0.4574
+        },
+        "epochs": 34,
+        "wall_s": 160.7
+      },
+      {
+        "arm": "ban_only",
+        "tag": "d256x3L_do0.2",
+        "seed": 16,
+        "d_model": 256,
+        "n_layers": 3,
+        "dropout": 0.2,
+        "n_heads": 8,
+        "n_params": 1832622,
+        "best_val_loss": 3.3684,
+        "top1": 0.1556,
+        "top5": 0.4741,
+        "bans": {
+          "n": 540,
+          "top1": 0.1333,
+          "top3": 0.3259,
+          "top5": 0.4593
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.1778,
+          "top3": 0.3648,
+          "top5": 0.4889
+        },
+        "epochs": 37,
+        "wall_s": 174.7
+      },
+      {
+        "arm": "ban_only",
+        "tag": "d256x3L_do0.2",
+        "seed": 17,
+        "d_model": 256,
+        "n_layers": 3,
+        "dropout": 0.2,
+        "n_heads": 8,
+        "n_params": 1832622,
+        "best_val_loss": 3.3881,
+        "top1": 0.1519,
+        "top5": 0.4926,
+        "bans": {
+          "n": 540,
+          "top1": 0.1389,
+          "top3": 0.3537,
+          "top5": 0.4833
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.1648,
+          "top3": 0.3852,
+          "top5": 0.5019
+        },
+        "epochs": 36,
+        "wall_s": 171.0
+      },
+      {
+        "arm": "ban_only",
+        "tag": "d256x3L_do0.2",
+        "seed": 42,
+        "d_model": 256,
+        "n_layers": 3,
+        "dropout": 0.2,
+        "n_heads": 8,
+        "n_params": 1832622,
+        "best_val_loss": 3.3762,
+        "top1": 0.1593,
+        "top5": 0.4787,
+        "bans": {
+          "n": 540,
+          "top1": 0.1315,
+          "top3": 0.3333,
+          "top5": 0.4556
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.187,
+          "top3": 0.387,
+          "top5": 0.5019
+        },
+        "epochs": 38,
+        "wall_s": 181.9
+      },
+      {
+        "arm": "ban_only",
+        "tag": "d256x4L_do0.1",
+        "seed": 16,
+        "d_model": 256,
+        "n_layers": 4,
+        "dropout": 0.1,
+        "n_heads": 8,
+        "n_params": 2359726,
+        "best_val_loss": 3.419,
+        "top1": 0.15,
+        "top5": 0.4593,
+        "bans": {
+          "n": 540,
+          "top1": 0.1611,
+          "top3": 0.3278,
+          "top5": 0.4648
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.1389,
+          "top3": 0.3241,
+          "top5": 0.4537
+        },
+        "epochs": 26,
+        "wall_s": 160.7
+      },
+      {
+        "arm": "ban_only",
+        "tag": "d256x4L_do0.1",
+        "seed": 17,
+        "d_model": 256,
+        "n_layers": 4,
+        "dropout": 0.1,
+        "n_heads": 8,
+        "n_params": 2359726,
+        "best_val_loss": 3.4095,
+        "top1": 0.1593,
+        "top5": 0.4796,
+        "bans": {
+          "n": 540,
+          "top1": 0.1426,
+          "top3": 0.3259,
+          "top5": 0.4722
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.1759,
+          "top3": 0.3833,
+          "top5": 0.487
+        },
+        "epochs": 34,
+        "wall_s": 208.3
+      },
+      {
+        "arm": "ban_only",
+        "tag": "d256x4L_do0.1",
+        "seed": 42,
+        "d_model": 256,
+        "n_layers": 4,
+        "dropout": 0.1,
+        "n_heads": 8,
+        "n_params": 2359726,
+        "best_val_loss": 3.3988,
+        "top1": 0.15,
+        "top5": 0.4694,
+        "bans": {
+          "n": 540,
+          "top1": 0.1389,
+          "top3": 0.3519,
+          "top5": 0.4722
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.1611,
+          "top3": 0.3611,
+          "top5": 0.4667
+        },
+        "epochs": 29,
+        "wall_s": 177.6
+      },
+      {
+        "arm": "ban_only",
+        "tag": "d256x4L_do0.2",
+        "seed": 16,
+        "d_model": 256,
+        "n_layers": 4,
+        "dropout": 0.2,
+        "n_heads": 8,
+        "n_params": 2359726,
+        "best_val_loss": 3.3708,
+        "top1": 0.1491,
+        "top5": 0.4667,
+        "bans": {
+          "n": 540,
+          "top1": 0.1296,
+          "top3": 0.3259,
+          "top5": 0.45
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.1685,
+          "top3": 0.3556,
+          "top5": 0.4833
+        },
+        "epochs": 45,
+        "wall_s": 274.5
+      },
+      {
+        "arm": "ban_only",
+        "tag": "d256x4L_do0.2",
+        "seed": 17,
+        "d_model": 256,
+        "n_layers": 4,
+        "dropout": 0.2,
+        "n_heads": 8,
+        "n_params": 2359726,
+        "best_val_loss": 3.39,
+        "top1": 0.162,
+        "top5": 0.4824,
+        "bans": {
+          "n": 540,
+          "top1": 0.1407,
+          "top3": 0.3111,
+          "top5": 0.4519
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.1833,
+          "top3": 0.3833,
+          "top5": 0.513
+        },
+        "epochs": 55,
+        "wall_s": 337.6
+      },
+      {
+        "arm": "ban_only",
+        "tag": "d256x4L_do0.2",
+        "seed": 42,
+        "d_model": 256,
+        "n_layers": 4,
+        "dropout": 0.2,
+        "n_heads": 8,
+        "n_params": 2359726,
+        "best_val_loss": 3.3804,
+        "top1": 0.1491,
+        "top5": 0.4769,
+        "bans": {
+          "n": 540,
+          "top1": 0.1315,
+          "top3": 0.3389,
+          "top5": 0.4593
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.1667,
+          "top3": 0.3796,
+          "top5": 0.4944
+        },
+        "epochs": 38,
+        "wall_s": 234.1
+      },
+      {
+        "arm": "ban_only",
+        "tag": "d256x6L_do0.1",
+        "seed": 16,
+        "d_model": 256,
+        "n_layers": 6,
+        "dropout": 0.1,
+        "n_heads": 8,
+        "n_params": 3413934,
+        "best_val_loss": 3.4504,
+        "top1": 0.1435,
+        "top5": 0.4537,
+        "bans": {
+          "n": 540,
+          "top1": 0.1352,
+          "top3": 0.3056,
+          "top5": 0.437
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.1519,
+          "top3": 0.337,
+          "top5": 0.4704
+        },
+        "epochs": 26,
+        "wall_s": 233.5
+      },
+      {
+        "arm": "ban_only",
+        "tag": "d256x6L_do0.1",
+        "seed": 17,
+        "d_model": 256,
+        "n_layers": 6,
+        "dropout": 0.1,
+        "n_heads": 8,
+        "n_params": 3413934,
+        "best_val_loss": 3.4205,
+        "top1": 0.1389,
+        "top5": 0.4713,
+        "bans": {
+          "n": 540,
+          "top1": 0.137,
+          "top3": 0.363,
+          "top5": 0.4667
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.1407,
+          "top3": 0.35,
+          "top5": 0.4759
+        },
+        "epochs": 28,
+        "wall_s": 251.6
+      },
+      {
+        "arm": "ban_only",
+        "tag": "d256x6L_do0.1",
+        "seed": 42,
+        "d_model": 256,
+        "n_layers": 6,
+        "dropout": 0.1,
+        "n_heads": 8,
+        "n_params": 3413934,
+        "best_val_loss": 3.4259,
+        "top1": 0.1407,
+        "top5": 0.4528,
+        "bans": {
+          "n": 540,
+          "top1": 0.1278,
+          "top3": 0.3407,
+          "top5": 0.4648
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.1537,
+          "top3": 0.35,
+          "top5": 0.4407
+        },
+        "epochs": 34,
+        "wall_s": 307.6
+      },
+      {
+        "arm": "ban_only",
+        "tag": "d256x6L_do0.2",
+        "seed": 16,
+        "d_model": 256,
+        "n_layers": 6,
+        "dropout": 0.2,
+        "n_heads": 8,
+        "n_params": 3413934,
+        "best_val_loss": 3.395,
+        "top1": 0.1491,
+        "top5": 0.4583,
+        "bans": {
+          "n": 540,
+          "top1": 0.137,
+          "top3": 0.3204,
+          "top5": 0.4444
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.1611,
+          "top3": 0.3648,
+          "top5": 0.4722
+        },
+        "epochs": 37,
+        "wall_s": 331.0
+      },
+      {
+        "arm": "ban_only",
+        "tag": "d256x6L_do0.2",
+        "seed": 17,
+        "d_model": 256,
+        "n_layers": 6,
+        "dropout": 0.2,
+        "n_heads": 8,
+        "n_params": 3413934,
+        "best_val_loss": 3.3735,
+        "top1": 0.1528,
+        "top5": 0.463,
+        "bans": {
+          "n": 540,
+          "top1": 0.1444,
+          "top3": 0.3333,
+          "top5": 0.4444
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.1611,
+          "top3": 0.3778,
+          "top5": 0.4815
+        },
+        "epochs": 36,
+        "wall_s": 321.9
+      },
+      {
+        "arm": "ban_only",
+        "tag": "d256x6L_do0.2",
+        "seed": 42,
+        "d_model": 256,
+        "n_layers": 6,
+        "dropout": 0.2,
+        "n_heads": 8,
+        "n_params": 3413934,
+        "best_val_loss": 3.3838,
+        "top1": 0.1574,
+        "top5": 0.4759,
+        "bans": {
+          "n": 540,
+          "top1": 0.1463,
+          "top3": 0.3333,
+          "top5": 0.4722
+        },
+        "picks": {
+          "n": 540,
+          "top1": 0.1685,
+          "top3": 0.337,
+          "top5": 0.4796
+        },
+        "epochs": 48,
+        "wall_s": 429.2
+      }
+    ],
+    "by_config": [
+      {
+        "tag": "d128x6L_do0.2",
+        "n_params": 871470,
+        "mean_loss": 3.3393,
+        "mean_top1": 0.1559,
+        "mean_ban_top1": 0.137,
+        "mean_pick_top1": 0.1747,
+        "mean_epochs": 72.6667,
+        "mean_wall_s": 293.4667
+      },
+      {
+        "tag": "d192x4L_do0.2",
+        "n_params": 1339758,
+        "mean_loss": 3.3445,
+        "mean_top1": 0.1636,
+        "mean_ban_top1": 0.1395,
+        "mean_pick_top1": 0.1876,
+        "mean_epochs": 53.3333,
+        "mean_wall_s": 224.4333
+      },
+      {
+        "tag": "d192x6L_do0.2",
+        "n_params": 1933806,
+        "mean_loss": 3.3453,
+        "mean_top1": 0.1534,
+        "mean_ban_top1": 0.1377,
+        "mean_pick_top1": 0.1691,
+        "mean_epochs": 49.0,
+        "mean_wall_s": 298.3
+      },
+      {
+        "tag": "d128x4L_do0.2",
+        "n_params": 606510,
+        "mean_loss": 3.3454,
+        "mean_top1": 0.1676,
+        "mean_ban_top1": 0.1537,
+        "mean_pick_top1": 0.1815,
+        "mean_epochs": 65.6667,
+        "mean_wall_s": 181.7
+      },
+      {
+        "tag": "d128x4L_do0.1",
+        "n_params": 606510,
+        "mean_loss": 3.3457,
+        "mean_top1": 0.154,
+        "mean_ban_top1": 0.1376,
+        "mean_pick_top1": 0.1704,
+        "mean_epochs": 59.6667,
+        "mean_wall_s": 165.0333
+      },
+      {
+        "tag": "d192x3L_do0.2",
+        "n_params": 1042734,
+        "mean_loss": 3.369,
+        "mean_top1": 0.1531,
+        "mean_ban_top1": 0.1345,
+        "mean_pick_top1": 0.1716,
+        "mean_epochs": 53.3333,
+        "mean_wall_s": 174.7333
+      },
+      {
+        "tag": "d128x3L_do0.2",
+        "n_params": 474030,
+        "mean_loss": 3.3707,
+        "mean_top1": 0.1592,
+        "mean_ban_top1": 0.1519,
+        "mean_pick_top1": 0.1667,
+        "mean_epochs": 65.3333,
+        "mean_wall_s": 140.6333
+      },
+      {
+        "tag": "d192x3L_do0.1",
+        "n_params": 1042734,
+        "mean_loss": 3.3759,
+        "mean_top1": 0.1466,
+        "mean_ban_top1": 0.1321,
+        "mean_pick_top1": 0.1611,
+        "mean_epochs": 41.6667,
+        "mean_wall_s": 137.0667
+      },
+      {
+        "tag": "d256x3L_do0.2",
+        "n_params": 1832622,
+        "mean_loss": 3.3776,
+        "mean_top1": 0.1556,
+        "mean_ban_top1": 0.1346,
+        "mean_pick_top1": 0.1765,
+        "mean_epochs": 37.0,
+        "mean_wall_s": 175.8667
+      },
+      {
+        "tag": "d256x4L_do0.2",
+        "n_params": 2359726,
+        "mean_loss": 3.3804,
+        "mean_top1": 0.1534,
+        "mean_ban_top1": 0.1339,
+        "mean_pick_top1": 0.1728,
+        "mean_epochs": 46.0,
+        "mean_wall_s": 282.0667
+      },
+      {
+        "tag": "d256x6L_do0.2",
+        "n_params": 3413934,
+        "mean_loss": 3.3841,
+        "mean_top1": 0.1531,
+        "mean_ban_top1": 0.1426,
+        "mean_pick_top1": 0.1636,
+        "mean_epochs": 40.3333,
+        "mean_wall_s": 360.7
+      },
+      {
+        "tag": "d128x6L_do0.1",
+        "n_params": 871470,
+        "mean_loss": 3.3863,
+        "mean_top1": 0.1525,
+        "mean_ban_top1": 0.1315,
+        "mean_pick_top1": 0.1735,
+        "mean_epochs": 51.6667,
+        "mean_wall_s": 209.1333
+      },
+      {
+        "tag": "d192x4L_do0.1",
+        "n_params": 1339758,
+        "mean_loss": 3.3923,
+        "mean_top1": 0.1466,
+        "mean_ban_top1": 0.1278,
+        "mean_pick_top1": 0.1654,
+        "mean_epochs": 39.6667,
+        "mean_wall_s": 167.4667
+      },
+      {
+        "tag": "d128x3L_do0.1",
+        "n_params": 474030,
+        "mean_loss": 3.4046,
+        "mean_top1": 0.1574,
+        "mean_ban_top1": 0.1475,
+        "mean_pick_top1": 0.1673,
+        "mean_epochs": 41.3333,
+        "mean_wall_s": 89.1
+      },
+      {
+        "tag": "d192x6L_do0.1",
+        "n_params": 1933806,
+        "mean_loss": 3.4052,
+        "mean_top1": 0.1478,
+        "mean_ban_top1": 0.1352,
+        "mean_pick_top1": 0.1605,
+        "mean_epochs": 38.0,
+        "mean_wall_s": 231.2667
+      },
+      {
+        "tag": "d256x4L_do0.1",
+        "n_params": 2359726,
+        "mean_loss": 3.4091,
+        "mean_top1": 0.1531,
+        "mean_ban_top1": 0.1475,
+        "mean_pick_top1": 0.1586,
+        "mean_epochs": 29.6667,
+        "mean_wall_s": 182.2
+      },
+      {
+        "tag": "d256x3L_do0.1",
+        "n_params": 1832622,
+        "mean_loss": 3.4258,
+        "mean_top1": 0.1503,
+        "mean_ban_top1": 0.1407,
+        "mean_pick_top1": 0.1599,
+        "mean_epochs": 31.3333,
+        "mean_wall_s": 148.9
+      },
+      {
+        "tag": "d256x6L_do0.1",
+        "n_params": 3413934,
+        "mean_loss": 3.4323,
+        "mean_top1": 0.141,
+        "mean_ban_top1": 0.1333,
+        "mean_pick_top1": 0.1488,
+        "mean_epochs": 29.3333,
+        "mean_wall_s": 264.2333
+      }
+    ],
+    "tied_within_band": [
+      "d128x6L_do0.2"
+    ],
+    "winner": "d128x6L_do0.2"
+  },
+  "confirm": {
+    "winner_tag": "d128x6L_do0.2",
+    "seeds": [
+      16,
+      17,
+      42,
+      7,
+      23
+    ],
+    "d_top1": [
+      -0.0148,
+      0.0277,
+      0.0149,
+      -0.0074,
+      -0.0111
+    ],
+    "d_ban_top1": [
+      -0.0037,
+      0.013,
+      0.0185,
+      -0.0222,
+      -0.0093
+    ],
+    "d_pick_top1": [
+      -0.0259,
+      0.0426,
+      0.0111,
+      0.0074,
+      -0.013
+    ],
+    "d_loss (incumbent - winner, >0 favors winner)": [
+      0.0288,
+      0.0476,
+      0.0826,
+      0.0505,
+      0.0316
+    ],
+    "mean_d_top1": 0.0019,
+    "mean_d_ban_top1": -0.0007,
+    "mean_d_pick_top1": 0.0044,
+    "mean_d_loss": 0.0482,
+    "bootstrap_95ci_mean_d_loss": [
+      0.0337,
+      0.066
+    ],
+    "gate": {
+      "primary_mean_d_top1_ge_1.0pt": false,
+      "bans_not_down_gt_1.5pts": true,
+      "picks_not_down_gt_1.5pts": true
+    },
+    "verdict": "NO-GO"
+  }
+}
