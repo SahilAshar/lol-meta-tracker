@@ -1,0 +1,424 @@
+==> freezing a snapshot for all arms: data/raw/soloq/sweep-snapshot-20260801T135046.db
+==> snapshot: data/raw/soloq/sweep-snapshot-20260801T135046.db (1.2G)
+games 880381, floor 2026-03-03, ceil 2026-08-01
+
+==============================================================
+ARM 2026-06-08
+==============================================================
+--> 1/3 lift tables
+wrote data/processed/soloq_lift_tables_floor20260608.json: 265270 games in [2026-06-08, 2026-07-01T00:00:00Z) (earliest 2026-06-08), 173 champs, 842 champ@role combos, 28721 counter pairs, 40414 duo pairs (drops: {'bad_roles': 16})
+  patch mix: {'16.13': 100129, '16.12': 155625, '16.11': 9516}
+--> 2/3 decision dataset
+  fearless[EWC 2026]: True (169 same-series game pairs, 0 champion overlaps)
+  fearless[FST 2026]: True (59 same-series game pairs, 0 champion overlaps)
+  fearless[LCK 2026]: True (321 same-series game pairs, 0 champion overlaps)
+  fearless[LCS 2026]: True (136 same-series game pairs, 0 champion overlaps)
+  fearless[LEC 2026]: True (173 same-series game pairs, 0 champion overlaps)
+  fearless[LPL 2026]: True (455 same-series game pairs, 0 champion overlaps)
+  fearless[MSI 2026]: True (97 same-series game pairs, 0 champion overlaps)
+champions: 150, fearless league-years: [('EWC', 2026), ('FST', 2026), ('LCK', 2026), ('LCS', 2026), ('LEC', 2026), ('LPL', 2026), ('MSI', 2026)]
+soloq bridge: 150/150 champs matched (misses: [])
+soloq floor: 2026-06-08 (table earliest game 2026-06-08, 265270 games)
+games: 1551, decisions: 31016, rows: 4076256, skipped games: 1
+  2026: 1551 games, 31016 decisions
+sequence table: 31016 decisions (0 outside the candidate vocab)
+--> 3/3 rung-2 GBM gate
+cutoff 2026-07-15 09:41:28; train 1447g/28936d, val 54g/1080d
+bridge coverage: 150/150 (misses: [])
+training baseline (17 features, data 8186e80ce3697532)...
+clf seed=16 (17 features): 219 iterations
+  baseline/clf seed=16: 20s
+clf seed=17 (17 features): 141 iterations
+  baseline/clf seed=17: 13s
+clf seed=42 (17 features): 132 iterations
+  baseline/clf seed=42: 12s
+clf seed=7 (17 features): 121 iterations
+  baseline/clf seed=7: 11s
+clf seed=23 (17 features): 128 iterations
+  baseline/clf seed=23: 12s
+/Users/sahilashar/Documents/Repos/lol-meta-tracker/.venv/lib/python3.12/site-packages/lightgbm/sklearn.py:1106: LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead.
+  eval_set = _validate_eval_set_Xy(eval_set=eval_set, eval_X=eval_X, eval_y=eval_y)
+ranker seed=16 (17 features): 102 iterations
+  baseline/rank seed=16: 8s
+/Users/sahilashar/Documents/Repos/lol-meta-tracker/.venv/lib/python3.12/site-packages/lightgbm/sklearn.py:1106: LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead.
+  eval_set = _validate_eval_set_Xy(eval_set=eval_set, eval_X=eval_X, eval_y=eval_y)
+ranker seed=17 (17 features): 58 iterations
+  baseline/rank seed=17: 6s
+/Users/sahilashar/Documents/Repos/lol-meta-tracker/.venv/lib/python3.12/site-packages/lightgbm/sklearn.py:1106: LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead.
+  eval_set = _validate_eval_set_Xy(eval_set=eval_set, eval_X=eval_X, eval_y=eval_y)
+ranker seed=42 (17 features): 84 iterations
+  baseline/rank seed=42: 7s
+/Users/sahilashar/Documents/Repos/lol-meta-tracker/.venv/lib/python3.12/site-packages/lightgbm/sklearn.py:1106: LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead.
+  eval_set = _validate_eval_set_Xy(eval_set=eval_set, eval_X=eval_X, eval_y=eval_y)
+ranker seed=7 (17 features): 191 iterations
+  baseline/rank seed=7: 12s
+/Users/sahilashar/Documents/Repos/lol-meta-tracker/.venv/lib/python3.12/site-packages/lightgbm/sklearn.py:1106: LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead.
+  eval_set = _validate_eval_set_Xy(eval_set=eval_set, eval_X=eval_X, eval_y=eval_y)
+ranker seed=23 (17 features): 106 iterations
+  baseline/rank seed=23: 8s
+  baseline: ens {'n': 1080, 'top1': 0.1324, 'top3': 0.3278, 'top5': 0.4389} | clf {'n': 1080, 'top1': 0.1259, 'top3': 0.3278, 'top5': 0.4472} | rank {'n': 1080, 'top1': 0.1389, 'top3': 0.3278, 'top5': 0.4333}
+training V1 (19 features, data 163d32df2c115cc6)...
+clf seed=16 (19 features): 173 iterations
+  V1/clf seed=16: 17s
+clf seed=17 (19 features): 110 iterations
+  V1/clf seed=17: 11s
+clf seed=42 (19 features): 191 iterations
+  V1/clf seed=42: 17s
+clf seed=7 (19 features): 265 iterations
+  V1/clf seed=7: 22s
+clf seed=23 (19 features): 160 iterations
+  V1/clf seed=23: 15s
+/Users/sahilashar/Documents/Repos/lol-meta-tracker/.venv/lib/python3.12/site-packages/lightgbm/sklearn.py:1106: LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead.
+  eval_set = _validate_eval_set_Xy(eval_set=eval_set, eval_X=eval_X, eval_y=eval_y)
+ranker seed=16 (19 features): 153 iterations
+  V1/rank seed=16: 11s
+/Users/sahilashar/Documents/Repos/lol-meta-tracker/.venv/lib/python3.12/site-packages/lightgbm/sklearn.py:1106: LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead.
+  eval_set = _validate_eval_set_Xy(eval_set=eval_set, eval_X=eval_X, eval_y=eval_y)
+ranker seed=17 (19 features): 146 iterations
+  V1/rank seed=17: 10s
+/Users/sahilashar/Documents/Repos/lol-meta-tracker/.venv/lib/python3.12/site-packages/lightgbm/sklearn.py:1106: LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead.
+  eval_set = _validate_eval_set_Xy(eval_set=eval_set, eval_X=eval_X, eval_y=eval_y)
+ranker seed=42 (19 features): 179 iterations
+  V1/rank seed=42: 12s
+/Users/sahilashar/Documents/Repos/lol-meta-tracker/.venv/lib/python3.12/site-packages/lightgbm/sklearn.py:1106: LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead.
+  eval_set = _validate_eval_set_Xy(eval_set=eval_set, eval_X=eval_X, eval_y=eval_y)
+ranker seed=7 (19 features): 112 iterations
+  V1/rank seed=7: 9s
+/Users/sahilashar/Documents/Repos/lol-meta-tracker/.venv/lib/python3.12/site-packages/lightgbm/sklearn.py:1106: LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead.
+  eval_set = _validate_eval_set_Xy(eval_set=eval_set, eval_X=eval_X, eval_y=eval_y)
+ranker seed=23 (19 features): 178 iterations
+  V1/rank seed=23: 12s
+  V1: ens {'n': 1080, 'top1': 0.1213, 'top3': 0.3278, 'top5': 0.462} | clf {'n': 1080, 'top1': 0.1102, 'top3': 0.3065, 'top5': 0.437} | rank {'n': 1080, 'top1': 0.1324, 'top3': 0.3269, 'top5': 0.4556}
+training V2 (18 features, data baea859747feef3f)...
+clf seed=16 (18 features): 176 iterations
+  V2/clf seed=16: 16s
+clf seed=17 (18 features): 221 iterations
+  V2/clf seed=17: 18s
+clf seed=42 (18 features): 119 iterations
+  V2/clf seed=42: 11s
+clf seed=7 (18 features): 219 iterations
+  V2/clf seed=7: 20s
+clf seed=23 (18 features): 175 iterations
+  V2/clf seed=23: 16s
+/Users/sahilashar/Documents/Repos/lol-meta-tracker/.venv/lib/python3.12/site-packages/lightgbm/sklearn.py:1106: LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead.
+  eval_set = _validate_eval_set_Xy(eval_set=eval_set, eval_X=eval_X, eval_y=eval_y)
+ranker seed=16 (18 features): 155 iterations
+  V2/rank seed=16: 11s
+/Users/sahilashar/Documents/Repos/lol-meta-tracker/.venv/lib/python3.12/site-packages/lightgbm/sklearn.py:1106: LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead.
+  eval_set = _validate_eval_set_Xy(eval_set=eval_set, eval_X=eval_X, eval_y=eval_y)
+ranker seed=17 (18 features): 93 iterations
+  V2/rank seed=17: 8s
+/Users/sahilashar/Documents/Repos/lol-meta-tracker/.venv/lib/python3.12/site-packages/lightgbm/sklearn.py:1106: LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead.
+  eval_set = _validate_eval_set_Xy(eval_set=eval_set, eval_X=eval_X, eval_y=eval_y)
+ranker seed=42 (18 features): 98 iterations
+  V2/rank seed=42: 8s
+/Users/sahilashar/Documents/Repos/lol-meta-tracker/.venv/lib/python3.12/site-packages/lightgbm/sklearn.py:1106: LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead.
+  eval_set = _validate_eval_set_Xy(eval_set=eval_set, eval_X=eval_X, eval_y=eval_y)
+ranker seed=7 (18 features): 69 iterations
+  V2/rank seed=7: 6s
+/Users/sahilashar/Documents/Repos/lol-meta-tracker/.venv/lib/python3.12/site-packages/lightgbm/sklearn.py:1106: LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead.
+  eval_set = _validate_eval_set_Xy(eval_set=eval_set, eval_X=eval_X, eval_y=eval_y)
+ranker seed=23 (18 features): 158 iterations
+  V2/rank seed=23: 11s
+  V2: ens {'n': 1080, 'top1': 0.1222, 'top3': 0.3241, 'top5': 0.4759} | clf {'n': 1080, 'top1': 0.1093, 'top3': 0.3111, 'top5': 0.4481} | rank {'n': 1080, 'top1': 0.1287, 'top3': 0.3231, 'top5': 0.4667}
+training V3 (20 features, data 5976263fc99ef5bc)...
+clf seed=16 (20 features): 147 iterations
+  V3/clf seed=16: 15s
+clf seed=17 (20 features): 138 iterations
+  V3/clf seed=17: 14s
+clf seed=42 (20 features): 159 iterations
+  V3/clf seed=42: 15s
+clf seed=7 (20 features): 109 iterations
+  V3/clf seed=7: 12s
+clf seed=23 (20 features): 153 iterations
+  V3/clf seed=23: 16s
+/Users/sahilashar/Documents/Repos/lol-meta-tracker/.venv/lib/python3.12/site-packages/lightgbm/sklearn.py:1106: LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead.
+  eval_set = _validate_eval_set_Xy(eval_set=eval_set, eval_X=eval_X, eval_y=eval_y)
+ranker seed=16 (20 features): 168 iterations
+  V3/rank seed=16: 12s
+/Users/sahilashar/Documents/Repos/lol-meta-tracker/.venv/lib/python3.12/site-packages/lightgbm/sklearn.py:1106: LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead.
+  eval_set = _validate_eval_set_Xy(eval_set=eval_set, eval_X=eval_X, eval_y=eval_y)
+ranker seed=17 (20 features): 159 iterations
+  V3/rank seed=17: 11s
+/Users/sahilashar/Documents/Repos/lol-meta-tracker/.venv/lib/python3.12/site-packages/lightgbm/sklearn.py:1106: LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead.
+  eval_set = _validate_eval_set_Xy(eval_set=eval_set, eval_X=eval_X, eval_y=eval_y)
+ranker seed=42 (20 features): 105 iterations
+  V3/rank seed=42: 8s
+/Users/sahilashar/Documents/Repos/lol-meta-tracker/.venv/lib/python3.12/site-packages/lightgbm/sklearn.py:1106: LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead.
+  eval_set = _validate_eval_set_Xy(eval_set=eval_set, eval_X=eval_X, eval_y=eval_y)
+ranker seed=7 (20 features): 131 iterations
+  V3/rank seed=7: 9s
+/Users/sahilashar/Documents/Repos/lol-meta-tracker/.venv/lib/python3.12/site-packages/lightgbm/sklearn.py:1106: LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead.
+  eval_set = _validate_eval_set_Xy(eval_set=eval_set, eval_X=eval_X, eval_y=eval_y)
+ranker seed=23 (20 features): 81 iterations
+  V3/rank seed=23: 7s
+  V3: ens {'n': 1080, 'top1': 0.1231, 'top3': 0.338, 'top5': 0.4583} | clf {'n': 1080, 'top1': 0.1148, 'top3': 0.3204, 'top5': 0.4426} | rank {'n': 1080, 'top1': 0.1213, 'top3': 0.3287, 'top5': 0.4713}
+gate V1 vs baseline: top3 {'mean_delta': 0.0, 'ci95': [-0.018519, 0.019444], 'p_variant_better': 0.4819} -> FAIL
+gate V2 vs baseline: top3 {'mean_delta': -0.003704, 'ci95': [-0.023148, 0.015741], 'p_variant_better': 0.3286} -> FAIL
+gate V3 vs baseline: top3 {'mean_delta': 0.010185, 'ci95': [-0.007407, 0.027778], 'p_variant_better': 0.8596} -> FAIL
+syn increment (V3 vs V1): {'mean_delta': 0.010185, 'ci95': [-0.001852, 0.022222], 'p_variant_better': 0.9463}
+wrote data/processed/rung2_gbm_floor20260608.json (491s total)
+
+==============================================================
+ARM 2026-05-01
+==============================================================
+--> 1/3 lift tables
+wrote data/processed/soloq_lift_tables_floor20260501.json: 334093 games in [2026-05-01, 2026-07-01T00:00:00Z) (earliest 2026-05-01), 173 champs, 849 champ@role combos, 30363 counter pairs, 42598 duo pairs (drops: {'bad_roles': 18})
+  patch mix: {'16.13': 100129, '16.12': 155625, '16.11': 39360, '16.10': 25046, '16.9': 13933}
+--> 2/3 decision dataset
+  fearless[EWC 2026]: True (169 same-series game pairs, 0 champion overlaps)
+  fearless[FST 2026]: True (59 same-series game pairs, 0 champion overlaps)
+  fearless[LCK 2026]: True (321 same-series game pairs, 0 champion overlaps)
+  fearless[LCS 2026]: True (136 same-series game pairs, 0 champion overlaps)
+  fearless[LEC 2026]: True (173 same-series game pairs, 0 champion overlaps)
+  fearless[LPL 2026]: True (455 same-series game pairs, 0 champion overlaps)
+  fearless[MSI 2026]: True (97 same-series game pairs, 0 champion overlaps)
+champions: 150, fearless league-years: [('EWC', 2026), ('FST', 2026), ('LCK', 2026), ('LCS', 2026), ('LEC', 2026), ('LPL', 2026), ('MSI', 2026)]
+soloq bridge: 150/150 champs matched (misses: [])
+soloq floor: 2026-05-01 (table earliest game 2026-05-01, 334093 games)
+games: 1551, decisions: 31016, rows: 4076256, skipped games: 1
+  2026: 1551 games, 31016 decisions
+sequence table: 31016 decisions (0 outside the candidate vocab)
+--> 3/3 rung-2 GBM gate
+cutoff 2026-07-15 09:41:28; train 1447g/28936d, val 54g/1080d
+bridge coverage: 150/150 (misses: [])
+training baseline (17 features, data 8186e80ce3697532)...
+  baseline: ens {'n': 1080, 'top1': 0.1324, 'top3': 0.3278, 'top5': 0.4389} | clf {'n': 1080, 'top1': 0.1259, 'top3': 0.3278, 'top5': 0.4472} | rank {'n': 1080, 'top1': 0.1389, 'top3': 0.3278, 'top5': 0.4333}
+training V1 (19 features, data 7469afa11a8cf8eb)...
+clf seed=16 (19 features): 141 iterations
+  V1/clf seed=16: 13s
+clf seed=17 (19 features): 126 iterations
+  V1/clf seed=17: 12s
+clf seed=42 (19 features): 136 iterations
+  V1/clf seed=42: 13s
+clf seed=7 (19 features): 153 iterations
+  V1/clf seed=7: 14s
+clf seed=23 (19 features): 186 iterations
+  V1/clf seed=23: 16s
+/Users/sahilashar/Documents/Repos/lol-meta-tracker/.venv/lib/python3.12/site-packages/lightgbm/sklearn.py:1106: LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead.
+  eval_set = _validate_eval_set_Xy(eval_set=eval_set, eval_X=eval_X, eval_y=eval_y)
+ranker seed=16 (19 features): 123 iterations
+  V1/rank seed=16: 9s
+/Users/sahilashar/Documents/Repos/lol-meta-tracker/.venv/lib/python3.12/site-packages/lightgbm/sklearn.py:1106: LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead.
+  eval_set = _validate_eval_set_Xy(eval_set=eval_set, eval_X=eval_X, eval_y=eval_y)
+ranker seed=17 (19 features): 93 iterations
+  V1/rank seed=17: 7s
+/Users/sahilashar/Documents/Repos/lol-meta-tracker/.venv/lib/python3.12/site-packages/lightgbm/sklearn.py:1106: LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead.
+  eval_set = _validate_eval_set_Xy(eval_set=eval_set, eval_X=eval_X, eval_y=eval_y)
+ranker seed=42 (19 features): 158 iterations
+  V1/rank seed=42: 10s
+/Users/sahilashar/Documents/Repos/lol-meta-tracker/.venv/lib/python3.12/site-packages/lightgbm/sklearn.py:1106: LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead.
+  eval_set = _validate_eval_set_Xy(eval_set=eval_set, eval_X=eval_X, eval_y=eval_y)
+ranker seed=7 (19 features): 53 iterations
+  V1/rank seed=7: 5s
+/Users/sahilashar/Documents/Repos/lol-meta-tracker/.venv/lib/python3.12/site-packages/lightgbm/sklearn.py:1106: LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead.
+  eval_set = _validate_eval_set_Xy(eval_set=eval_set, eval_X=eval_X, eval_y=eval_y)
+ranker seed=23 (19 features): 97 iterations
+  V1/rank seed=23: 8s
+  V1: ens {'n': 1080, 'top1': 0.1296, 'top3': 0.3287, 'top5': 0.4491} | clf {'n': 1080, 'top1': 0.1083, 'top3': 0.3083, 'top5': 0.4269} | rank {'n': 1080, 'top1': 0.1296, 'top3': 0.3231, 'top5': 0.4546}
+training V2 (18 features, data dbb1087bf4144505)...
+clf seed=16 (18 features): 124 iterations
+  V2/clf seed=16: 11s
+clf seed=17 (18 features): 181 iterations
+  V2/clf seed=17: 15s
+clf seed=42 (18 features): 154 iterations
+  V2/clf seed=42: 13s
+clf seed=7 (18 features): 152 iterations
+  V2/clf seed=7: 13s
+clf seed=23 (18 features): 234 iterations
+  V2/clf seed=23: 19s
+/Users/sahilashar/Documents/Repos/lol-meta-tracker/.venv/lib/python3.12/site-packages/lightgbm/sklearn.py:1106: LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead.
+  eval_set = _validate_eval_set_Xy(eval_set=eval_set, eval_X=eval_X, eval_y=eval_y)
+ranker seed=16 (18 features): 182 iterations
+  V2/rank seed=16: 11s
+/Users/sahilashar/Documents/Repos/lol-meta-tracker/.venv/lib/python3.12/site-packages/lightgbm/sklearn.py:1106: LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead.
+  eval_set = _validate_eval_set_Xy(eval_set=eval_set, eval_X=eval_X, eval_y=eval_y)
+ranker seed=17 (18 features): 261 iterations
+  V2/rank seed=17: 14s
+/Users/sahilashar/Documents/Repos/lol-meta-tracker/.venv/lib/python3.12/site-packages/lightgbm/sklearn.py:1106: LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead.
+  eval_set = _validate_eval_set_Xy(eval_set=eval_set, eval_X=eval_X, eval_y=eval_y)
+ranker seed=42 (18 features): 147 iterations
+  V2/rank seed=42: 10s
+/Users/sahilashar/Documents/Repos/lol-meta-tracker/.venv/lib/python3.12/site-packages/lightgbm/sklearn.py:1106: LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead.
+  eval_set = _validate_eval_set_Xy(eval_set=eval_set, eval_X=eval_X, eval_y=eval_y)
+ranker seed=7 (18 features): 95 iterations
+  V2/rank seed=7: 7s
+/Users/sahilashar/Documents/Repos/lol-meta-tracker/.venv/lib/python3.12/site-packages/lightgbm/sklearn.py:1106: LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead.
+  eval_set = _validate_eval_set_Xy(eval_set=eval_set, eval_X=eval_X, eval_y=eval_y)
+ranker seed=23 (18 features): 146 iterations
+  V2/rank seed=23: 10s
+  V2: ens {'n': 1080, 'top1': 0.1185, 'top3': 0.325, 'top5': 0.4491} | clf {'n': 1080, 'top1': 0.1019, 'top3': 0.3111, 'top5': 0.4343} | rank {'n': 1080, 'top1': 0.1287, 'top3': 0.3157, 'top5': 0.45}
+training V3 (20 features, data 48fae70f9cfb94d3)...
+clf seed=16 (20 features): 189 iterations
+  V3/clf seed=16: 16s
+clf seed=17 (20 features): 169 iterations
+  V3/clf seed=17: 15s
+clf seed=42 (20 features): 241 iterations
+  V3/clf seed=42: 20s
+clf seed=7 (20 features): 127 iterations
+  V3/clf seed=7: 12s
+clf seed=23 (20 features): 182 iterations
+  V3/clf seed=23: 15s
+/Users/sahilashar/Documents/Repos/lol-meta-tracker/.venv/lib/python3.12/site-packages/lightgbm/sklearn.py:1106: LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead.
+  eval_set = _validate_eval_set_Xy(eval_set=eval_set, eval_X=eval_X, eval_y=eval_y)
+ranker seed=16 (20 features): 132 iterations
+  V3/rank seed=16: 9s
+/Users/sahilashar/Documents/Repos/lol-meta-tracker/.venv/lib/python3.12/site-packages/lightgbm/sklearn.py:1106: LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead.
+  eval_set = _validate_eval_set_Xy(eval_set=eval_set, eval_X=eval_X, eval_y=eval_y)
+ranker seed=17 (20 features): 159 iterations
+  V3/rank seed=17: 10s
+/Users/sahilashar/Documents/Repos/lol-meta-tracker/.venv/lib/python3.12/site-packages/lightgbm/sklearn.py:1106: LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead.
+  eval_set = _validate_eval_set_Xy(eval_set=eval_set, eval_X=eval_X, eval_y=eval_y)
+ranker seed=42 (20 features): 141 iterations
+  V3/rank seed=42: 10s
+/Users/sahilashar/Documents/Repos/lol-meta-tracker/.venv/lib/python3.12/site-packages/lightgbm/sklearn.py:1106: LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead.
+  eval_set = _validate_eval_set_Xy(eval_set=eval_set, eval_X=eval_X, eval_y=eval_y)
+ranker seed=7 (20 features): 123 iterations
+  V3/rank seed=7: 9s
+/Users/sahilashar/Documents/Repos/lol-meta-tracker/.venv/lib/python3.12/site-packages/lightgbm/sklearn.py:1106: LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead.
+  eval_set = _validate_eval_set_Xy(eval_set=eval_set, eval_X=eval_X, eval_y=eval_y)
+ranker seed=23 (20 features): 59 iterations
+  V3/rank seed=23: 6s
+  V3: ens {'n': 1080, 'top1': 0.1343, 'top3': 0.3324, 'top5': 0.4648} | clf {'n': 1080, 'top1': 0.1148, 'top3': 0.312, 'top5': 0.4361} | rank {'n': 1080, 'top1': 0.137, 'top3': 0.325, 'top5': 0.462}
+gate V1 vs baseline: top3 {'mean_delta': 0.000926, 'ci95': [-0.017593, 0.019444], 'p_variant_better': 0.5205} -> FAIL
+gate V2 vs baseline: top3 {'mean_delta': -0.002778, 'ci95': [-0.022222, 0.016667], 'p_variant_better': 0.3746} -> FAIL
+gate V3 vs baseline: top3 {'mean_delta': 0.00463, 'ci95': [-0.014815, 0.023148], 'p_variant_better': 0.6665} -> FAIL
+syn increment (V3 vs V1): {'mean_delta': 0.003704, 'ci95': [-0.009259, 0.017593], 'p_variant_better': 0.6831}
+wrote data/processed/rung2_gbm_floor20260501.json (357s total)
+
+==============================================================
+ARM 2026-03-03
+==============================================================
+--> 1/3 lift tables
+wrote data/processed/soloq_lift_tables_floor20260303.json: 359886 games in [2026-03-03, 2026-07-01T00:00:00Z) (earliest 2026-03-03), 173 champs, 854 champ@role combos, 31039 counter pairs, 43557 duo pairs (drops: {'bad_roles': 22})
+  patch mix: {'16.13': 100129, '16.12': 155625, '16.11': 39360, '16.7': 6662, '16.5': 3754, '16.10': 25046, '16.8': 8285, '16.6': 5459, '16.4': 177, '16.9': 15389}
+--> 2/3 decision dataset
+  fearless[EWC 2026]: True (169 same-series game pairs, 0 champion overlaps)
+  fearless[FST 2026]: True (59 same-series game pairs, 0 champion overlaps)
+  fearless[LCK 2026]: True (321 same-series game pairs, 0 champion overlaps)
+  fearless[LCS 2026]: True (136 same-series game pairs, 0 champion overlaps)
+  fearless[LEC 2026]: True (173 same-series game pairs, 0 champion overlaps)
+  fearless[LPL 2026]: True (455 same-series game pairs, 0 champion overlaps)
+  fearless[MSI 2026]: True (97 same-series game pairs, 0 champion overlaps)
+champions: 150, fearless league-years: [('EWC', 2026), ('FST', 2026), ('LCK', 2026), ('LCS', 2026), ('LEC', 2026), ('LPL', 2026), ('MSI', 2026)]
+soloq bridge: 150/150 champs matched (misses: [])
+soloq floor: 2026-03-03 (table earliest game 2026-03-03, 359886 games)
+games: 1551, decisions: 31016, rows: 4076256, skipped games: 1
+  2026: 1551 games, 31016 decisions
+sequence table: 31016 decisions (0 outside the candidate vocab)
+--> 3/3 rung-2 GBM gate
+cutoff 2026-07-15 09:41:28; train 1447g/28936d, val 54g/1080d
+bridge coverage: 150/150 (misses: [])
+training baseline (17 features, data 8186e80ce3697532)...
+  baseline: ens {'n': 1080, 'top1': 0.1324, 'top3': 0.3278, 'top5': 0.4389} | clf {'n': 1080, 'top1': 0.1259, 'top3': 0.3278, 'top5': 0.4472} | rank {'n': 1080, 'top1': 0.1389, 'top3': 0.3278, 'top5': 0.4333}
+training V1 (19 features, data 6ece91a676a4f16e)...
+clf seed=16 (19 features): 156 iterations
+  V1/clf seed=16: 17s
+clf seed=17 (19 features): 154 iterations
+  V1/clf seed=17: 15s
+clf seed=42 (19 features): 134 iterations
+  V1/clf seed=42: 13s
+clf seed=7 (19 features): 136 iterations
+  V1/clf seed=7: 12s
+clf seed=23 (19 features): 188 iterations
+  V1/clf seed=23: 15s
+/Users/sahilashar/Documents/Repos/lol-meta-tracker/.venv/lib/python3.12/site-packages/lightgbm/sklearn.py:1106: LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead.
+  eval_set = _validate_eval_set_Xy(eval_set=eval_set, eval_X=eval_X, eval_y=eval_y)
+ranker seed=16 (19 features): 203 iterations
+  V1/rank seed=16: 12s
+/Users/sahilashar/Documents/Repos/lol-meta-tracker/.venv/lib/python3.12/site-packages/lightgbm/sklearn.py:1106: LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead.
+  eval_set = _validate_eval_set_Xy(eval_set=eval_set, eval_X=eval_X, eval_y=eval_y)
+ranker seed=17 (19 features): 87 iterations
+  V1/rank seed=17: 7s
+/Users/sahilashar/Documents/Repos/lol-meta-tracker/.venv/lib/python3.12/site-packages/lightgbm/sklearn.py:1106: LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead.
+  eval_set = _validate_eval_set_Xy(eval_set=eval_set, eval_X=eval_X, eval_y=eval_y)
+ranker seed=42 (19 features): 172 iterations
+  V1/rank seed=42: 11s
+/Users/sahilashar/Documents/Repos/lol-meta-tracker/.venv/lib/python3.12/site-packages/lightgbm/sklearn.py:1106: LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead.
+  eval_set = _validate_eval_set_Xy(eval_set=eval_set, eval_X=eval_X, eval_y=eval_y)
+ranker seed=7 (19 features): 118 iterations
+  V1/rank seed=7: 9s
+/Users/sahilashar/Documents/Repos/lol-meta-tracker/.venv/lib/python3.12/site-packages/lightgbm/sklearn.py:1106: LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead.
+  eval_set = _validate_eval_set_Xy(eval_set=eval_set, eval_X=eval_X, eval_y=eval_y)
+ranker seed=23 (19 features): 149 iterations
+  V1/rank seed=23: 10s
+  V1: ens {'n': 1080, 'top1': 0.1269, 'top3': 0.3083, 'top5': 0.4611} | clf {'n': 1080, 'top1': 0.0926, 'top3': 0.2907, 'top5': 0.4139} | rank {'n': 1080, 'top1': 0.1343, 'top3': 0.3111, 'top5': 0.4639}
+training V2 (18 features, data 4e2962c2c51675b9)...
+clf seed=16 (18 features): 171 iterations
+  V2/clf seed=16: 14s
+clf seed=17 (18 features): 164 iterations
+  V2/clf seed=17: 14s
+clf seed=42 (18 features): 127 iterations
+  V2/clf seed=42: 13s
+clf seed=7 (18 features): 167 iterations
+  V2/clf seed=7: 16s
+clf seed=23 (18 features): 199 iterations
+  V2/clf seed=23: 17s
+/Users/sahilashar/Documents/Repos/lol-meta-tracker/.venv/lib/python3.12/site-packages/lightgbm/sklearn.py:1106: LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead.
+  eval_set = _validate_eval_set_Xy(eval_set=eval_set, eval_X=eval_X, eval_y=eval_y)
+ranker seed=16 (18 features): 148 iterations
+  V2/rank seed=16: 10s
+/Users/sahilashar/Documents/Repos/lol-meta-tracker/.venv/lib/python3.12/site-packages/lightgbm/sklearn.py:1106: LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead.
+  eval_set = _validate_eval_set_Xy(eval_set=eval_set, eval_X=eval_X, eval_y=eval_y)
+ranker seed=17 (18 features): 164 iterations
+  V2/rank seed=17: 11s
+/Users/sahilashar/Documents/Repos/lol-meta-tracker/.venv/lib/python3.12/site-packages/lightgbm/sklearn.py:1106: LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead.
+  eval_set = _validate_eval_set_Xy(eval_set=eval_set, eval_X=eval_X, eval_y=eval_y)
+ranker seed=42 (18 features): 95 iterations
+  V2/rank seed=42: 8s
+/Users/sahilashar/Documents/Repos/lol-meta-tracker/.venv/lib/python3.12/site-packages/lightgbm/sklearn.py:1106: LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead.
+  eval_set = _validate_eval_set_Xy(eval_set=eval_set, eval_X=eval_X, eval_y=eval_y)
+ranker seed=7 (18 features): 115 iterations
+  V2/rank seed=7: 9s
+/Users/sahilashar/Documents/Repos/lol-meta-tracker/.venv/lib/python3.12/site-packages/lightgbm/sklearn.py:1106: LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead.
+  eval_set = _validate_eval_set_Xy(eval_set=eval_set, eval_X=eval_X, eval_y=eval_y)
+ranker seed=23 (18 features): 126 iterations
+  V2/rank seed=23: 9s
+  V2: ens {'n': 1080, 'top1': 0.1287, 'top3': 0.3167, 'top5': 0.4565} | clf {'n': 1080, 'top1': 0.1167, 'top3': 0.3111, 'top5': 0.4444} | rank {'n': 1080, 'top1': 0.1343, 'top3': 0.3287, 'top5': 0.4556}
+training V3 (20 features, data 8d196f341aa52b0c)...
+clf seed=16 (20 features): 208 iterations
+  V3/clf seed=16: 19s
+clf seed=17 (20 features): 180 iterations
+  V3/clf seed=17: 17s
+clf seed=42 (20 features): 202 iterations
+  V3/clf seed=42: 20s
+clf seed=7 (20 features): 180 iterations
+  V3/clf seed=7: 18s
+clf seed=23 (20 features): 179 iterations
+  V3/clf seed=23: 18s
+/Users/sahilashar/Documents/Repos/lol-meta-tracker/.venv/lib/python3.12/site-packages/lightgbm/sklearn.py:1106: LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead.
+  eval_set = _validate_eval_set_Xy(eval_set=eval_set, eval_X=eval_X, eval_y=eval_y)
+ranker seed=16 (20 features): 152 iterations
+  V3/rank seed=16: 11s
+/Users/sahilashar/Documents/Repos/lol-meta-tracker/.venv/lib/python3.12/site-packages/lightgbm/sklearn.py:1106: LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead.
+  eval_set = _validate_eval_set_Xy(eval_set=eval_set, eval_X=eval_X, eval_y=eval_y)
+ranker seed=17 (20 features): 142 iterations
+  V3/rank seed=17: 12s
+/Users/sahilashar/Documents/Repos/lol-meta-tracker/.venv/lib/python3.12/site-packages/lightgbm/sklearn.py:1106: LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead.
+  eval_set = _validate_eval_set_Xy(eval_set=eval_set, eval_X=eval_X, eval_y=eval_y)
+ranker seed=42 (20 features): 148 iterations
+  V3/rank seed=42: 12s
+/Users/sahilashar/Documents/Repos/lol-meta-tracker/.venv/lib/python3.12/site-packages/lightgbm/sklearn.py:1106: LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead.
+  eval_set = _validate_eval_set_Xy(eval_set=eval_set, eval_X=eval_X, eval_y=eval_y)
+ranker seed=7 (20 features): 104 iterations
+  V3/rank seed=7: 9s
+/Users/sahilashar/Documents/Repos/lol-meta-tracker/.venv/lib/python3.12/site-packages/lightgbm/sklearn.py:1106: LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead.
+  eval_set = _validate_eval_set_Xy(eval_set=eval_set, eval_X=eval_X, eval_y=eval_y)
+ranker seed=23 (20 features): 134 iterations
+  V3/rank seed=23: 10s
+  V3: ens {'n': 1080, 'top1': 0.1352, 'top3': 0.3278, 'top5': 0.463} | clf {'n': 1080, 'top1': 0.1204, 'top3': 0.3231, 'top5': 0.4491} | rank {'n': 1080, 'top1': 0.1444, 'top3': 0.3435, 'top5': 0.4593}
+gate V1 vs baseline: top3 {'mean_delta': -0.019444, 'ci95': [-0.037037, -0.000926], 'p_variant_better': 0.0154} -> FAIL
+gate V2 vs baseline: top3 {'mean_delta': -0.011111, 'ci95': [-0.028704, 0.006481], 'p_variant_better': 0.0977} -> FAIL
+gate V3 vs baseline: top3 {'mean_delta': 0.0, 'ci95': [-0.018519, 0.018519], 'p_variant_better': 0.4739} -> FAIL
+syn increment (V3 vs V1): {'mean_delta': 0.019444, 'ci95': [0.006481, 0.033333], 'p_variant_better': 0.9978}
+wrote data/processed/rung2_gbm_floor20260303.json (392s total)
+
+==============================================================
+SWEEP COMPLETE — arms written to data/processed/rung2_gbm_floor*.json
+==============================================================
+floor           games  patches  base t3  best t3   arm   gate
+2026-03-03     359886       10   0.3278   0.3278    V3   null
+2026-05-01     334093        5   0.3278   0.3324    V3   null
+2026-06-08     265270        3   0.3278   0.3380    V3   null
+
+More games is not automatically better — compare across floors, and remember the 1,080-decision val set cannot resolve a sub-1pt top-3 effect. State the power limit whatever the result.

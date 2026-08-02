@@ -8,93 +8,93 @@
     "per_variant": {
       "V1": {
         "top1": {
-          "mean_delta": -0.00463,
-          "ci95": [
-            -0.019444,
-            0.010185
-          ],
-          "p_variant_better": 0.2442
-        },
-        "top3": {
-          "mean_delta": -0.006481,
+          "mean_delta": -0.008333,
           "ci95": [
             -0.025,
-            0.012037
+            0.007407
           ],
-          "p_variant_better": 0.2401
+          "p_variant_better": 0.149
+        },
+        "top3": {
+          "mean_delta": 0.0,
+          "ci95": [
+            -0.017593,
+            0.017593
+          ],
+          "p_variant_better": 0.487
         },
         "top5": {
-          "mean_delta": 0.014815,
+          "mean_delta": 0.032407,
           "ci95": [
-            -0.00463,
-            0.034259
+            0.012963,
+            0.051852
           ],
-          "p_variant_better": 0.9313
+          "p_variant_better": 0.9994
         },
         "pass": false
       },
       "V2": {
         "top1": {
-          "mean_delta": 0.0,
+          "mean_delta": -0.009259,
           "ci95": [
-            -0.014838,
-            0.015741
+            -0.025,
+            0.006481
           ],
-          "p_variant_better": 0.4766
+          "p_variant_better": 0.1081
         },
         "top3": {
-          "mean_delta": -0.003704,
+          "mean_delta": 0.0,
           "ci95": [
-            -0.023148,
-            0.015741
+            -0.018519,
+            0.018519
           ],
-          "p_variant_better": 0.3336
+          "p_variant_better": 0.4744
         },
         "top5": {
-          "mean_delta": 0.015741,
+          "mean_delta": 0.017593,
           "ci95": [
-            -0.003704,
-            0.035185
+            -0.000926,
+            0.036111
           ],
-          "p_variant_better": 0.9362
+          "p_variant_better": 0.9654
         },
         "pass": false
       },
       "V3": {
         "top1": {
-          "mean_delta": 0.006481,
+          "mean_delta": -0.006481,
           "ci95": [
-            -0.009259,
-            0.022222
+            -0.023148,
+            0.010185
           ],
-          "p_variant_better": 0.7768
+          "p_variant_better": 0.2073
         },
         "top3": {
-          "mean_delta": 0.001852,
+          "mean_delta": 0.008333,
           "ci95": [
-            -0.016667,
-            0.02037
+            -0.009259,
+            0.025
           ],
-          "p_variant_better": 0.5471
+          "p_variant_better": 0.8115
         },
         "top5": {
-          "mean_delta": 0.016667,
+          "mean_delta": 0.028704,
           "ci95": [
-            -0.001852,
-            0.035185
+            0.010185,
+            0.047222
           ],
-          "p_variant_better": 0.9533
+          "p_variant_better": 0.9984
         },
         "pass": false
       },
       "syn_increment_V3_vs_V1": {
         "top1": {
-          "mean_delta": 0.011111,
+          "mean_delta": 0.001852,
           "ci95": [
-            0.002778,
-            0.02037
+            -0.008333,
+            0.012037
           ],
-          "p_variant_better": 0.9946
+          "p_variant_better": 0.6082
         },
         "top3": {
           "mean_delta": 0.008333,
@@ -102,15 +102,15 @@
             -0.003704,
             0.02037
           ],
-          "p_variant_better": 0.8933
+          "p_variant_better": 0.8953
         },
         "top5": {
-          "mean_delta": 0.001852,
+          "mean_delta": -0.003704,
           "ci95": [
-            -0.009259,
-            0.012963
+            -0.015741,
+            0.008333
           ],
-          "p_variant_better": 0.5933
+          "p_variant_better": 0.2554
         }
       }
     }
@@ -179,21 +179,21 @@
       ],
       "ensemble": {
         "n": 1080,
-        "top1": 0.1278,
-        "top3": 0.3213,
-        "top5": 0.4537
+        "top1": 0.1241,
+        "top3": 0.3278,
+        "top5": 0.4713
       },
       "clf_family": {
         "n": 1080,
-        "top1": 0.125,
-        "top3": 0.3148,
-        "top5": 0.4546
+        "top1": 0.112,
+        "top3": 0.3083,
+        "top5": 0.4324
       },
       "ranker_family": {
         "n": 1080,
-        "top1": 0.1287,
-        "top3": 0.3148,
-        "top5": 0.4491
+        "top1": 0.1296,
+        "top3": 0.3269,
+        "top5": 0.4546
       }
     },
     "V2": {
@@ -219,21 +219,21 @@
       ],
       "ensemble": {
         "n": 1080,
-        "top1": 0.1324,
-        "top3": 0.3241,
-        "top5": 0.4546
+        "top1": 0.1231,
+        "top3": 0.3278,
+        "top5": 0.4565
       },
       "clf_family": {
         "n": 1080,
-        "top1": 0.1204,
-        "top3": 0.312,
-        "top5": 0.4565
+        "top1": 0.112,
+        "top3": 0.3093,
+        "top5": 0.437
       },
       "ranker_family": {
         "n": 1080,
-        "top1": 0.1278,
-        "top3": 0.3185,
-        "top5": 0.45
+        "top1": 0.1269,
+        "top3": 0.3167,
+        "top5": 0.4583
       }
     },
     "V3": {
@@ -261,21 +261,21 @@
       ],
       "ensemble": {
         "n": 1080,
-        "top1": 0.1389,
-        "top3": 0.3296,
-        "top5": 0.4556
+        "top1": 0.1259,
+        "top3": 0.3361,
+        "top5": 0.4676
       },
       "clf_family": {
         "n": 1080,
-        "top1": 0.1296,
-        "top3": 0.3167,
-        "top5": 0.4565
+        "top1": 0.1139,
+        "top3": 0.3213,
+        "top5": 0.4389
       },
       "ranker_family": {
         "n": 1080,
-        "top1": 0.138,
-        "top3": 0.3222,
-        "top5": 0.4444
+        "top1": 0.1185,
+        "top3": 0.3352,
+        "top5": 0.4759
       }
     }
   },
@@ -305,16 +305,41 @@
     "frozen_ewc_test": "never loaded into any scorer",
     "backup_check": {
       "pre_cutoff_rows": 3941356,
-      "columns_checked": 26,
-      "byte_identical": true
+      "columns_checked": 24,
+      "byte_identical": true,
+      "soloq_columns_exempt": [
+        "soloq_role_wr",
+        "soloq_ctr_score",
+        "soloq_syn_score"
+      ],
+      "soloq_column_shift": {
+        "soloq_role_wr": {
+          "corr_with_backup": 0.9321,
+          "mean_abs_backup": 0.499847,
+          "mean_abs_rebuilt": 0.499866,
+          "rows_changed": 0.0791
+        },
+        "soloq_ctr_score": {
+          "corr_with_backup": 0.7978,
+          "mean_abs_backup": 0.000329,
+          "mean_abs_rebuilt": 0.000352,
+          "rows_changed": 0.0473
+        },
+        "soloq_syn_score": {
+          "corr_with_backup": 0.7844,
+          "mean_abs_backup": 0.00042,
+          "mean_abs_rebuilt": 0.000449,
+          "rows_changed": 0.0428
+        }
+      }
     },
     "soloq_table": {
       "cutoff_iso": "2026-07-01T00:00:00Z",
-      "clean_games": 124731,
-      "blue_win_rate": 0.4754,
+      "clean_games": 224064,
+      "blue_win_rate": 0.4777,
       "n_champs": 173,
-      "n_counter_pairs": 23717,
-      "n_syn_pairs": 33546
+      "n_counter_pairs": 27648,
+      "n_syn_pairs": 39023
     },
     "bridge_coverage": {
       "pro_champs": 150,
@@ -323,6 +348,6 @@
     },
     "rung1c": "PASS \u2014 soloq_syn_score added as V3 per the spec's PASS branch (docs/2026-07-25-synergy-rung1c-results.md); no LOO needed, pro games are disjoint from the soloq table sample",
     "soloq_feature_construction": "soloq_role_wr = E_r[soloq_wr(cand@r)] under P(r) \u221d cand role-shares x ref-team open-role probs (normalized); soloq_ctr_score = sum over other side's locked picks of E[ctr lift] under P(cand@r) x P(pick@r), pick roles marginalized by permutation enumeration; soloq_syn_score = sum over the REFERENCE team's locked picks of E[duo lift] over the four priority vectors, candidate in either slot, same probability weighting; decisions before 2026-06-08 neutral (0.5 / 0.0 / 0.0)",
-    "runtime_seconds": 128
+    "runtime_seconds": 547
   }
 }

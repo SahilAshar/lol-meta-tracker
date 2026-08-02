@@ -1,0 +1,1376 @@
+{
+  "analysis": "counter_swing",
+  "question": "how large is the draft-composition win-probability swing in soloq, in units a reader can feel?",
+  "headline": {
+    "counter_p90_vs_p10_raw_wr_points": 8.713,
+    "counter_p99_vs_p1_raw_wr_points": 13.183,
+    "counter_p90_vs_p10_role_conditioned_wr_points": 5.711,
+    "combined_draft_p90_vs_p10_raw_wr_points": 15.551,
+    "role_strength_p90_vs_p10_raw_wr_points": 14.07,
+    "synergy_p90_vs_p10_raw_wr_points": 5.928,
+    "side_selection_anchor_wr_points": 4.85
+  },
+  "raw_win_rate_bands": {
+    "CTR": {
+      "p90_vs_p10": {
+        "low_pct": 10,
+        "high_pct": 90,
+        "low_cut": -0.049935,
+        "high_cut": 0.045349,
+        "low_band_mean": -0.068438,
+        "high_band_mean": 0.063543,
+        "n_low": 19569,
+        "n_high": 19569,
+        "wr_low": 0.43094,
+        "wr_high": 0.51806,
+        "gap_wr_points": 8.713,
+        "gap_se_points": 0.503,
+        "gap_ci95_points": [
+          7.727,
+          9.698
+        ]
+      },
+      "p99_vs_p1": {
+        "low_pct": 1,
+        "high_pct": 99,
+        "low_cut": -0.090704,
+        "high_cut": 0.085497,
+        "low_band_mean": -0.104977,
+        "high_band_mean": 0.098948,
+        "n_low": 1957,
+        "n_high": 1957,
+        "wr_low": 0.40061,
+        "wr_high": 0.53245,
+        "gap_wr_points": 13.183,
+        "gap_se_points": 1.581,
+        "gap_ci95_points": [
+          10.085,
+          16.282
+        ]
+      },
+      "p75_vs_p25": {
+        "low_pct": 25,
+        "high_pct": 75,
+        "low_cut": -0.027077,
+        "high_cut": 0.022725,
+        "low_band_mean": -0.049792,
+        "high_band_mean": 0.04517,
+        "n_low": 48921,
+        "n_high": 48922,
+        "wr_low": 0.44464,
+        "wr_high": 0.50664,
+        "gap_wr_points": 6.201,
+        "gap_se_points": 0.319,
+        "gap_ci95_points": [
+          5.576,
+          6.825
+        ]
+      }
+    },
+    "SYN": {
+      "p90_vs_p10": {
+        "low_pct": 10,
+        "high_pct": 90,
+        "low_cut": -0.060958,
+        "high_cut": 0.060267,
+        "low_band_mean": -0.084492,
+        "high_band_mean": 0.083677,
+        "n_low": 19569,
+        "n_high": 19569,
+        "wr_low": 0.44545,
+        "wr_high": 0.50473,
+        "gap_wr_points": 5.928,
+        "gap_se_points": 0.504,
+        "gap_ci95_points": [
+          4.94,
+          6.916
+        ]
+      },
+      "p99_vs_p1": {
+        "low_pct": 1,
+        "high_pct": 99,
+        "low_cut": -0.113046,
+        "high_cut": 0.111882,
+        "low_band_mean": -0.130309,
+        "high_band_mean": 0.129804,
+        "n_low": 1957,
+        "n_high": 1957,
+        "wr_low": 0.42616,
+        "wr_high": 0.51763,
+        "gap_wr_points": 9.147,
+        "gap_se_points": 1.589,
+        "gap_ci95_points": [
+          6.032,
+          12.261
+        ]
+      },
+      "p75_vs_p25": {
+        "low_pct": 25,
+        "high_pct": 75,
+        "low_cut": -0.032025,
+        "high_cut": 0.031378,
+        "low_band_mean": -0.060838,
+        "high_band_mean": 0.060067,
+        "n_low": 48922,
+        "n_high": 48921,
+        "wr_low": 0.45546,
+        "wr_high": 0.49862,
+        "gap_wr_points": 4.316,
+        "gap_se_points": 0.319,
+        "gap_ci95_points": [
+          3.691,
+          4.941
+        ]
+      }
+    },
+    "ROLE": {
+      "p90_vs_p10": {
+        "low_pct": 10,
+        "high_pct": 90,
+        "low_cut": -0.07666,
+        "high_cut": 0.072981,
+        "low_band_mean": -0.105469,
+        "high_band_mean": 0.10148,
+        "n_low": 19569,
+        "n_high": 19570,
+        "wr_low": 0.4039,
+        "wr_high": 0.54461,
+        "gap_wr_points": 14.07,
+        "gap_se_points": 0.5,
+        "gap_ci95_points": [
+          13.091,
+          15.05
+        ]
+      },
+      "p99_vs_p1": {
+        "low_pct": 1,
+        "high_pct": 99,
+        "low_cut": -0.141199,
+        "high_cut": 0.136175,
+        "low_band_mean": -0.161827,
+        "high_band_mean": 0.158515,
+        "n_low": 1957,
+        "n_high": 1957,
+        "wr_low": 0.37353,
+        "wr_high": 0.5861,
+        "gap_wr_points": 21.257,
+        "gap_se_points": 1.561,
+        "gap_ci95_points": [
+          18.198,
+          24.316
+        ]
+      },
+      "p75_vs_p25": {
+        "low_pct": 25,
+        "high_pct": 75,
+        "low_cut": -0.040752,
+        "high_cut": 0.037151,
+        "low_band_mean": -0.076348,
+        "high_band_mean": 0.072551,
+        "n_low": 48921,
+        "n_high": 48921,
+        "wr_low": 0.42389,
+        "wr_high": 0.52654,
+        "gap_wr_points": 10.266,
+        "gap_se_points": 0.318,
+        "gap_ci95_points": [
+          9.643,
+          10.888
+        ]
+      }
+    }
+  },
+  "raw_vs_fit_matched": {
+    "CTR": {
+      "p90_vs_p10": {
+        "raw_counted_gap_points": 8.713,
+        "fit_at_same_scores": {
+          "at_low_score": -0.068438,
+          "at_high_score": 0.063543,
+          "wr_low": 0.43085,
+          "wr_high": 0.52013,
+          "gap_wr_points": 8.929
+        }
+      },
+      "p99_vs_p1": {
+        "raw_counted_gap_points": 13.183,
+        "fit_at_same_scores": {
+          "at_low_score": -0.104977,
+          "at_high_score": 0.098948,
+          "wr_low": 0.40666,
+          "wr_high": 0.54411,
+          "gap_wr_points": 13.744
+        }
+      },
+      "p75_vs_p25": {
+        "raw_counted_gap_points": 6.201,
+        "fit_at_same_scores": {
+          "at_low_score": -0.049792,
+          "at_high_score": 0.04517,
+          "wr_low": 0.44332,
+          "wr_high": 0.50765,
+          "gap_wr_points": 6.433
+        }
+      }
+    },
+    "SYN": {
+      "p90_vs_p10": {
+        "raw_counted_gap_points": 5.928,
+        "fit_at_same_scores": {
+          "at_low_score": -0.084492,
+          "at_high_score": 0.083677,
+          "wr_low": 0.44577,
+          "wr_high": 0.50542,
+          "gap_wr_points": 5.965
+        }
+      },
+      "p99_vs_p1": {
+        "raw_counted_gap_points": 9.147,
+        "fit_at_same_scores": {
+          "at_low_score": -0.130309,
+          "at_high_score": 0.129804,
+          "wr_low": 0.42971,
+          "wr_high": 0.52182,
+          "gap_wr_points": 9.211
+        }
+      },
+      "p75_vs_p25": {
+        "raw_counted_gap_points": 4.316,
+        "fit_at_same_scores": {
+          "at_low_score": -0.060838,
+          "at_high_score": 0.060067,
+          "wr_low": 0.4541,
+          "wr_high": 0.49701,
+          "gap_wr_points": 4.291
+        }
+      }
+    },
+    "ROLE": {
+      "p90_vs_p10": {
+        "raw_counted_gap_points": 14.07,
+        "fit_at_same_scores": {
+          "at_low_score": -0.105469,
+          "at_high_score": 0.10148,
+          "wr_low": 0.40239,
+          "wr_high": 0.54911,
+          "gap_wr_points": 14.672
+        }
+      },
+      "p99_vs_p1": {
+        "raw_counted_gap_points": 21.257,
+        "fit_at_same_scores": {
+          "at_low_score": -0.161827,
+          "at_high_score": 0.158515,
+          "wr_low": 0.36427,
+          "wr_high": 0.58914,
+          "gap_wr_points": 22.487
+        }
+      },
+      "p75_vs_p25": {
+        "raw_counted_gap_points": 10.266,
+        "fit_at_same_scores": {
+          "at_low_score": -0.076348,
+          "at_high_score": 0.072551,
+          "wr_low": 0.4226,
+          "wr_high": 0.52853,
+          "gap_wr_points": 10.593
+        }
+      }
+    }
+  },
+  "logistic_implied_single_scalar": {
+    "CTR": {
+      "p90_vs_p10": {
+        "low_pct": 10,
+        "high_pct": 90,
+        "coef_per_sd": 0.10236,
+        "wr_low": 0.44323,
+        "wr_high": 0.50777,
+        "gap_wr_points": 6.455,
+        "conditional_on": "nothing (single-scalar fit)"
+      },
+      "p99_vs_p1": {
+        "low_pct": 1,
+        "high_pct": 99,
+        "coef_per_sd": 0.10236,
+        "wr_low": 0.41606,
+        "wr_high": 0.53502,
+        "gap_wr_points": 11.895,
+        "conditional_on": "nothing (single-scalar fit)"
+      },
+      "p75_vs_p25": {
+        "low_pct": 25,
+        "high_pct": 75,
+        "coef_per_sd": 0.10236,
+        "wr_low": 0.45862,
+        "wr_high": 0.49239,
+        "gap_wr_points": 3.377,
+        "conditional_on": "nothing (single-scalar fit)"
+      }
+    },
+    "SYN": {
+      "p90_vs_p10": {
+        "low_pct": 10,
+        "high_pct": 90,
+        "coef_per_sd": 0.06819,
+        "wr_low": 0.45406,
+        "wr_high": 0.49708,
+        "gap_wr_points": 4.302,
+        "conditional_on": "nothing (single-scalar fit)"
+      },
+      "p99_vs_p1": {
+        "low_pct": 1,
+        "high_pct": 99,
+        "coef_per_sd": 0.06819,
+        "wr_low": 0.43575,
+        "wr_high": 0.51545,
+        "gap_wr_points": 7.971,
+        "conditional_on": "nothing (single-scalar fit)"
+      },
+      "p75_vs_p25": {
+        "low_pct": 25,
+        "high_pct": 75,
+        "coef_per_sd": 0.06819,
+        "wr_low": 0.46429,
+        "wr_high": 0.4868,
+        "gap_wr_points": 2.251,
+        "conditional_on": "nothing (single-scalar fit)"
+      }
+    },
+    "ROLE": {
+      "p90_vs_p10": {
+        "low_pct": 10,
+        "high_pct": 90,
+        "coef_per_sd": 0.16902,
+        "wr_low": 0.42238,
+        "wr_high": 0.52884,
+        "gap_wr_points": 10.646,
+        "conditional_on": "nothing (single-scalar fit)"
+      },
+      "p99_vs_p1": {
+        "low_pct": 1,
+        "high_pct": 99,
+        "coef_per_sd": 0.16902,
+        "wr_low": 0.37805,
+        "wr_high": 0.57357,
+        "gap_wr_points": 19.551,
+        "conditional_on": "nothing (single-scalar fit)"
+      },
+      "p75_vs_p25": {
+        "low_pct": 25,
+        "high_pct": 75,
+        "coef_per_sd": 0.16902,
+        "wr_low": 0.44764,
+        "wr_high": 0.50322,
+        "gap_wr_points": 5.557,
+        "conditional_on": "nothing (single-scalar fit)"
+      }
+    }
+  },
+  "logistic_implied_joint": {
+    "CTR": {
+      "p90_vs_p10": {
+        "low_pct": 10,
+        "high_pct": 90,
+        "coef_per_sd": 0.06536,
+        "wr_low": 0.4547,
+        "wr_high": 0.49594,
+        "gap_wr_points": 4.125,
+        "conditional_on": "the other scalars held at their sample means"
+      },
+      "p99_vs_p1": {
+        "low_pct": 1,
+        "high_pct": 99,
+        "coef_per_sd": 0.06536,
+        "wr_low": 0.4372,
+        "wr_high": 0.51337,
+        "gap_wr_points": 7.617,
+        "conditional_on": "the other scalars held at their sample means"
+      },
+      "p75_vs_p25": {
+        "low_pct": 25,
+        "high_pct": 75,
+        "coef_per_sd": 0.06536,
+        "wr_low": 0.46456,
+        "wr_high": 0.48612,
+        "gap_wr_points": 2.157,
+        "conditional_on": "the other scalars held at their sample means"
+      },
+      "at_raw_band_means": {
+        "p90_vs_p10": {
+          "at_low_score": -0.068438,
+          "at_high_score": 0.063543,
+          "wr_low": 0.44674,
+          "wr_high": 0.50384,
+          "gap_wr_points": 5.711
+        },
+        "p99_vs_p1": {
+          "at_low_score": -0.104977,
+          "at_high_score": 0.098948,
+          "wr_low": 0.43111,
+          "wr_high": 0.51921,
+          "gap_wr_points": 8.81
+        },
+        "p75_vs_p25": {
+          "at_low_score": -0.049792,
+          "at_high_score": 0.04517,
+          "wr_low": 0.45476,
+          "wr_high": 0.49587,
+          "gap_wr_points": 4.111
+        }
+      }
+    },
+    "SYN": {
+      "p90_vs_p10": {
+        "low_pct": 10,
+        "high_pct": 90,
+        "coef_per_sd": 0.01271,
+        "wr_low": 0.47131,
+        "wr_high": 0.47934,
+        "gap_wr_points": 0.803,
+        "conditional_on": "the other scalars held at their sample means"
+      },
+      "p99_vs_p1": {
+        "low_pct": 1,
+        "high_pct": 99,
+        "coef_per_sd": 0.01271,
+        "wr_low": 0.46787,
+        "wr_high": 0.48276,
+        "gap_wr_points": 1.489,
+        "conditional_on": "the other scalars held at their sample means"
+      },
+      "p75_vs_p25": {
+        "low_pct": 25,
+        "high_pct": 75,
+        "coef_per_sd": 0.01271,
+        "wr_low": 0.47323,
+        "wr_high": 0.47743,
+        "gap_wr_points": 0.42,
+        "conditional_on": "the other scalars held at their sample means"
+      },
+      "at_raw_band_means": {
+        "p90_vs_p10": {
+          "at_low_score": -0.084492,
+          "at_high_score": 0.083677,
+          "wr_low": 0.46976,
+          "wr_high": 0.48089,
+          "gap_wr_points": 1.114
+        },
+        "p99_vs_p1": {
+          "at_low_score": -0.130309,
+          "at_high_score": 0.129804,
+          "wr_low": 0.46673,
+          "wr_high": 0.48395,
+          "gap_wr_points": 1.722
+        },
+        "p75_vs_p25": {
+          "at_low_score": -0.060838,
+          "at_high_score": 0.060067,
+          "wr_low": 0.47132,
+          "wr_high": 0.47933,
+          "gap_wr_points": 0.801
+        }
+      }
+    },
+    "ROLE": {
+      "p90_vs_p10": {
+        "low_pct": 10,
+        "high_pct": 90,
+        "coef_per_sd": 0.14915,
+        "wr_low": 0.4285,
+        "wr_high": 0.52252,
+        "gap_wr_points": 9.402,
+        "conditional_on": "the other scalars held at their sample means"
+      },
+      "p99_vs_p1": {
+        "low_pct": 1,
+        "high_pct": 99,
+        "coef_per_sd": 0.14915,
+        "wr_low": 0.38911,
+        "wr_high": 0.56213,
+        "gap_wr_points": 17.302,
+        "conditional_on": "the other scalars held at their sample means"
+      },
+      "p75_vs_p25": {
+        "low_pct": 25,
+        "high_pct": 75,
+        "coef_per_sd": 0.14915,
+        "wr_low": 0.45085,
+        "wr_high": 0.4999,
+        "gap_wr_points": 4.905,
+        "conditional_on": "the other scalars held at their sample means"
+      },
+      "at_raw_band_means": {
+        "p90_vs_p10": {
+          "at_low_score": -0.105469,
+          "at_high_score": 0.10148,
+          "wr_low": 0.41078,
+          "wr_high": 0.54045,
+          "gap_wr_points": 12.968
+        },
+        "p99_vs_p1": {
+          "at_low_score": -0.161827,
+          "at_high_score": 0.158515,
+          "wr_low": 0.3768,
+          "wr_high": 0.57598,
+          "gap_wr_points": 19.918
+        },
+        "p75_vs_p25": {
+          "at_low_score": -0.076348,
+          "at_high_score": 0.072551,
+          "wr_low": 0.4287,
+          "wr_high": 0.52225,
+          "gap_wr_points": 9.356
+        }
+      }
+    }
+  },
+  "combined_draft_score": {
+    "definition": "logit of the 3-scalar logistic (CTR + SYN + ROLE), fitted on the first 70% of the window and evaluated on the last 30%",
+    "n_eval": 58706,
+    "coef_per_sd": {
+      "CTR": 0.06536,
+      "SYN": 0.01271,
+      "ROLE": 0.14915
+    },
+    "intercept": -0.0988,
+    "auc_eval": 0.5469,
+    "p90_vs_p10": {
+      "low_pct": 10,
+      "high_pct": 90,
+      "low_cut": -0.325089,
+      "high_cut": 0.126689,
+      "low_band_mean": -0.410239,
+      "high_band_mean": 0.214324,
+      "n_low": 5871,
+      "n_high": 5871,
+      "wr_low": 0.40027,
+      "wr_high": 0.55578,
+      "gap_wr_points": 15.551,
+      "gap_se_points": 0.911,
+      "gap_ci95_points": [
+        13.766,
+        17.336
+      ]
+    },
+    "p99_vs_p1": {
+      "low_pct": 1,
+      "high_pct": 99,
+      "low_cut": -0.515845,
+      "high_cut": 0.316726,
+      "low_band_mean": -0.573902,
+      "high_band_mean": 0.381991,
+      "n_low": 588,
+      "n_high": 588,
+      "wr_low": 0.38265,
+      "wr_high": 0.59524,
+      "gap_wr_points": 21.259,
+      "gap_se_points": 2.849,
+      "gap_ci95_points": [
+        15.675,
+        26.842
+      ]
+    },
+    "p75_vs_p25": {
+      "low_pct": 25,
+      "high_pct": 75,
+      "low_cut": -0.216109,
+      "high_cut": 0.02048,
+      "low_band_mean": -0.32324,
+      "high_band_mean": 0.126651,
+      "n_low": 14677,
+      "n_high": 14677,
+      "wr_low": 0.42706,
+      "wr_high": 0.52967,
+      "gap_wr_points": 10.261,
+      "gap_se_points": 0.58,
+      "gap_ci95_points": [
+        9.124,
+        11.398
+      ]
+    },
+    "deciles": [
+      {
+        "decile": 1,
+        "n": 5871,
+        "score_mean": -0.410239,
+        "actual_blue_wr": 0.4003,
+        "ref_predicted_wr": 0.399,
+        "residual_wr_points": 0.13
+      },
+      {
+        "decile": 2,
+        "n": 5871,
+        "score_mean": -0.282569,
+        "actual_blue_wr": 0.442,
+        "ref_predicted_wr": 0.4298,
+        "residual_wr_points": 1.22
+      },
+      {
+        "decile": 3,
+        "n": 5871,
+        "score_mean": -0.216634,
+        "actual_blue_wr": 0.4517,
+        "ref_predicted_wr": 0.4461,
+        "residual_wr_points": 0.57
+      },
+      {
+        "decile": 4,
+        "n": 5871,
+        "score_mean": -0.166026,
+        "actual_blue_wr": 0.4556,
+        "ref_predicted_wr": 0.4586,
+        "residual_wr_points": -0.3
+      },
+      {
+        "decile": 5,
+        "n": 5871,
+        "score_mean": -0.120559,
+        "actual_blue_wr": 0.4599,
+        "ref_predicted_wr": 0.4699,
+        "residual_wr_points": -1.0
+      },
+      {
+        "decile": 6,
+        "n": 5871,
+        "score_mean": -0.076077,
+        "actual_blue_wr": 0.48,
+        "ref_predicted_wr": 0.481,
+        "residual_wr_points": -0.1
+      },
+      {
+        "decile": 7,
+        "n": 5870,
+        "score_mean": -0.030517,
+        "actual_blue_wr": 0.499,
+        "ref_predicted_wr": 0.4924,
+        "residual_wr_points": 0.66
+      },
+      {
+        "decile": 8,
+        "n": 5870,
+        "score_mean": 0.020972,
+        "actual_blue_wr": 0.5007,
+        "ref_predicted_wr": 0.5052,
+        "residual_wr_points": -0.46
+      },
+      {
+        "decile": 9,
+        "n": 5870,
+        "score_mean": 0.085044,
+        "actual_blue_wr": 0.5181,
+        "ref_predicted_wr": 0.5212,
+        "residual_wr_points": -0.32
+      },
+      {
+        "decile": 10,
+        "n": 5870,
+        "score_mean": 0.214339,
+        "actual_blue_wr": 0.5557,
+        "ref_predicted_wr": 0.5533,
+        "residual_wr_points": 0.24
+      }
+    ]
+  },
+  "decile_tables": {
+    "CTR": {
+      "full_window_vs_nothing": [
+        {
+          "decile": 1,
+          "n": 19569,
+          "score_mean": -0.068438,
+          "actual_blue_wr": 0.4309
+        },
+        {
+          "decile": 2,
+          "n": 19569,
+          "score_mean": -0.040982,
+          "actual_blue_wr": 0.4543
+        },
+        {
+          "decile": 3,
+          "n": 19569,
+          "score_mean": -0.027146,
+          "actual_blue_wr": 0.4527
+        },
+        {
+          "decile": 4,
+          "n": 19569,
+          "score_mean": -0.016229,
+          "actual_blue_wr": 0.4673
+        },
+        {
+          "decile": 5,
+          "n": 19568,
+          "score_mean": -0.006624,
+          "actual_blue_wr": 0.4787
+        },
+        {
+          "decile": 6,
+          "n": 19568,
+          "score_mean": 0.002611,
+          "actual_blue_wr": 0.4734
+        },
+        {
+          "decile": 7,
+          "n": 19568,
+          "score_mean": 0.012199,
+          "actual_blue_wr": 0.4906
+        },
+        {
+          "decile": 8,
+          "n": 19568,
+          "score_mean": 0.02283,
+          "actual_blue_wr": 0.4891
+        },
+        {
+          "decile": 9,
+          "n": 19568,
+          "score_mean": 0.036517,
+          "actual_blue_wr": 0.5025
+        },
+        {
+          "decile": 10,
+          "n": 19568,
+          "score_mean": 0.063544,
+          "actual_blue_wr": 0.518
+        }
+      ],
+      "eval_slice_vs_role_model": [
+        {
+          "decile": 1,
+          "n": 5871,
+          "score_mean": -0.067511,
+          "actual_blue_wr": 0.4337,
+          "ref_predicted_wr": 0.4594,
+          "residual_wr_points": -2.58
+        },
+        {
+          "decile": 2,
+          "n": 5871,
+          "score_mean": -0.040477,
+          "actual_blue_wr": 0.4526,
+          "ref_predicted_wr": 0.4653,
+          "residual_wr_points": -1.28
+        },
+        {
+          "decile": 3,
+          "n": 5871,
+          "score_mean": -0.026853,
+          "actual_blue_wr": 0.4665,
+          "ref_predicted_wr": 0.4696,
+          "residual_wr_points": -0.31
+        },
+        {
+          "decile": 4,
+          "n": 5871,
+          "score_mean": -0.01596,
+          "actual_blue_wr": 0.4684,
+          "ref_predicted_wr": 0.4717,
+          "residual_wr_points": -0.33
+        },
+        {
+          "decile": 5,
+          "n": 5871,
+          "score_mean": -0.006536,
+          "actual_blue_wr": 0.4817,
+          "ref_predicted_wr": 0.4746,
+          "residual_wr_points": 0.71
+        },
+        {
+          "decile": 6,
+          "n": 5871,
+          "score_mean": 0.002474,
+          "actual_blue_wr": 0.472,
+          "ref_predicted_wr": 0.4771,
+          "residual_wr_points": -0.51
+        },
+        {
+          "decile": 7,
+          "n": 5870,
+          "score_mean": 0.011933,
+          "actual_blue_wr": 0.4845,
+          "ref_predicted_wr": 0.4793,
+          "residual_wr_points": 0.52
+        },
+        {
+          "decile": 8,
+          "n": 5870,
+          "score_mean": 0.022565,
+          "actual_blue_wr": 0.4862,
+          "ref_predicted_wr": 0.482,
+          "residual_wr_points": 0.42
+        },
+        {
+          "decile": 9,
+          "n": 5870,
+          "score_mean": 0.036236,
+          "actual_blue_wr": 0.499,
+          "ref_predicted_wr": 0.4848,
+          "residual_wr_points": 1.42
+        },
+        {
+          "decile": 10,
+          "n": 5870,
+          "score_mean": 0.063023,
+          "actual_blue_wr": 0.5184,
+          "ref_predicted_wr": 0.4923,
+          "residual_wr_points": 2.61
+        }
+      ]
+    },
+    "SYN": {
+      "full_window_vs_nothing": [
+        {
+          "decile": 1,
+          "n": 19569,
+          "score_mean": -0.084492,
+          "actual_blue_wr": 0.4454
+        },
+        {
+          "decile": 2,
+          "n": 19569,
+          "score_mean": -0.049677,
+          "actual_blue_wr": 0.4605
+        },
+        {
+          "decile": 3,
+          "n": 19569,
+          "score_mean": -0.032167,
+          "actual_blue_wr": 0.4665
+        },
+        {
+          "decile": 4,
+          "n": 19569,
+          "score_mean": -0.018544,
+          "actual_blue_wr": 0.4677
+        },
+        {
+          "decile": 5,
+          "n": 19568,
+          "score_mean": -0.006375,
+          "actual_blue_wr": 0.4717
+        },
+        {
+          "decile": 6,
+          "n": 19568,
+          "score_mean": 0.005438,
+          "actual_blue_wr": 0.4825
+        },
+        {
+          "decile": 7,
+          "n": 19568,
+          "score_mean": 0.017823,
+          "actual_blue_wr": 0.4753
+        },
+        {
+          "decile": 8,
+          "n": 19568,
+          "score_mean": 0.031518,
+          "actual_blue_wr": 0.4877
+        },
+        {
+          "decile": 9,
+          "n": 19568,
+          "score_mean": 0.048879,
+          "actual_blue_wr": 0.4955
+        },
+        {
+          "decile": 10,
+          "n": 19568,
+          "score_mean": 0.083678,
+          "actual_blue_wr": 0.5047
+        }
+      ],
+      "eval_slice_vs_role_model": [
+        {
+          "decile": 1,
+          "n": 5871,
+          "score_mean": -0.083729,
+          "actual_blue_wr": 0.4514,
+          "ref_predicted_wr": 0.4519,
+          "residual_wr_points": -0.05
+        },
+        {
+          "decile": 2,
+          "n": 5871,
+          "score_mean": -0.049306,
+          "actual_blue_wr": 0.4578,
+          "ref_predicted_wr": 0.4618,
+          "residual_wr_points": -0.4
+        },
+        {
+          "decile": 3,
+          "n": 5871,
+          "score_mean": -0.031829,
+          "actual_blue_wr": 0.4733,
+          "ref_predicted_wr": 0.4665,
+          "residual_wr_points": 0.68
+        },
+        {
+          "decile": 4,
+          "n": 5871,
+          "score_mean": -0.018233,
+          "actual_blue_wr": 0.467,
+          "ref_predicted_wr": 0.4704,
+          "residual_wr_points": -0.34
+        },
+        {
+          "decile": 5,
+          "n": 5871,
+          "score_mean": -0.006115,
+          "actual_blue_wr": 0.4624,
+          "ref_predicted_wr": 0.474,
+          "residual_wr_points": -1.16
+        },
+        {
+          "decile": 6,
+          "n": 5871,
+          "score_mean": 0.005606,
+          "actual_blue_wr": 0.4878,
+          "ref_predicted_wr": 0.4772,
+          "residual_wr_points": 1.06
+        },
+        {
+          "decile": 7,
+          "n": 5870,
+          "score_mean": 0.017828,
+          "actual_blue_wr": 0.4659,
+          "ref_predicted_wr": 0.4807,
+          "residual_wr_points": -1.48
+        },
+        {
+          "decile": 8,
+          "n": 5870,
+          "score_mean": 0.031336,
+          "actual_blue_wr": 0.4942,
+          "ref_predicted_wr": 0.4849,
+          "residual_wr_points": 0.93
+        },
+        {
+          "decile": 9,
+          "n": 5870,
+          "score_mean": 0.048511,
+          "actual_blue_wr": 0.4985,
+          "ref_predicted_wr": 0.4891,
+          "residual_wr_points": 0.93
+        },
+        {
+          "decile": 10,
+          "n": 5870,
+          "score_mean": 0.082951,
+          "actual_blue_wr": 0.5044,
+          "ref_predicted_wr": 0.4996,
+          "residual_wr_points": 0.48
+        }
+      ]
+    },
+    "ROLE": {
+      "full_window_vs_nothing": [
+        {
+          "decile": 1,
+          "n": 19569,
+          "score_mean": -0.105469,
+          "actual_blue_wr": 0.4039
+        },
+        {
+          "decile": 2,
+          "n": 19569,
+          "score_mean": -0.062606,
+          "actual_blue_wr": 0.4344
+        },
+        {
+          "decile": 3,
+          "n": 19569,
+          "score_mean": -0.040914,
+          "actual_blue_wr": 0.4449
+        },
+        {
+          "decile": 4,
+          "n": 19569,
+          "score_mean": -0.023813,
+          "actual_blue_wr": 0.4569
+        },
+        {
+          "decile": 5,
+          "n": 19568,
+          "score_mean": -0.008841,
+          "actual_blue_wr": 0.4662
+        },
+        {
+          "decile": 6,
+          "n": 19568,
+          "score_mean": 0.005671,
+          "actual_blue_wr": 0.4847
+        },
+        {
+          "decile": 7,
+          "n": 19568,
+          "score_mean": 0.020656,
+          "actual_blue_wr": 0.4961
+        },
+        {
+          "decile": 8,
+          "n": 19568,
+          "score_mean": 0.03739,
+          "actual_blue_wr": 0.5058
+        },
+        {
+          "decile": 9,
+          "n": 19568,
+          "score_mean": 0.058913,
+          "actual_blue_wr": 0.5201
+        },
+        {
+          "decile": 10,
+          "n": 19568,
+          "score_mean": 0.101482,
+          "actual_blue_wr": 0.5446
+        }
+      ],
+      "eval_slice_vs_role_model": [
+        {
+          "decile": 1,
+          "n": 5871,
+          "score_mean": -0.103816,
+          "actual_blue_wr": 0.4067,
+          "ref_predicted_wr": 0.4037,
+          "residual_wr_points": 0.31
+        },
+        {
+          "decile": 2,
+          "n": 5871,
+          "score_mean": -0.061949,
+          "actual_blue_wr": 0.4475,
+          "ref_predicted_wr": 0.4327,
+          "residual_wr_points": 1.48
+        },
+        {
+          "decile": 3,
+          "n": 5871,
+          "score_mean": -0.040409,
+          "actual_blue_wr": 0.4485,
+          "ref_predicted_wr": 0.4479,
+          "residual_wr_points": 0.06
+        },
+        {
+          "decile": 4,
+          "n": 5871,
+          "score_mean": -0.023618,
+          "actual_blue_wr": 0.457,
+          "ref_predicted_wr": 0.4598,
+          "residual_wr_points": -0.28
+        },
+        {
+          "decile": 5,
+          "n": 5871,
+          "score_mean": -0.008851,
+          "actual_blue_wr": 0.4587,
+          "ref_predicted_wr": 0.4703,
+          "residual_wr_points": -1.16
+        },
+        {
+          "decile": 6,
+          "n": 5871,
+          "score_mean": 0.005461,
+          "actual_blue_wr": 0.4819,
+          "ref_predicted_wr": 0.4805,
+          "residual_wr_points": 0.13
+        },
+        {
+          "decile": 7,
+          "n": 5870,
+          "score_mean": 0.020402,
+          "actual_blue_wr": 0.4905,
+          "ref_predicted_wr": 0.4912,
+          "residual_wr_points": -0.08
+        },
+        {
+          "decile": 8,
+          "n": 5870,
+          "score_mean": 0.037091,
+          "actual_blue_wr": 0.5044,
+          "ref_predicted_wr": 0.5032,
+          "residual_wr_points": 0.13
+        },
+        {
+          "decile": 9,
+          "n": 5870,
+          "score_mean": 0.058727,
+          "actual_blue_wr": 0.5208,
+          "ref_predicted_wr": 0.5187,
+          "residual_wr_points": 0.21
+        },
+        {
+          "decile": 10,
+          "n": 5870,
+          "score_mean": 0.100518,
+          "actual_blue_wr": 0.547,
+          "ref_predicted_wr": 0.5484,
+          "residual_wr_points": -0.13
+        }
+      ]
+    }
+  },
+  "scalar_stats": {
+    "CTR": {
+      "fit_mean": -0.002198,
+      "fit_sd": 0.037632,
+      "p1": -0.090704,
+      "p10": -0.049935,
+      "p90": 0.045349,
+      "p99": 0.085497,
+      "auc_full_window": 0.5277
+    },
+    "SYN": {
+      "fit_mean": -0.000432,
+      "fit_sd": 0.047888,
+      "p1": -0.113046,
+      "p10": -0.060958,
+      "p90": 0.060267,
+      "p99": 0.111882,
+      "auc_full_window": 0.5188
+    },
+    "ROLE": {
+      "fit_mean": -0.0018,
+      "fit_sd": 0.059027,
+      "p1": -0.141199,
+      "p10": -0.07666,
+      "p90": 0.072981,
+      "p99": 0.136175,
+      "auc_full_window": 0.5467
+    }
+  },
+  "scalar_correlations": {
+    "CTR~SYN": 0.0957,
+    "CTR~ROLE": 0.2388,
+    "SYN~ROLE": 0.3313
+  },
+  "anchors": {
+    "side_selection": {
+      "blue_win_rate_this_sample": 0.47575,
+      "blue_handicap_wr_points_below_even": 2.425,
+      "red_minus_blue_gap_wr_points": 4.85,
+      "note": "the largest uncontested edge in the game: nobody drafts around it because nobody can \u2014 side is assigned, not chosen",
+      "elo_equivalent": {
+        "gap_wr_points": 4.85,
+        "favourite_expected_score": 0.52425,
+        "elo_points_vs_even_opponent": 16.9
+      }
+    },
+    "team_strength_v09": {
+      "source": "data/processed/outcome_baseline_v09.json (pro, 2024-26)",
+      "elo_k": 10.0,
+      "elo_only_holdout": {
+        "log_loss": 0.61439,
+        "auc": 0.7077,
+        "acc": 0.6578
+      },
+      "elo_plus_completed_draft_holdout": {
+        "log_loss": 0.60235,
+        "auc": 0.7289,
+        "acc": 0.6952
+      },
+      "base_rate_holdout": {
+        "log_loss": 0.68558,
+        "auc": 0.5,
+        "acc": 0.5775
+      },
+      "note": "scale reference only. The Elo-equivalent conversions in this file are analytic (standard 400-point curve); the pro Elo-gap distribution was deliberately NOT recomputed here because the frozen EWC July test set must not be loaded by this analysis."
+    },
+    "elo_equivalents": {
+      "CTR": {
+        "p90_vs_p10": {
+          "gap_wr_points": 8.713,
+          "favourite_expected_score": 0.54356,
+          "elo_points_vs_even_opponent": 30.3
+        },
+        "p99_vs_p1": {
+          "gap_wr_points": 13.183,
+          "favourite_expected_score": 0.56591,
+          "elo_points_vs_even_opponent": 46.1
+        },
+        "p75_vs_p25": {
+          "gap_wr_points": 6.201,
+          "favourite_expected_score": 0.531,
+          "elo_points_vs_even_opponent": 21.6
+        }
+      },
+      "SYN": {
+        "p90_vs_p10": {
+          "gap_wr_points": 5.928,
+          "favourite_expected_score": 0.52964,
+          "elo_points_vs_even_opponent": 20.6
+        },
+        "p99_vs_p1": {
+          "gap_wr_points": 9.147,
+          "favourite_expected_score": 0.54573,
+          "elo_points_vs_even_opponent": 31.9
+        },
+        "p75_vs_p25": {
+          "gap_wr_points": 4.316,
+          "favourite_expected_score": 0.52158,
+          "elo_points_vs_even_opponent": 15.0
+        }
+      },
+      "ROLE": {
+        "p90_vs_p10": {
+          "gap_wr_points": 14.07,
+          "favourite_expected_score": 0.57035,
+          "elo_points_vs_even_opponent": 49.2
+        },
+        "p99_vs_p1": {
+          "gap_wr_points": 21.257,
+          "favourite_expected_score": 0.60628,
+          "elo_points_vs_even_opponent": 75.0
+        },
+        "p75_vs_p25": {
+          "gap_wr_points": 10.266,
+          "favourite_expected_score": 0.55133,
+          "elo_points_vs_even_opponent": 35.8
+        }
+      }
+    },
+    "elo_equivalents_role_conditioned": {
+      "CTR": {
+        "p90_vs_p10": {
+          "gap_wr_points": 5.711,
+          "favourite_expected_score": 0.52855,
+          "elo_points_vs_even_opponent": 19.9
+        },
+        "p99_vs_p1": {
+          "gap_wr_points": 8.81,
+          "favourite_expected_score": 0.54405,
+          "elo_points_vs_even_opponent": 30.7
+        },
+        "p75_vs_p25": {
+          "gap_wr_points": 4.111,
+          "favourite_expected_score": 0.52055,
+          "elo_points_vs_even_opponent": 14.3
+        }
+      },
+      "SYN": {
+        "p90_vs_p10": {
+          "gap_wr_points": 1.114,
+          "favourite_expected_score": 0.50557,
+          "elo_points_vs_even_opponent": 3.9
+        },
+        "p99_vs_p1": {
+          "gap_wr_points": 1.722,
+          "favourite_expected_score": 0.50861,
+          "elo_points_vs_even_opponent": 6.0
+        },
+        "p75_vs_p25": {
+          "gap_wr_points": 0.801,
+          "favourite_expected_score": 0.50401,
+          "elo_points_vs_even_opponent": 2.8
+        }
+      },
+      "ROLE": {
+        "p90_vs_p10": {
+          "gap_wr_points": 12.968,
+          "favourite_expected_score": 0.56484,
+          "elo_points_vs_even_opponent": 45.3
+        },
+        "p99_vs_p1": {
+          "gap_wr_points": 19.918,
+          "favourite_expected_score": 0.59959,
+          "elo_points_vs_even_opponent": 70.1
+        },
+        "p75_vs_p25": {
+          "gap_wr_points": 9.356,
+          "favourite_expected_score": 0.54678,
+          "elo_points_vs_even_opponent": 32.6
+        }
+      }
+    },
+    "combined_elo_equivalent": {
+      "p90_vs_p10": {
+        "gap_wr_points": 15.551,
+        "favourite_expected_score": 0.57776,
+        "elo_points_vs_even_opponent": 54.5
+      },
+      "p99_vs_p1": {
+        "gap_wr_points": 21.259,
+        "favourite_expected_score": 0.6063,
+        "elo_points_vs_even_opponent": 75.0
+      },
+      "p75_vs_p25": {
+        "gap_wr_points": 10.261,
+        "favourite_expected_score": 0.55131,
+        "elo_points_vs_even_opponent": 35.8
+      }
+    },
+    "counter_swing_vs_side_selection": {
+      "raw_p90_vs_p10_multiple_of_side_gap": 1.8,
+      "role_conditioned_p90_vs_p10_multiple_of_side_gap": 1.18,
+      "combined_draft_p90_vs_p10_multiple_of_side_gap": 3.21
+    }
+  },
+  "provenance": {
+    "lift_tables": {
+      "path": "data/processed/soloq_lift_tables.json",
+      "built_from_games_before": "2026-07-01T00:00:00Z",
+      "clean_games": 124731,
+      "blue_win_rate": 0.4754,
+      "patch_mix": {
+        "16.13": 46797,
+        "16.12": 74814,
+        "16.11": 3120
+      },
+      "shrink_prior_games": 200.0,
+      "n_champs": 173,
+      "n_champ_role_combos": 816,
+      "n_counter_pairs": 23717,
+      "n_syn_pairs": 33546
+    },
+    "scoring_window": {
+      "start": "2026-07-01T00:00:00Z",
+      "end": "2026-07-25T00:00:00Z",
+      "clean_games": 195684,
+      "dropped": {
+        "bad_roles": 14
+      },
+      "blue_win_rate": 0.47575,
+      "patch_mix": {
+        "16.13": 112533,
+        "16.14": 83151
+      },
+      "region_mix": {
+        "na": 63881,
+        "kr": 64959,
+        "euw": 66844
+      },
+      "first_game": "2026-07-01 00:00 UTC",
+      "last_game": "2026-07-24 23:59 UTC",
+      "fit_eval_boundary": "2026-07-18 00:39 UTC",
+      "fit_games": 136978,
+      "eval_games": 58706,
+      "upper_bound_pinned_because": "the soloq scrape resumed 2026-07-25 and is appending live; days after 07-24 are thinly covered. Pinning keeps re-runs reproducible and the sample density flat."
+    },
+    "leave_one_out": "NOT APPLIED, AND NOT NEEDED: every scored game postdates the lift tables' 2026-07-01 cutoff, so no game contributes to its own lift. Asserted against the table file's recorded cutoff at run time. Rung 1c's LOO repair applies only to in-sample scoring.",
+    "table_coverage": {
+      "role_wr_hit": 1956626,
+      "ctr_hit": 964738,
+      "syn_hit": 1547322,
+      "ctr_miss": 13682,
+      "syn_miss": 18150,
+      "role_wr_champ_fallback": 214,
+      "unseen_champs": [],
+      "CTR_nonzero_frac": 1.0,
+      "SYN_nonzero_frac": 1.0,
+      "ROLE_nonzero_frac": 1.0
+    },
+    "population": "soloq ranked solo/duo (queue 420), Master+ scrape, regions na/kr/euw \u2014 NOT professional play",
+    "determinism": "no random sampling; analytic binomial SEs; logistic fits are deterministic (lbfgs, C=1e6)",
+    "frozen_ewc_test_set": "never loaded or scored by this script",
+    "runtime_seconds": 5
+  },
+  "caveats": [
+    "correlational, not causal: these are win rates conditional on the champions that got picked, not the effect of intervening on a draft",
+    "soloq Master+ on patches 16.11-16.13; pro play has different champion pools, coordination, and a ban phase that removes the extremes",
+    "the lift tables are a static pre-2026-07-01 snapshot applied to a later window \u2014 champion meta drift inside the window is unmodelled noise",
+    "the counter/synergy tails are partly selection: an extreme differential usually means one side got a strong champ@role, which is why the role-conditioned columns (joint fit, residual deciles) matter more than the raw gaps for any causal reading",
+    "no player-skill term exists in this data, and soloq outcomes are player-dominated (rung 1b's ceiling: AUC .551 with every comp feature)"
+  ]
+}

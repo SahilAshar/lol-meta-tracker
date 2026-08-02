@@ -1,8 +1,47 @@
 # Roadmap & Pickup Notes
 
-*Last updated: 2026-07-22 (v0.9 rung 0: outcome-head falsifiable baseline —
-draft signal in win prediction is REAL). This doc is the "where were we"
-file — read it first when resuming work.*
+*Last updated: 2026-07-22 (north star decided — LoLMetaWeekly public column).
+This doc is the "where were we" file — read it first when resuming work.*
+
+## North Star — Summer 2026
+
+**What**: LoLMetaWeekly — a public weekly esports analysis column on
+Twitter (`@lolmetatracker`) and Reddit, covering all four major leagues.
+
+**Why this and not something else**: The project explored three directions —
+(a) public analysis engine, (b) coach-facing draft assistant, (c) ML
+portfolio piece. Decision (2026-07-22): (a) is the primary bet for summer.
+(b) requires a modeling pivot (v0.9 outcome head) that passed its
+feasibility gate but is not a blocker — it runs in the background and
+joins the column if/when it lands. (c) is served by a separate one-time
+Anthropic writeup (the model-ladder article for Noah), not by the column.
+
+**The column's differentiator**: model-graded predictions against real
+outcomes. Every edition scores v0.8.1's accuracy on that week's games —
+prediction ledger, surprise detection, regional predictability splits.
+This is what separates it from vibes-based tier lists.
+
+**Success metric**: 10–12 published editions covering summer regular season
+through playoffs (~Aug 3 through September). The cadence itself — showing
+up every week — is part of the goal.
+
+**Time budget**: ~5 hours/week total. 2–3 hours on the column (data pull,
+analysis, writing, posting). 2–3 hours on model work (v0.9 research,
+transformer improvements, pipeline maintenance).
+
+**Debut plan**: the account opens with LoLMetaWeekly Edition 1 (~Aug 3–4,
+first cross-league Week 1 report). The drafted EWC debut thread stays
+shelved — the launch moment is the column, not the model story.
+
+**Options explicitly set aside**:
+- Win-probability-conditioned draft evaluation (option b) is not cut — it's
+  backgrounded. The v0.9 feasibility gate passed (p=0.993, holdout AUC
+  0.708→0.729). If the outcome head matures during the split, it adds a
+  "what should they have done" segment to the column. It does not block
+  publishing.
+- The Anthropic writeup (option c) is a one-time article based on
+  `docs/2026-07-22-model-ladder-first-principles.md`, sent to Noah
+  independently. Not part of the column cadence.
 
 ## Current state (all working, all verified)
 
@@ -71,6 +110,15 @@ file — read it first when resuming work.*
     head is alive — the completed draft carries real win signal beyond team
     strength; a per-slot head can only see less, so per-slot value remains
     to be shown.
+  - **Soloq lineage (2026-07-23)**: rung 0 co-occurrence embeddings passed
+    the role-purity gate (0.723 vs pro 0.704), but Step 3 — soloq-init vs
+    random-init `champ_emb`, 5 paired seeds, val only — was a clean **NO-GO**
+    (mean d_loss −0.029, CI straddles 0, 2/5 seeds positive; write-up in
+    `docs/2026-07-23-step3-results.md`). 100k pro decisions learn their own
+    embedding fine. Pivot: the scrape's unused `win` column → champion-pair
+    synergy/counter lifts (`docs/2026-07-23-soloq-synergy-research.md`,
+    rung-1 handoff alongside). Soloq estimates the interaction structure,
+    pro data validates and calibrates.
   - **Embeddings learned real structure**: 5-NN role purity 0.682 vs 0.20
     chance; `charts/champion_embeddings_tsne_v08.png` (debut-thread artifact)
     shows role clusters with flex picks (Poppy, Camille, Sett, Nasus, TF)
@@ -106,11 +154,23 @@ file — read it first when resuming work.*
      (different labels, different audience) — the north-star conversation
      (vault `drafts/2026-07-20-handoff-lol-meta-tracker-northstar.md`) is
      still unhad and should gate the full build, not this cheap probe.
-   - **Give the transformer time signal** for bans: patch embedding or the
-     trailing meta-rate features injected at the output layer — its 7.6 ban
-     top-1 vs GBM's 15.0 is entirely current-meta blindness.
+   - **Give the transformer time signal** for bans (NEXT UP — handoff:
+     `docs/2026-07-23-ban-timesignal-handoff.md`): inject the existing 28-day
+     trailing pick/ban rates (already causal, per-game constant in the
+     candidate table) at the output layer — its 7.6 ban top-1 vs GBM's 15.0
+     is entirely current-meta blindness. If it passes, follow-up: soloq
+     trailing rates as a fresher meta clock (aggregate — no pick-order wall).
+   - **Synergy lift ladder** (spec `docs/2026-07-23-soloq-synergy-research.md`,
+     rung-1 handoff `docs/2026-07-23-synergy-rung1-handoff.md`): rung 1 =
+     in-domain gate (do pair terms predict soloq wins?); rung 2 = re-estimate
+     the GBM's `pair_syn`/`pair_ctr` from 77k Master+ games instead of ~5k pro
+     (direct accuracy play for v0.8.1); rung 3 = counterfactual draft critic
+     (background per north star).
    - **Series-prior tokens** (fearless context: which champs each side burned
      earlier in the series) — currently only enters availability masks.
+   - **Team-identity conditioning**: the transformer sees league but not which
+     team is drafting; GBM's player_pool/player_wr prove the signal exists.
+     Team embeddings on ~5k games are an overfit risk — val-gated experiment.
 3. ~~Write the "meta entering summer" debut piece~~ **Drafted 2026-07-20** —
    `drafts/2026-07-20-meta-entering-summer-debut-thread.md`: 10-tweet thread
    with full stat-provenance appendix (16.13 intl sample is now 121 games
