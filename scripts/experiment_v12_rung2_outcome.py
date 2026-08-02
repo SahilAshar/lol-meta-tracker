@@ -47,11 +47,15 @@ from experiment_v09_outcome_baseline import (
 )
 from draft_dataset import load_games
 from soloq_lift_tables import (
-    PRO_ROLE_TO_SOLOQ, PRO_TO_SOLOQ, SYN_VECTORS, load_tables,
+    DEFAULT_FLOOR_ISO, PRO_ROLE_TO_SOLOQ, PRO_TO_SOLOQ, SYN_VECTORS,
+    load_tables,
 )
 
 N_BOOT = 10_000
-SOLOQ_START = pd.Timestamp("2026-06-08")
+# Single source of truth, shared with the table builder and draft_dataset — a
+# second hardcoded copy of this date is how a floor sweep ends up reporting one
+# arm's slice boundary against another arm's features.
+SOLOQ_START = pd.Timestamp(DEFAULT_FLOOR_ISO)
 RNG = np.random.default_rng(20260725)
 
 

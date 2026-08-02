@@ -28,9 +28,12 @@ The PRO_TO_SOLOQ name bridge is copied from experiment_v09_soloq_transfer.py:46
 
 from __future__ import annotations
 
+import argparse
+import datetime as dt
 import json
 import sqlite3
 from collections import Counter, defaultdict
+from pathlib import Path
 
 import numpy as np
 
@@ -40,7 +43,20 @@ DB = DATA_RAW / "soloq" / "soloq.db"
 TABLE_PATH = DATA_PROCESSED / "soloq_lift_tables.json"
 CUTOFF_MS = 1_782_864_000_000  # 2026-07-01 00:00 UTC, pro val window start
 CUTOFF_ISO = "2026-07-01T00:00:00Z"
-SOLOQ_COVERAGE_START = "2026-06-08"  # first soloq game in the db
+
+# Lower bound on soloq games entering the tables. Until the 2026-07-31/08-01
+# calendar backfill this was implicit: the db simply had nothing before
+# 2026-06-08, so "no lower bound" and "floor at 06-08" were the same table.
+# They are no longer the same — the db now reaches 2026-03-03 — so the floor is
+# explicit and plumbed. Two consequences worth knowing before changing it:
+#
+#   - The 06-08 CONTROL is only a control if this is set. An unbounded rebuild
+#     pulls in patches 16.4-16.11 and is a different table, not the old one.
+#   - These tables are patch-BLIND. Lowering the floor widens the patch mix
+#     (06-08 spans 3 patches; 03-03 spans 10), so older games dilute the
+#     champion-strength prior with pre-balance-change evidence. More games is
+#     not automatically a better table.
+DEFAULT_FLOOR_ISO = "2026-06-08"
 SHRINK_GAMES = 200.0
 ROLES = ("TOP", "JUNGLE", "MIDDLE", "BOTTOM", "UTILITY")
 SYN_VECTORS = (            # same-team priority vectors, rung 1b/1c
@@ -68,14 +84,39 @@ PRO_TO_SOLOQ = {
 }
 
 
-def load_clean_games_before(cutoff_ms: int = CUTOFF_MS) -> tuple[list[dict], dict]:
-    """Rung 1b's loader/cleaning verbatim, restricted to creation < cutoff."""
-    con = sqlite3.connect(DB)
+def iso_to_ms(iso: str) -> int:
+    """'YYYY-MM-DD' (or a full ISO stamp) -> epoch ms, UTC."""
+    return int(dt.datetime.fromisoformat(iso).replace(
+        tzinfo=dt.timezone.utc).timestamp() * 1000)
+
+
+def load_clean_games_before(cutoff_ms: int = CUTOFF_MS,
+                            floor_ms: int = 0,
+                            db=None) -> tuple[list[dict], dict]:
+    """Rung 1b's loader/cleaning verbatim, restricted to floor <= creation < cutoff.
+
+    Prefers a read-only handle: the scraper may be mid-run against the live db,
+    and a table build must never be able to touch it.
+
+    The fallback is not optional. This db is in WAL mode, and a WAL read needs
+    the -shm index, which a read-only connection is not allowed to create. A
+    clean scraper shutdown deletes -shm, so `mode=ro` raises CANTOPEN on a
+    quiescent db — the exact state the next session finds it in. Read-only is
+    the safety we want *while a writer is live* (and -shm exists then), so try
+    it first and fall back when nothing is running.
+    """
+    path = db or DB
+    try:
+        con = sqlite3.connect(f"file:{path}?mode=ro", uri=True)
+        con.execute("SELECT 1 FROM matches LIMIT 1").fetchone()
+    except sqlite3.OperationalError:
+        con = sqlite3.connect(path)
     rows = con.execute(
         "SELECT payload, game_creation, game_version FROM matches "
         "WHERE state='done' AND payload IS NOT NULL "
-        "AND queue_id=420 AND duration>=300 AND game_creation < ?",
-        (cutoff_ms,),
+        "AND queue_id=420 AND duration>=300 "
+        "AND game_creation >= ? AND game_creation < ?",
+        (floor_ms, cutoff_ms),
     ).fetchall()
     con.close()
     games, drops = [], Counter()
@@ -108,8 +149,13 @@ def load_clean_games_before(cutoff_ms: int = CUTOFF_MS) -> tuple[list[dict], dic
     return games, dict(drops)
 
 
-def build_tables() -> dict:
-    games, drops = load_clean_games_before()
+def build_tables(floor_iso: str = DEFAULT_FLOOR_ISO,
+                 out_path=None, db=None) -> dict:
+    floor_ms = iso_to_ms(floor_iso)
+    games, drops = load_clean_games_before(floor_ms=floor_ms, db=db)
+    if not games:
+        raise SystemExit(f"no clean games in [{floor_iso}, {CUTOFF_ISO}) — "
+                         "check the floor and the db")
     blue_wr = float(np.mean([g["blue_win"] for g in games]))
     assert abs(blue_wr - 0.4755) < 0.01, \
         f"blue WR {blue_wr:.4f} far from 1b anchor 0.4755 — team-id bug?"
@@ -162,10 +208,20 @@ def build_tables() -> dict:
         syn_table[f"{ra}+{rb}|{a}|{b}"] = round(float(lift), 6)
 
     versions = Counter(".".join(str(g["version"]).split(".")[:2]) for g in games)
+    # Record the floor that was ASKED for and the earliest game actually in the
+    # sample. These used to be one hardcoded string, which stayed "2026-06-08"
+    # no matter what the db held — exactly the way a control arm gets silently
+    # contaminated. Downstream consumers assert against soloq_coverage_start.
+    observed_ms = min(g["creation"] for g in games)
+    observed_iso = dt.datetime.fromtimestamp(
+        observed_ms / 1000, dt.timezone.utc).date().isoformat()
     out = {
         "cutoff_ms": CUTOFF_MS,
         "cutoff_iso": CUTOFF_ISO,
-        "soloq_coverage_start": SOLOQ_COVERAGE_START,
+        "soloq_coverage_start": floor_iso,
+        "soloq_floor_ms": floor_ms,
+        "source_db": str(db or DB),
+        "soloq_observed_start": observed_iso,
         "clean_games": len(games),
         "dropped": drops,
         "blue_win_rate": round(blue_wr, 4),
@@ -180,19 +236,23 @@ def build_tables() -> dict:
         "ctr": ctr_table,
         "syn": syn_table,
     }
-    TABLE_PATH.write_text(json.dumps(out, indent=1))
-    print(f"wrote {TABLE_PATH}: {len(games)} games pre-{CUTOFF_ISO}, "
+    path = out_path or TABLE_PATH
+    path.write_text(json.dumps(out, indent=1))
+    print(f"wrote {path}: {len(games)} games in "
+          f"[{floor_iso}, {CUTOFF_ISO}) (earliest {observed_iso}), "
           f"{len(champ_wr)} champs, {len(role_wr_table)} champ@role combos, "
           f"{len(ctr_table)} counter pairs, {len(syn_table)} duo pairs "
           f"(drops: {drops})")
+    print(f"  patch mix: {dict(versions)}")
     return out
 
 
-def load_tables() -> dict:
-    if not TABLE_PATH.exists():
+def load_tables(path=None) -> dict:
+    path = Path(path) if path else TABLE_PATH
+    if not path.exists():
         raise FileNotFoundError(
-            f"{TABLE_PATH} missing — run scripts/soloq_lift_tables.py first")
-    return json.loads(TABLE_PATH.read_text())
+            f"{path} missing — run scripts/soloq_lift_tables.py first")
+    return json.loads(path.read_text())
 
 
 def pro_arrays(pro_champs: list[str], tables: dict | None = None,
@@ -245,4 +305,17 @@ def pro_arrays(pro_champs: list[str], tables: dict | None = None,
 
 
 if __name__ == "__main__":
-    build_tables()
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--floor", default=DEFAULT_FLOOR_ISO,
+                    help="earliest soloq game date to admit, YYYY-MM-DD "
+                         f"(default {DEFAULT_FLOOR_ISO}; the 06-08 control)")
+    ap.add_argument("--db", default=None,
+                    help="sqlite db to read (default: the live soloq.db). Point at a frozen snapshot when the scraper is running.")
+    ap.add_argument("--out", default=None,
+                    help="write here instead of the canonical table path — "
+                         "use for sweep arms so the production table is not "
+                         "clobbered")
+    a = ap.parse_args()
+    build_tables(floor_iso=a.floor,
+                 out_path=Path(a.out) if a.out else None,
+                 db=a.db)
