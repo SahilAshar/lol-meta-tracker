@@ -73,11 +73,16 @@ import numpy as np
 import pandas as pd
 
 from common import CURRENT_YEAR, DATA_PROCESSED, raw_csv_path
-from soloq_lift_tables import SYN_VECTORS, load_tables, pro_arrays
+from soloq_lift_tables import (DEFAULT_FLOOR_ISO, SYN_VECTORS, load_tables,
+                               pro_arrays)
 
 LEAGUES = ["LCK", "LPL", "LEC", "LCS", "MSI", "EWC", "FST"]
 
-SOLOQ_START = pd.Timestamp("2026-06-08")  # first day of soloq coverage
+# First day of soloq coverage: decisions before it get neutral placeholders.
+# Must match the floor the lift tables were built at — build() asserts this
+# against the table's own recorded floor rather than trusting the caller, so a
+# mismatched pair fails loudly instead of producing a quietly wrong dataset.
+SOLOQ_START = pd.Timestamp(DEFAULT_FLOOR_ISO)
 SOLOQ_TO_PRO_ROLE = {"TOP": "top", "JUNGLE": "jng", "MIDDLE": "mid",
                      "BOTTOM": "bot", "UTILITY": "sup"}
 
@@ -506,7 +511,19 @@ def role_assign_probs(
     return list(zip(idx, marg))
 
 
-def build(years: list[int]) -> pd.DataFrame:
+def build(years: list[int], soloq_floor: str = DEFAULT_FLOOR_ISO,
+          table_path=None, out_suffix: str | None = None) -> pd.DataFrame:
+    soloq_start = pd.Timestamp(soloq_floor)
+    # Checked before any loading: a floor/table mismatch is a config error and
+    # should cost a second, not the whole build.
+    sq_tables = load_tables(table_path)
+    table_floor = sq_tables.get("soloq_coverage_start")
+    if table_floor != soloq_floor:
+        raise SystemExit(
+            f"floor mismatch: dataset asked for {soloq_floor}, but "
+            f"{table_path or 'the canonical table'} was built at "
+            f"{table_floor!r}. Rebuild it with "
+            f"`python3 scripts/soloq_lift_tables.py --floor {soloq_floor}`.")
     players, teams = load_games(years)
     champs = sorted(players.champion.dropna().unique())
     cidx = {c: i for i, c in enumerate(champs)}
@@ -520,9 +537,12 @@ def build(years: list[int]) -> pd.DataFrame:
     # Static soloq lift tables (rung 2). W_sq[i, r] = soloq_wr(champ_i@r),
     # C_sq[r, i, j] = soloq_ctr(champ_i, champ_j | r) antisymmetric,
     # S_sq[v, i, j] = duo lift for priority vector v with i in the first slot.
-    W_sq, C_sq, S_sq, sq_coverage = pro_arrays(champs, load_tables())
+    W_sq, C_sq, S_sq, sq_coverage = pro_arrays(champs, sq_tables)
     print(f"soloq bridge: {sq_coverage['matched']}/{sq_coverage['pro_champs']} "
           f"champs matched (misses: {sq_coverage['misses']})")
+    print(f"soloq floor: {soloq_floor} (table earliest game "
+          f"{sq_tables.get('soloq_observed_start')}, "
+          f"{sq_tables.get('clean_games')} games)")
     # Priority vectors as pro-role indices (slot order preserved).
     syn_vec_idx = [(ROLES.index(SOLOQ_TO_PRO_ROLE[ra]),
                     ROLES.index(SOLOQ_TO_PRO_ROLE[rb]))
@@ -653,7 +673,7 @@ def build(years: list[int]) -> pd.DataFrame:
 
             # Soloq-informed candidate features (neutral before coverage:
             # the static table cannot causally inform earlier decisions).
-            if day >= SOLOQ_START:
+            if day >= soloq_start:
                 P_cand = cand_shares * p_open[None, :]
                 rs = P_cand.sum(axis=1, keepdims=True)
                 P_cand = np.where(rs > 1e-9,
@@ -722,7 +742,8 @@ def build(years: list[int]) -> pd.DataFrame:
     for yr, ydf in uniq.groupby(uniq.date.dt.year):
         print(f"  {yr}: {ydf.gameid.nunique()} games, {len(ydf)} decisions")
 
-    suffix = "" if years == [CURRENT_YEAR] else "_multi"
+    suffix = ("" if years == [CURRENT_YEAR] else "_multi") \
+        if out_suffix is None else out_suffix
     DATA_PROCESSED.mkdir(parents=True, exist_ok=True)
     ds.to_parquet(DATA_PROCESSED / f"draft_decisions{suffix}.parquet", index=False)
     seq_ds = pd.DataFrame(seq_rows)
@@ -738,4 +759,20 @@ if __name__ == "__main__":
         "--years", type=int, nargs="+", default=[CURRENT_YEAR],
         help="seasons to include (default: current year only)",
     )
-    build(sorted(parser.parse_args().years))
+    parser.add_argument(
+        "--soloq-floor", default=DEFAULT_FLOOR_ISO,
+        help="decisions before this date get neutral soloq features; must "
+             f"match the lift table's own floor (default {DEFAULT_FLOOR_ISO})",
+    )
+    parser.add_argument(
+        "--soloq-tables", default=None,
+        help="lift-table JSON to read (default: the canonical table)",
+    )
+    parser.add_argument(
+        "--out-suffix", default=None,
+        help="suffix for the output parquets, e.g. '_floor0501' — use for "
+             "sweep arms so the production dataset is not clobbered",
+    )
+    a = parser.parse_args()
+    build(sorted(a.years), soloq_floor=a.soloq_floor,
+          table_path=a.soloq_tables, out_suffix=a.out_suffix)

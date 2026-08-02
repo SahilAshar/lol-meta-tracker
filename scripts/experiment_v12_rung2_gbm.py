@@ -35,7 +35,9 @@ data/processed/expcache_rung2gbm/.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
+import pathlib
 import time
 
 import numpy as np
@@ -48,6 +50,12 @@ from train_draft_model import (
 )
 
 NEW_FEATURES = ["soloq_ctr_score", "soloq_role_wr"]
+# The table-derived columns draft_dataset.py rewrites on every rebuild. Exempt
+# from the backup byte-identity check when the backup already carries them (a
+# rebuild against denser soloq tables is *supposed* to move exactly these); the
+# check still pins every other column. When the backup predates them (the
+# original 2026-07-25 run) this set is empty and the check is unchanged.
+SOLOQ_FEATURES = NEW_FEATURES + ["soloq_syn_score"]
 CONFIGS = {
     "baseline": FEATURES,
     "V1": FEATURES + NEW_FEATURES,
@@ -69,14 +77,27 @@ def verify_backup(ds: pd.DataFrame, backup_path: str, cutoff) -> dict:
         f"pre-cutoff row count changed: {len(old_pre)} -> {len(new_pre)}"
     assert (new_pre[key].to_numpy() == old_pre[key].to_numpy()).all(), \
         "pre-cutoff row identity changed"
-    diffs = [c for c in old.columns
+    pinned = [c for c in old.columns if c not in SOLOQ_FEATURES]
+    regenerated = [c for c in old.columns if c in SOLOQ_FEATURES]
+    diffs = [c for c in pinned
              if not np.array_equal(new_pre[c].to_numpy(),
                                    old_pre[c].to_numpy())]
     assert not diffs, f"pre-cutoff columns not byte-identical: {diffs}"
+    # Descriptive only: how far the deliberately-rebuilt columns moved.
+    moved = {}
+    for c in regenerated:
+        a, b = old_pre[c].to_numpy(), new_pre[c].to_numpy()
+        moved[c] = {"corr_with_backup": round(float(np.corrcoef(a, b)[0, 1]), 4),
+                    "mean_abs_backup": round(float(np.abs(a).mean()), 6),
+                    "mean_abs_rebuilt": round(float(np.abs(b).mean()), 6),
+                    "rows_changed": round(float((a != b).mean()), 4)}
     print(f"backup check OK: {len(new_pre)} pre-cutoff rows, "
-          f"{len(old.columns)} pre-existing columns byte-identical")
+          f"{len(pinned)} pre-existing columns byte-identical"
+          + (f"; {len(regenerated)} soloq columns rebuilt (exempt): {moved}"
+             if regenerated else ""))
     return {"pre_cutoff_rows": len(new_pre),
-            "columns_checked": len(old.columns), "byte_identical": True}
+            "columns_checked": len(pinned), "byte_identical": True,
+            "soloq_columns_exempt": regenerated, "soloq_column_shift": moved}
 
 
 def decision_ranks(df: pd.DataFrame, score_col: str) -> pd.Series:
@@ -104,9 +125,31 @@ def paired_bootstrap(d: np.ndarray) -> dict:
             "p_variant_better": round(float((means > 0).mean()), 4)}
 
 
+def data_fingerprint(train: pd.DataFrame, val: pd.DataFrame,
+                     features: list[str]) -> str:
+    """Short digest of the exact model inputs.
+
+    This exists because the cache key used to be (config, family, seed) alone,
+    with nothing about the data in it. Re-running against rebuilt lift tables
+    then silently reloaded the previous fits and reproduced the old numbers
+    exactly — a rebuild that looks like a result. Hashing the actual feature
+    matrices makes stale reuse impossible rather than merely discouraged, so
+    the floor-sweep arms cannot collide no matter what order they run in.
+    """
+    h = hashlib.blake2b(digest_size=8)
+    for name, df in (("train", train), ("val", val)):
+        h.update(f"{name}:{len(df)}:".encode())
+        for col in features:
+            h.update(col.encode())
+            h.update(np.ascontiguousarray(
+                df[col].to_numpy(dtype=np.float64)).tobytes())
+    return h.hexdigest()
+
+
 def family_scores(features: list[str], train: pd.DataFrame,
-                  val: pd.DataFrame, tag: str) -> dict[str, np.ndarray]:
-    """Val pct-rank scores per family, cached per (config, family, seed)."""
+                  val: pd.DataFrame, tag: str,
+                  fingerprint: str) -> dict[str, np.ndarray]:
+    """Val pct-rank scores per family, cached per (config, data, family, seed)."""
     CACHE_DIR.mkdir(exist_ok=True)
     out = {}
     for fam, fit, predict in (
@@ -115,7 +158,7 @@ def family_scores(features: list[str], train: pd.DataFrame,
     ):
         per_seed = []
         for seed in SEEDS:
-            cache = CACHE_DIR / f"{tag}_{fam}_seed{seed}.npy"
+            cache = CACHE_DIR / f"{tag}_{fingerprint}_{fam}_seed{seed}.npy"
             if cache.exists():
                 per_seed.append(np.load(cache))
                 continue
@@ -135,10 +178,19 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--backup", default=None,
                         help="pre-rebuild parquet for the byte-identity check")
+    parser.add_argument("--dataset",
+                        default=str(DATA_PROCESSED / "draft_decisions.parquet"),
+                        help="decisions parquet to score (floor-sweep arms "
+                             "pass their own)")
+    parser.add_argument("--soloq-tables", default=None,
+                        help="lift-table JSON matching --dataset")
+    parser.add_argument("--out",
+                        default=str(DATA_PROCESSED / "rung2_gbm.json"),
+                        help="results JSON path")
     args = parser.parse_args()
     t0 = time.time()
 
-    ds = pd.read_parquet(DATA_PROCESSED / "draft_decisions.parquet")
+    ds = pd.read_parquet(args.dataset)
     ds["date"] = pd.to_datetime(ds["date"])
     is_test = (ds.league == "EWC") & (ds.date.dt.month == 7)
     cutoff = ds.loc[is_test, "date"].min()
@@ -159,15 +211,18 @@ def main() -> None:
     assert n_val_dec == 1080, f"val decisions {n_val_dec} != 1080 (spec anchor)"
 
     champs = sorted(pre.candidate.unique())
-    _, _, _, coverage = pro_arrays(champs, load_tables())
+    sq_tables = load_tables(args.soloq_tables)
+    _, _, _, coverage = pro_arrays(champs, sq_tables)
     print(f"bridge coverage: {coverage['matched']}/{coverage['pro_champs']} "
           f"(misses: {coverage['misses']})")
 
     results, rank_vecs = {}, {}
     order = None
     for tag, feats in CONFIGS.items():
-        print(f"training {tag} ({len(feats)} features)...", flush=True)
-        fams = family_scores(feats, train, val, tag)
+        fp = data_fingerprint(train, val, feats)
+        print(f"training {tag} ({len(feats)} features, data {fp})...",
+              flush=True)
+        fams = family_scores(feats, train, val, tag, fp)
         val["score_ens"] = (fams["clf"] + fams["rank"]) / 2.0
         val["score_clf"] = fams["clf"]
         val["score_rank"] = fams["rank"]
@@ -245,10 +300,13 @@ def main() -> None:
             "n_bootstrap": N_BOOT,
             "frozen_ewc_test": "never loaded into any scorer",
             "backup_check": backup_check,
-            "soloq_table": {k: load_tables()[k]
-                            for k in ("cutoff_iso", "clean_games",
+            "dataset": args.dataset,
+            "soloq_table": {k: sq_tables.get(k)
+                            for k in ("cutoff_iso", "soloq_coverage_start",
+                                      "soloq_observed_start", "clean_games",
                                       "blue_win_rate", "n_champs",
-                                      "n_counter_pairs", "n_syn_pairs")},
+                                      "n_counter_pairs", "n_syn_pairs",
+                                      "patch_mix")},
             "bridge_coverage": coverage,
             "rung1c": ("PASS — soloq_syn_score added as V3 per the spec's "
                        "PASS branch (docs/2026-07-25-synergy-rung1c-"
@@ -267,7 +325,7 @@ def main() -> None:
             "runtime_seconds": round(time.time() - t0),
         },
     }
-    path = DATA_PROCESSED / "rung2_gbm.json"
+    path = pathlib.Path(args.out)
     path.write_text(json.dumps(out, indent=2))
     print(f"wrote {path} ({round(time.time() - t0)}s total)")
 
