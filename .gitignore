@@ -24,3 +24,8 @@ data/processed/*.pt
 # Riot API (personal key + scraped soloq data — never commit)
 .riot-api-key
 data/raw/soloq/
+
+# Experiment fit caches — regenerable .npy score vectors, ~350MB and growing.
+# The rung-2 GBM cache is keyed by a data fingerprint, so a stale entry can
+# never be silently reused; there is nothing here worth versioning.
+data/processed/expcache_*/
