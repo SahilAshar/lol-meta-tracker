@@ -1,13 +1,12 @@
 {
-  "since": "2026-04-19",
-  "fallback": true,
-  "fallback_reason": "No games on/after 2026-07-22 yet; using most recent 8 weeks",
+  "since": "2026-07-22",
+  "fallback": false,
   "year": 2026,
   "games_per_league": {
-    "LCK": 158,
-    "LPL": 180,
-    "LEC": 80,
-    "LCS": 69
+    "LCK": 107,
+    "LPL": 160,
+    "LEC": 89,
+    "LCS": 46
   },
-  "window_end": "2026-06-14"
+  "window_end": "2026-08-27"
 }

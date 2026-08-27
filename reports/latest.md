@@ -1,17 +1,15 @@
-# Cross-League Meta Report — 2026-07-23
+# Cross-League Meta Report — 2026-08-27
 
-Games from **2026-04-19** through **2026-06-14**.
-
-> ⚠️ No games on/after 2026-07-22 yet; using most recent 8 weeks. Summer split coverage begins once leagues start (LPL Jul 22 → LCK Jul 29).
+Games from **2026-07-22** through **2026-08-27**.
 
 ## Games analyzed
 
 | League | Games |
 |---|---|
-| LCK | 158 |
-| LPL | 180 |
-| LEC | 80 |
-| LCS | 69 |
+| LCK | 107 |
+| LPL | 160 |
+| LEC | 89 |
+| LCS | 46 |
 
 ## Charts
 
@@ -25,21 +23,21 @@ Games from **2026-04-19** through **2026-06-14**.
 
 | Champion | LCK | LPL | LEC | LCS | Mean |
 |---|---|---|---|---|---|
-| Ezreal | 26% | 28% | 32% | 30% | 29% |
-| Xin Zhao | 34% | 24% | 26% | 26% | 28% |
-| Ryze | 28% | 29% | 24% | 23% | 26% |
-| Rumble | 22% | 22% | 26% | 33% | 26% |
-| Jarvan IV | 30% | 23% | 20% | 29% | 26% |
-| Seraphine | 22% | 26% | 24% | 25% | 24% |
-| Bard | 20% | 24% | 24% | 25% | 23% |
-| Sion | 25% | 24% | 14% | 28% | 23% |
-| Ashe | 22% | 22% | 21% | 25% | 23% |
-| Annie | 23% | 26% | 19% | 22% | 22% |
-| Pantheon | 25% | 21% | 25% | 16% | 22% |
-| Lucian | 23% | 24% | 19% | 20% | 22% |
-| Lulu | 21% | 22% | 22% | 16% | 20% |
-| Vi | 20% | 22% | 22% | 16% | 20% |
-| Gnar | 24% | 19% | 22% | 14% | 20% |
+| Ezreal | 32% | 27% | 26% | 41% | 31% |
+| Jarvan IV | 32% | 28% | 31% | 33% | 31% |
+| Ryze | 31% | 34% | 21% | 35% | 30% |
+| Rumble | 22% | 36% | 33% | 20% | 28% |
+| Ambessa | 21% | 29% | 26% | 28% | 26% |
+| Shen | 28% | 20% | 26% | 26% | 25% |
+| Lee Sin | 31% | 24% | 24% | 22% | 25% |
+| Syndra | 25% | 26% | 28% | 20% | 25% |
+| Gnar | 15% | 21% | 24% | 35% | 24% |
+| Jhin | 30% | 24% | 18% | 22% | 23% |
+| Lucian | 18% | 19% | 26% | 30% | 23% |
+| Vi | 21% | 26% | 22% | 20% | 22% |
+| Viktor | 19% | 14% | 34% | 22% | 22% |
+| Orianna | 20% | 16% | 28% | 24% | 22% |
+| Naafiri | 20% | 31% | 16% | 17% | 21% |
 
 ## LCK
 
@@ -47,31 +45,31 @@ Games from **2026-04-19** through **2026-06-14**.
 
 | Champion | Rate | Games |
 |---|---|---|
-| Xin Zhao | 34% | 53 |
-| Jarvan IV | 30% | 47 |
-| Ryze | 28% | 45 |
-| Ezreal | 26% | 41 |
-| Pantheon | 25% | 40 |
-| Sion | 25% | 39 |
-| Gnar | 24% | 38 |
-| Lucian | 23% | 37 |
-| Annie | 23% | 36 |
-| Jayce | 23% | 36 |
+| Ezreal | 32% | 34 |
+| Jarvan IV | 32% | 34 |
+| Lee Sin | 31% | 33 |
+| Ryze | 31% | 33 |
+| Jhin | 30% | 32 |
+| Olaf | 28% | 30 |
+| Shen | 28% | 30 |
+| Syndra | 25% | 27 |
+| Pantheon | 24% | 26 |
+| Jayce | 22% | 24 |
 
 **Top bans**
 
 | Champion | Rate | Games |
 |---|---|---|
-| Varus | 94% | 148 |
-| Orianna | 78% | 124 |
-| Rumble | 54% | 85 |
-| Karma | 52% | 82 |
-| Bard | 46% | 72 |
-| Nocturne | 41% | 64 |
-| Cassiopeia | 35% | 55 |
-| Jarvan IV | 32% | 50 |
-| Jayce | 30% | 47 |
-| Caitlyn | 28% | 45 |
+| Poppy | 66% | 71 |
+| Orianna | 61% | 65 |
+| Cassiopeia | 54% | 58 |
+| Nocturne | 53% | 57 |
+| Vi | 53% | 57 |
+| Lucian | 49% | 52 |
+| Camille | 45% | 48 |
+| Bard | 43% | 46 |
+| Jayce | 36% | 39 |
+| Locke | 34% | 36 |
 
 ## LPL
 
@@ -79,31 +77,31 @@ Games from **2026-04-19** through **2026-06-14**.
 
 | Champion | Rate | Games |
 |---|---|---|
-| Ryze | 29% | 53 |
-| Ezreal | 28% | 50 |
-| Annie | 26% | 47 |
-| Seraphine | 26% | 46 |
-| Sion | 24% | 44 |
-| Xin Zhao | 24% | 44 |
-| Bard | 24% | 43 |
-| Lucian | 24% | 43 |
-| Milio | 24% | 43 |
-| Jarvan IV | 23% | 42 |
+| Rumble | 36% | 57 |
+| Ryze | 34% | 54 |
+| Naafiri | 31% | 50 |
+| Ambessa | 29% | 46 |
+| Jarvan IV | 28% | 45 |
+| Ezreal | 27% | 43 |
+| Vi | 26% | 42 |
+| Syndra | 26% | 41 |
+| Jhin | 24% | 39 |
+| Lee Sin | 24% | 38 |
 
 **Top bans**
 
 | Champion | Rate | Games |
 |---|---|---|
-| Varus | 76% | 136 |
-| Orianna | 74% | 134 |
-| Nocturne | 61% | 109 |
-| Karma | 46% | 83 |
-| Rumble | 45% | 81 |
-| Jarvan IV | 39% | 70 |
-| Lucian | 29% | 52 |
-| Vi | 28% | 50 |
-| Bard | 25% | 45 |
-| Cassiopeia | 25% | 45 |
+| Orianna | 69% | 110 |
+| Poppy | 67% | 107 |
+| Cassiopeia | 61% | 97 |
+| Vayne | 49% | 78 |
+| Ezreal | 48% | 77 |
+| Lucian | 41% | 65 |
+| Akali | 40% | 64 |
+| Nocturne | 37% | 59 |
+| Vi | 36% | 57 |
+| Nautilus | 32% | 51 |
 
 ## LEC
 
@@ -111,31 +109,31 @@ Games from **2026-04-19** through **2026-06-14**.
 
 | Champion | Rate | Games |
 |---|---|---|
-| Ezreal | 32% | 26 |
-| Nami | 28% | 22 |
-| Rumble | 26% | 21 |
-| Xin Zhao | 26% | 21 |
-| Pantheon | 25% | 20 |
-| Azir | 24% | 19 |
-| Bard | 24% | 19 |
-| Caitlyn | 24% | 19 |
-| Ryze | 24% | 19 |
-| Seraphine | 24% | 19 |
+| Viktor | 34% | 30 |
+| Rumble | 33% | 29 |
+| Jarvan IV | 31% | 28 |
+| Orianna | 28% | 25 |
+| Syndra | 28% | 25 |
+| Ambessa | 26% | 23 |
+| Ezreal | 26% | 23 |
+| Leona | 26% | 23 |
+| Lucian | 26% | 23 |
+| Shen | 26% | 23 |
 
 **Top bans**
 
 | Champion | Rate | Games |
 |---|---|---|
-| Orianna | 88% | 70 |
-| Nautilus | 69% | 55 |
-| Varus | 66% | 53 |
-| Jarvan IV | 48% | 38 |
-| Vayne | 40% | 32 |
-| Pantheon | 36% | 29 |
-| Nocturne | 31% | 25 |
-| Sion | 31% | 25 |
-| Rumble | 30% | 24 |
-| Akali | 28% | 22 |
+| Jayce | 69% | 61 |
+| Poppy | 64% | 57 |
+| Nocturne | 58% | 52 |
+| Cassiopeia | 53% | 47 |
+| Akali | 51% | 45 |
+| Vi | 49% | 44 |
+| Vayne | 48% | 43 |
+| Locke | 36% | 32 |
+| Orianna | 36% | 32 |
+| Ezreal | 29% | 26 |
 
 ## LCS
 
@@ -143,31 +141,31 @@ Games from **2026-04-19** through **2026-06-14**.
 
 | Champion | Rate | Games |
 |---|---|---|
-| Rumble | 33% | 23 |
-| Ezreal | 30% | 21 |
-| Jarvan IV | 29% | 20 |
-| Sion | 28% | 19 |
-| Xin Zhao | 26% | 18 |
-| Ashe | 25% | 17 |
-| Bard | 25% | 17 |
-| Seraphine | 25% | 17 |
-| Ryze | 23% | 16 |
-| Annie | 22% | 15 |
+| Ezreal | 41% | 19 |
+| Gnar | 35% | 16 |
+| Ryze | 35% | 16 |
+| Jarvan IV | 33% | 15 |
+| Lucian | 30% | 14 |
+| Ambessa | 28% | 13 |
+| Milio | 26% | 12 |
+| Nautilus | 26% | 12 |
+| Shen | 26% | 12 |
+| Jayce | 24% | 11 |
 
 **Top bans**
 
 | Champion | Rate | Games |
 |---|---|---|
-| Varus | 72% | 50 |
-| Orianna | 65% | 45 |
-| Karma | 59% | 41 |
-| Nocturne | 51% | 35 |
-| Bard | 41% | 28 |
-| Anivia | 36% | 25 |
-| Jarvan IV | 35% | 24 |
-| Cassiopeia | 29% | 20 |
-| Akali | 28% | 19 |
-| Seraphine | 28% | 19 |
+| Nocturne | 80% | 37 |
+| Vi | 65% | 30 |
+| Cassiopeia | 59% | 27 |
+| Poppy | 59% | 27 |
+| Vayne | 54% | 25 |
+| Akali | 50% | 23 |
+| Lee Sin | 46% | 21 |
+| Orianna | 43% | 20 |
+| Jayce | 39% | 18 |
+| Olaf | 37% | 17 |
 
 ---
 _Data: [Oracle's Elixir](https://oracleselixir.com). Note: some 2026 draft/champion-select data has known issues pending upstream fix._
