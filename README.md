@@ -8,7 +8,7 @@ source data hasn't changed).
 
 Nobody does consistent cross-league comparative analysis. This repo does.
 
-**Latest report:** <!-- LATEST-REPORT -->[Latest meta report (2026-08-27)](reports/latest.md)<!-- /LATEST-REPORT -->
+**Latest report:** <!-- LATEST-REPORT -->[Latest meta report (2026-08-28)](reports/latest.md)<!-- /LATEST-REPORT -->
 
 ## What it tracks
 
