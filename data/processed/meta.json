@@ -3,10 +3,10 @@
   "fallback": false,
   "year": 2026,
   "games_per_league": {
-    "LCK": 112,
-    "LPL": 166,
-    "LEC": 91,
-    "LCS": 46
+    "LCK": 153,
+    "LPL": 221,
+    "LEC": 126,
+    "LCS": 67
   },
-  "window_end": "2026-08-28"
+  "window_end": "2026-09-13"
 }
