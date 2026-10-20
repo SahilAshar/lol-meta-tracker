@@ -5,8 +5,8 @@
   "games_per_league": {
     "LCK": 153,
     "LPL": 221,
-    "LEC": 126,
-    "LCS": 67
+    "LEC": 137,
+    "LCS": 126
   },
-  "window_end": "2026-09-13"
+  "window_end": "2026-10-13"
 }

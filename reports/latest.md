@@ -1,6 +1,6 @@
-# Cross-League Meta Report — 2026-09-15
+# Cross-League Meta Report — 2026-10-20
 
-Games from **2026-07-22** through **2026-09-13**.
+Games from **2026-07-22** through **2026-10-13**.
 
 ## Games analyzed
 
@@ -8,8 +8,8 @@ Games from **2026-07-22** through **2026-09-13**.
 |---|---|
 | LCK | 153 |
 | LPL | 221 |
-| LEC | 126 |
-| LCS | 67 |
+| LEC | 137 |
+| LCS | 126 |
 
 ## Charts
 
@@ -23,20 +23,20 @@ Games from **2026-07-22** through **2026-09-13**.
 
 | Champion | LCK | LPL | LEC | LCS | Mean |
 |---|---|---|---|---|---|
-| Ryze | 29% | 30% | 23% | 33% | 29% |
-| Ezreal | 27% | 25% | 24% | 37% | 28% |
-| Jarvan IV | 29% | 25% | 29% | 30% | 28% |
-| Rumble | 21% | 32% | 32% | 24% | 27% |
-| Lucian | 18% | 19% | 25% | 33% | 24% |
-| Syndra | 23% | 23% | 27% | 19% | 23% |
-| Ambessa | 18% | 24% | 26% | 22% | 23% |
+| Ryze | 29% | 30% | 23% | 28% | 27% |
+| Rumble | 21% | 32% | 31% | 24% | 27% |
+| Jarvan IV | 29% | 25% | 30% | 23% | 27% |
+| Ezreal | 27% | 25% | 24% | 29% | 27% |
+| Syndra | 23% | 23% | 26% | 22% | 23% |
 | Lee Sin | 27% | 22% | 21% | 21% | 23% |
-| Gnar | 15% | 20% | 19% | 34% | 22% |
-| Jhin | 27% | 22% | 18% | 19% | 22% |
-| Orianna | 19% | 17% | 27% | 24% | 22% |
-| Milio | 18% | 19% | 17% | 28% | 21% |
-| Vi | 19% | 21% | 22% | 19% | 20% |
-| Viktor | 18% | 14% | 31% | 18% | 20% |
+| Lucian | 18% | 19% | 23% | 29% | 22% |
+| Ambessa | 18% | 24% | 26% | 20% | 22% |
+| Orianna | 19% | 17% | 26% | 25% | 22% |
+| Jhin | 27% | 22% | 18% | 18% | 21% |
+| Gnar | 15% | 20% | 18% | 29% | 21% |
+| Viktor | 18% | 14% | 29% | 19% | 20% |
+| Milio | 18% | 19% | 17% | 25% | 20% |
+| K'Sante | 18% | 20% | 16% | 25% | 20% |
 | Jayce | 22% | 19% | 17% | 21% | 20% |
 
 ## LCK
@@ -109,31 +109,31 @@ Games from **2026-07-22** through **2026-09-13**.
 
 | Champion | Rate | Games |
 |---|---|---|
-| Rumble | 32% | 40 |
-| Viktor | 31% | 39 |
-| Jarvan IV | 29% | 37 |
-| Orianna | 27% | 34 |
-| Syndra | 27% | 34 |
-| Ambessa | 26% | 33 |
-| Lucian | 25% | 31 |
-| Ezreal | 24% | 30 |
-| Ryze | 23% | 29 |
-| Vi | 22% | 28 |
+| Rumble | 31% | 43 |
+| Jarvan IV | 30% | 41 |
+| Viktor | 29% | 40 |
+| Orianna | 26% | 36 |
+| Syndra | 26% | 36 |
+| Ambessa | 26% | 35 |
+| Ezreal | 24% | 33 |
+| Lucian | 23% | 32 |
+| Ryze | 23% | 32 |
+| Lee Sin | 21% | 29 |
 
 **Top bans**
 
 | Champion | Rate | Games |
 |---|---|---|
-| Nocturne | 62% | 78 |
-| Jayce | 60% | 76 |
-| Cassiopeia | 60% | 75 |
-| Akali | 49% | 62 |
-| Poppy | 48% | 60 |
-| Vi | 47% | 59 |
-| Vayne | 37% | 47 |
-| Orianna | 37% | 46 |
-| Nautilus | 33% | 41 |
-| Ezreal | 32% | 40 |
+| Nocturne | 65% | 89 |
+| Cassiopeia | 63% | 86 |
+| Jayce | 57% | 78 |
+| Vi | 49% | 67 |
+| Akali | 48% | 66 |
+| Poppy | 44% | 60 |
+| Orianna | 36% | 50 |
+| Vayne | 34% | 47 |
+| Nautilus | 33% | 45 |
+| Ezreal | 31% | 43 |
 
 ## LCS
 
@@ -141,31 +141,31 @@ Games from **2026-07-22** through **2026-09-13**.
 
 | Champion | Rate | Games |
 |---|---|---|
-| Ezreal | 37% | 25 |
-| Gnar | 34% | 23 |
-| Lucian | 33% | 22 |
-| Ryze | 33% | 22 |
-| Jarvan IV | 30% | 20 |
-| Milio | 28% | 19 |
-| K'Sante | 24% | 16 |
-| Nautilus | 24% | 16 |
-| Orianna | 24% | 16 |
-| Rumble | 24% | 16 |
+| Ezreal | 29% | 37 |
+| Gnar | 29% | 37 |
+| Lucian | 29% | 36 |
+| Ryze | 28% | 35 |
+| Orianna | 25% | 32 |
+| K'Sante | 25% | 31 |
+| Milio | 25% | 31 |
+| Rumble | 24% | 30 |
+| Jarvan IV | 23% | 29 |
+| Syndra | 22% | 28 |
 
 **Top bans**
 
 | Champion | Rate | Games |
 |---|---|---|
-| Nocturne | 73% | 49 |
-| Cassiopeia | 69% | 46 |
-| Vi | 61% | 41 |
-| Olaf | 49% | 33 |
-| Poppy | 48% | 32 |
-| Lee Sin | 46% | 31 |
-| Akali | 45% | 30 |
-| Orianna | 40% | 27 |
-| Vayne | 37% | 25 |
-| Jayce | 36% | 24 |
+| Cassiopeia | 79% | 100 |
+| Nocturne | 75% | 95 |
+| Vi | 64% | 81 |
+| Olaf | 47% | 59 |
+| Akali | 40% | 50 |
+| Lee Sin | 38% | 48 |
+| Jarvan IV | 32% | 40 |
+| Jayce | 30% | 38 |
+| Orianna | 30% | 38 |
+| Poppy | 28% | 35 |
 
 ---
 _Data: [Oracle's Elixir](https://oracleselixir.com). Note: some 2026 draft/champion-select data has known issues pending upstream fix._
