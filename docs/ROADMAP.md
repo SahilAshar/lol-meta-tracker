@@ -151,9 +151,10 @@ shelved — the launch moment is the column, not the model story.
      transformer outcome head proper (second output head on the v0.8
      transformer, mimicry head proposes / outcome head ranks), (c) team
      embeddings instead of Elo. NOTE: the outcome head is a real pivot
-     (different labels, different audience) — the north-star conversation
-     (vault `drafts/2026-07-20-handoff-lol-meta-tracker-northstar.md`) is
-     still unhad and should gate the full build, not this cheap probe.
+     (different labels, different audience) — the north-star question
+     (is this a public analysis/content engine, or a tool a pro coach would
+     actually use?) is still undecided and should gate the full build, not
+     this cheap probe.
    - **Give the transformer time signal** for bans (NEXT UP — handoff:
      `docs/2026-07-23-ban-timesignal-handoff.md`): inject the existing 28-day
      trailing pick/ban rates (already causal, per-game constant in the
